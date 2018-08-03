@@ -1,0 +1,25 @@
+package com.gearsofcode.wemf.reveng.database.sql;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.gearsofcode.wemf.reveng.database.model.DataType;
+
+/**
+ * Represents a group of Data Types for some database technology.
+ * 
+ * @author Carlos Padoa
+ * */
+public interface DatabaseTypes {
+
+	/**
+	 * Enumerates all the available data types.
+	 * */
+	public abstract List<DataType> getDatabaseTypes();
+	public DataType fromJavaClass(Class<?> c);
+	public default DataType getByTypeName(String typeName) {
+		Optional<DataType> dt = getDatabaseTypes().stream().filter(dataType -> dataType.getName().equals(typeName.toLowerCase())).findFirst();
+		if (dt.isPresent()) return dt.get();
+		throw new IllegalArgumentException("Unknow datatype: " + typeName);
+	}
+}

@@ -1,0 +1,43 @@
+/*[- */ fileNamePattern=%sFacade.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=facade /* -]*/ 
+package [(${clazz.epackage.name})].facade;
+
+import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].service.[(${clazz.name})]Service;
+import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+import javax.inject.Inject;
+import java.util.List;
+
+
+public class [(${clazz.name})]Facade {
+
+	@Inject
+	[(${clazz.name})]Service [(${#strings.toLowerCase(clazz.name)})]Service;
+	
+	public void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Service.include([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	
+	public void exclude ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Service.remove([(${#strings.toLowerCase(clazz.name)})]);
+	} 
+	
+	public void alter ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Service.alter([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	public [(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id){
+		return [(${#strings.toLowerCase(clazz.name)})]Service.getById(id);
+	}
+	
+	public List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filter){
+		return [(${#strings.toLowerCase(clazz.name)})]Service.getByFilter(filter);
+	}
+	
+	public Long getTotalRecords([(${clazz.name})]FilterDTO filter){
+		return [(${#strings.toLowerCase(clazz.name)})]Service.getTotalRecords(filter);
+	}
+	
+}

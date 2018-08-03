@@ -1,0 +1,54 @@
+/*[- */ fileNamePattern=%sRepositoryJPA.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=repository.jpa /* -]*/
+package [(${clazz.epackage.name})].repository.jpa;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].repository.[(${clazz.name})]Repository;
+import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+
+
+
+public class [(${clazz.name})]RepositoryJPA implements [(${clazz.name})]Repository {
+
+	@PersistenceContext
+	private transient EntityManager em;
+	
+	@Override
+	public void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		em.persist([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	@Override
+	public void remove ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		em.remove([(${#strings.toLowerCase(clazz.name)})]);
+	} 
+	
+	@Override
+	public void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		em.merge([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	@Override
+	public [(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id){
+		return em.find([(${clazz.name})].class, id);
+	}
+	
+	@Override
+	public List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filtro){
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public Long getTotalRecords([(${clazz.name})]FilterDTO filtro){
+		throw new UnsupportedOperationException();
+	}
+}

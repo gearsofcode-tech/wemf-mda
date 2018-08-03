@@ -1,0 +1,37 @@
+/*[- */ fileNamePattern=%sDTO.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=dto /* -]*/
+package [(${clazz.epackage.name})].dto;
+
+[# emft:importJavaList="${clazz}" /]
+
+public class [(${clazz.name})]DTO {
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
+	[# th:if="${attr.upperBound} == 1"]
+	private [# emft:javaDTOType="${attr}"/] [(${attr.name})];
+	[/]
+	[# th:if="${attr.upperBound} == -1 or ${attr.upperBound} > 1"]
+	private List<[# emft:javaDTOType="${attr}"/]> [(${attr.name})];
+	[/]
+[/]
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
+	[# th:if="${attr.upperBound} == 1"]
+	public [# emft:javaDTOType="${attr}"/] get[# emft:cc="${attr}" /]() {
+		return [(${attr.name})];
+	}
+
+	public void set[# emft:cc="${attr}" /]([# emft:javaDTOType="${attr}"/] [(${attr.name})]) {
+		this.[(${attr.name})] = [(${attr.name})];
+	}
+	[/]
+	[# th:if="${attr.upperBound} == -1 or ${attr.upperBound} > 1"]
+	public List<[# emft:javaDTOType="${attr}"/]> get[# emft:cc="${attr}" /]() {
+		return [(${attr.name})];
+	}
+
+	public void set[# emft:cc="${attr}" /](List<[# emft:javaDTOType="${attr}"/]> [(${attr.name})]) {
+		this.[(${attr.name})] = [(${attr.name})];
+	}
+	[/]
+[/]	
+}

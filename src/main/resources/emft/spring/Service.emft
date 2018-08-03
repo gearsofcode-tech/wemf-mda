@@ -1,0 +1,48 @@
+/*[- */ fileNamePattern=%sService.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=service /* -]*/ 
+package [(${clazz.epackage.name})].service;
+
+import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].repository.[(${clazz.name})]Repository;
+import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
+@Service
+@Transactional
+@Component
+public class [(${clazz.name})]Service {
+
+	@Autowired
+	[(${clazz.name})]Repository [(${#strings.toLowerCase(clazz.name)})]Repository;
+	
+	public void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Repository.include([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	
+	public void remove ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Repository.remove([(${#strings.toLowerCase(clazz.name)})]);
+	} 
+	
+	public void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Repository.update([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	public [(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id){
+		return [(${#strings.toLowerCase(clazz.name)})]Repository.getById(id);
+	}
+	
+	public List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filtro){
+		return [(${#strings.toLowerCase(clazz.name)})]Repository.getByFilter(filtro);
+	}
+	
+	public Long getTotalRecords([(${clazz.name})]FilterDTO filtro){
+		return [(${#strings.toLowerCase(clazz.name)})]Repository.getTotalRecords(filtro);
+	}
+	
+}

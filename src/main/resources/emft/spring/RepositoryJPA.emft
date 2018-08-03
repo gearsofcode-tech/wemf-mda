@@ -1,0 +1,108 @@
+/*[- */ fileNamePattern=%sRepositoryJPA.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=repository.jpa /* -]*/
+package [(${clazz.epackage.name})].repository.jpa;
+
+import java.util.List;
+import java.util.LinkedList;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].repository.[(${clazz.name})]Repository;
+import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class [(${clazz.name})]RepositoryJPA implements [(${clazz.name})]Repository {
+
+	@PersistenceContext
+	private transient EntityManager em;
+	
+	@Override
+	public void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		em.persist([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	@Override
+	public void remove ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		em.remove([(${#strings.toLowerCase(clazz.name)})]);
+	} 
+	
+	@Override
+	public void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		em.persist([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	@Override
+	public [(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id){
+		return em.find([(${clazz.name})].class, id);
+	}
+	
+	@Override
+	public List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filter){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<[(${clazz.name})]> cq = cb.createQuery([(${clazz.name})].class);
+		Root<[(${clazz.name})]> root = cq.from([(${clazz.name})].class);
+		cq.select(root);
+
+		List<Predicate> predicates = getPredicates(cb, root, filter);
+		cq.where(predicates.toArray(new Predicate[predicates.size()]));
+		
+		TypedQuery<[(${clazz.name})]> query = em.createQuery(cq);
+		return query.getResultList();
+	}
+	
+	@Override
+	public Long getTotalRecords([(${clazz.name})]FilterDTO filter){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<[(${clazz.name})]> [(${#strings.toLowerCase(clazz.name)})] = cq.from([(${clazz.name})].class);
+		cq.select(cb.count([(${#strings.toLowerCase(clazz.name)})]));
+
+		List<Predicate> predicates = getPredicates(cb, [(${#strings.toLowerCase(clazz.name)})], filter);
+		cq.where(predicates.toArray(new Predicate[predicates.size()]));
+		
+		TypedQuery<Long> query = em.createQuery(cq);
+		return query.getSingleResult();
+	}
+	
+	
+	private List<Predicate> getPredicates (CriteriaBuilder cb, Root<[(${clazz.name})]> root, [(${clazz.name})]FilterDTO filter){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<Predicate> lstPredicate = new LinkedList<Predicate>();
+		[# th:each="attr : ${clazz.eAttributes}"]
+		if (filter.get[# emft:cc="${attr}"/]() != null){
+			[# th:switch="${attr.eAttributeType.name}"]
+			[# th:case="'EString'"]
+				if (!filter.get[# emft:cc="${attr}"/]().isEmpty()){
+					lstPredicate.add(cb.like(root.get("[(${attr.name})]"), "%"+filter.get[# emft:cc="${attr}"/]()+"%"));
+				}
+			[/]
+			[# th:case="'EDate'"]
+			try {
+				if (!filter.get[# emft:cc="${attr}"/]().isEmpty()){
+					lstPredicate.add(cb.equal(root.get("indices"), sdf.parse(filter.getIndices())));
+				}
+			}
+			catch (ParseException e) {
+				throw new IllegalArgumentException(e);
+			}
+			[/]
+			[# th:case="*"]lstPredicate.add(cb.equal(root.get("[(${attr.name})]"), filter.get[# emft:cc="${attr}"/]()));[/]
+			[/]
+		}
+		[/]
+		return lstPredicate;
+	}
+}

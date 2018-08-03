@@ -1,0 +1,21 @@
+package teste001 {
+
+	class Aluno{
+	
+		nome:EString;
+	
+		inscrever(a:Aula);
+		
+		obterInscricoes():Aula[0..*];
+	
+	}
+	
+	class Aula{
+		professor:Professor;
+		alunos:Aluno[10..60];
+	}
+	
+	class Professor{
+		nome:EString;
+	}
+}

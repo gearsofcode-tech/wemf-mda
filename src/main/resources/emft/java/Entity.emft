@@ -1,0 +1,46 @@
+/*[- */ fileNamePattern=%s.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=model /* -]*/
+package [(${clazz.epackage.name})].model;
+
+import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+[# emft:importJavaList="${clazz}" /]
+
+[# emft:javaAnnotations="${clazz}"/]
+public class [(${clazz.name})] {
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
+	[# th:if="${attr.upperBound} == 1"]
+	[# emft:javaAnnotations="${attr}"/]
+	private [# emft:javaType="${attr}"/] [(${attr.name})];
+	[/]
+	[# th:if="${attr.upperBound} == -1 or ${attr.upperBound} > 1"]
+	[# emft:javaAnnotations="${attr}"/]
+	private List<[# emft:javaType="${attr}"/]> [(${attr.name})];
+	[/]
+[/]
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
+	[# th:if="${attr.upperBound} == 1"]
+	public [# emft:javaType="${attr}"/] get[# emft:cc="${attr}" /]() {
+		return [(${attr.name})];
+	}
+
+	public void set[# emft:cc="${attr}" /]([# emft:javaType="${attr}"/] [(${attr.name})]) {
+		this.[(${attr.name})] = [(${attr.name})];
+	}
+	[/]
+	[# th:if="${attr.upperBound} == -1 or ${attr.upperBound} > 1"]
+	public List<[# emft:javaType="${attr}"/]> get[# emft:cc="${attr}" /]() {
+		return [(${attr.name})];
+	}
+
+	public void set[# emft:cc="${attr}" /](List<[# emft:javaType="${attr}"/]> [(${attr.name})]) {
+		this.[(${attr.name})] = [(${attr.name})];
+	}
+	[/]
+[/]	
+}

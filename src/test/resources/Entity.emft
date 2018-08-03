@@ -1,0 +1,15 @@
+
+class [(${model.namem})] {
+
+<% for att : clazz.getEAttributes()%>
+
+	private <%=att.getName()%> <%=att.getEType().getName()%> ;
+	
+	private <%=att.getEType().getName()%> <%=getter(att.getName())%>() {
+		return <%=att.getName()%>;
+	}
+
+	private void <%=setter(att.getName())%> (<%=att.getName()%> <%=att.getEType().getName()%>) {
+		this.<%=att.getName()%> = <%=att.getName()%>;
+	}
+}

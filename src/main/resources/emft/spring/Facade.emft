@@ -1,0 +1,48 @@
+/*[- */ fileNamePattern=%sFacade.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=facade /* -]*/ 
+package [(${clazz.epackage.name})].facade;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].service.[(${clazz.name})]Service;
+import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import java.util.List;
+
+@Service
+@Transactional
+@Component
+public class [(${clazz.name})]Facade {
+
+	@Autowired
+	[(${clazz.name})]Service [(${#strings.toLowerCase(clazz.name)})]Service;
+	
+	public void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Service.include([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	
+	public void remove ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Service.remove([(${#strings.toLowerCase(clazz.name)})]);
+	} 
+	
+	public void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${#strings.toLowerCase(clazz.name)})]Service.update([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	public [(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id){
+		return [(${#strings.toLowerCase(clazz.name)})]Service.getById(id);
+	}
+	
+	public List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filter){
+		return [(${#strings.toLowerCase(clazz.name)})]Service.getByFilter(filter);
+	}
+	
+	public Long getTotalRecords([(${clazz.name})]FilterDTO filter){
+		return [(${#strings.toLowerCase(clazz.name)})]Service.getTotalRecords(filter);
+	}
+	
+}

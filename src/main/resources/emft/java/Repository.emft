@@ -1,0 +1,25 @@
+/*[- */ fileNamePattern=%sRepository.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=repository /* -]*/ 
+package [(${clazz.epackage.name})].repository;
+
+import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+import java.util.List;
+
+
+public interface [(${clazz.name})]Repository {
+	
+	void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]);
+	
+	void remove ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]); 
+	
+	void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]);
+	
+	[(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id);
+	
+	List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filtro);
+	
+	Long getTotalRecords([(${clazz.name})]FilterDTO filtro);
+	
+}
