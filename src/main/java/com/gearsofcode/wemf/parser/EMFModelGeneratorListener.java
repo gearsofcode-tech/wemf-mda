@@ -40,13 +40,7 @@ import com.gearsofcode.wemf.parser.WEMFParser.SystemContext;
 public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	public static final String SYSTEM_NAME_ANNOTATION = "SYSTEM_NAME";
-	public static final EDataType E_LONG = EcorePackage.eINSTANCE.getELong();
-	public static final EDataType E_BOOLEAN = EcorePackage.eINSTANCE.getEBoolean();
-	public static final EDataType E_DATE = EcorePackage.eINSTANCE.getEDate();
-	public static final EDataType E_BIGDECIMAL = EcorePackage.eINSTANCE.getEBigDecimal();
-	public static final EDataType E_INT = EcorePackage.eINSTANCE.getEInt();
-	public static final EDataType E_STRING = EcorePackage.eINSTANCE.getEString();
-	public static final EDataType E_LONG_OBJECT = EcorePackage.eINSTANCE.getELongObject();
+
 
 	/**
 	 * Simple mappings of strings to the actual EMF objects.
@@ -78,11 +72,25 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 	 * */
 	static {
 		typeMap = new HashMap<String, EDataType>();
-		typeMap.put("EString", E_STRING);
-		typeMap.put("ELong", E_LONG);
-		typeMap.put("ELongObject", E_LONG_OBJECT);
-		typeMap.put("EInt", E_INT);
-		typeMap.put("EDate", E_DATE);
+		typeMap.put("EString", EcorePackage.eINSTANCE.getEString());
+		typeMap.put("ELong", EcorePackage.eINSTANCE.getELong());
+		typeMap.put("ELongObject", EcorePackage.eINSTANCE.getELongObject());
+		typeMap.put("EInt", EcorePackage.eINSTANCE.getEInt());
+		typeMap.put("EIntegerObject", EcorePackage.eINSTANCE.getEIntegerObject());
+		typeMap.put("EDate", EcorePackage.eINSTANCE.getEDate());
+		typeMap.put("EBoolean", EcorePackage.eINSTANCE.getEBoolean());
+		typeMap.put("EBooleanObject", EcorePackage.eINSTANCE.getEBooleanObject());
+		typeMap.put("EDouble", EcorePackage.eINSTANCE.getEDouble());
+		typeMap.put("EDoubleObject", EcorePackage.eINSTANCE.getEDoubleObject());
+		typeMap.put("EFloat", EcorePackage.eINSTANCE.getEFloat());
+		typeMap.put("EFloatObject", EcorePackage.eINSTANCE.getEFloatObject());
+		typeMap.put("EShort", EcorePackage.eINSTANCE.getEShort());
+		typeMap.put("EShortObject", EcorePackage.eINSTANCE.getEShortObject());
+		typeMap.put("EChar", EcorePackage.eINSTANCE.getEChar());
+		typeMap.put("ECharacterObject", EcorePackage.eINSTANCE.getECharacterObject());
+		typeMap.put("EByte", EcorePackage.eINSTANCE.getEByte());
+		typeMap.put("EByteObject", EcorePackage.eINSTANCE.getEByteObject());
+		typeMap.put("EByteArray", EcorePackage.eINSTANCE.getEByteArray());
 	}
 
 

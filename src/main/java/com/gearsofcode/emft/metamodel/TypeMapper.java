@@ -16,6 +16,7 @@ public class TypeMapper {
 	public static final EDataType E_BIGDECIMAL = EcorePackage.eINSTANCE.getEBigDecimal();
 	public static final EDataType E_INT = EcorePackage.eINSTANCE.getEInt();
 	public static final EDataType E_STRING = EcorePackage.eINSTANCE.getEString();
+	public static final EDataType E_DOUBLE = EcorePackage.eINSTANCE.getEDouble();
 
 
 	/**
@@ -35,6 +36,12 @@ public class TypeMapper {
 			case "ELongObject":
 				javaType = "Long";
 				break;
+			case "EDouble":
+				javaType = "double";
+				break;
+			case "EDoubleObject":
+				javaType = "Double";
+				break;
 			case "EBoolean":
 				javaType = "boolean";
 				break;
@@ -44,7 +51,7 @@ public class TypeMapper {
 			case "EInt":
 				javaType = "int";
 				break;
-			case "EIntObject":
+			case "EIntegerObject":
 				javaType = "Integer";
 				break;
 			case "EDate":
@@ -86,7 +93,7 @@ public class TypeMapper {
 				eType = "EInt";
 				break;	
 			case "Integer":
-				eType = "EIntObject";
+				eType = "EIntegerObject";
 				break;			
 			case "Date":
 				eType = "EDate";
@@ -119,6 +126,12 @@ public class TypeMapper {
 			case "ELongObject":
 				javaType = "Long";
 				break;
+			case "EDouble":
+				javaType = "Double";
+				break;
+			case "EDoubleObject":
+				javaType = "Double";
+				break;
 			case "EBoolean":
 				javaType = "Boolean";
 				break;
@@ -128,14 +141,14 @@ public class TypeMapper {
 			case "EInt":
 				javaType = "Integer";
 				break;
-			case "EIntObject":
+			case "EIntegerObject":
 				javaType = "Integer";
 				break;
 			case "EDate":
 				javaType = "String";
 				break;
 			default:
-				javaType = emfType;
+				javaType = emfType + "DTO";
 		}	
 		return javaType;
 	}

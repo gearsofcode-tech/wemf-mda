@@ -13,7 +13,7 @@ import java.util.Date;
 
 [# emft:javaAnnotations="${clazz}"/]
 public class [(${clazz.name})] {
-[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
+[# th:each="attr : ${clazz.getEAttributes()}"]
 	[# th:if="${attr.upperBound} == 1"]
 	[# emft:javaAnnotations="${attr}"/]
 	private [# emft:javaType="${attr}"/] [(${attr.name})];
@@ -23,7 +23,7 @@ public class [(${clazz.name})] {
 	private List<[# emft:javaType="${attr}"/]> [(${attr.name})];
 	[/]
 [/]
-[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
+[# th:each="attr : ${clazz.getEAttributes()}"]	
 	[# th:if="${attr.upperBound} == 1"]
 	public [# emft:javaType="${attr}"/] get[# emft:cc="${attr}" /]() {
 		return [(${attr.name})];
