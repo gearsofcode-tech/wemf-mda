@@ -1,3 +1,5 @@
+system Teste;
+
 package teste001 {
 
 	class Aluno{

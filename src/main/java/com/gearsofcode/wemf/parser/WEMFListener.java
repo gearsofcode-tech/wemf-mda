@@ -40,6 +40,16 @@ public interface WEMFListener extends ParseTreeListener {
 	 */
 	void exitEpackage(WEMFParser.EpackageContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link WEMFParser#packageName}.
+	 * @param ctx the parse tree
+	 */
+	void enterPackageName(WEMFParser.PackageNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WEMFParser#packageName}.
+	 * @param ctx the parse tree
+	 */
+	void exitPackageName(WEMFParser.PackageNameContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ConcreteClass}
 	 * labeled alternative in {@link WEMFParser#eclass}.
 	 * @param ctx the parse tree

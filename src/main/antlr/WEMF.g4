@@ -5,7 +5,9 @@ package com.gearsofcode.wemf.parser;
 }
 prog: system epackage ;
 system	 : 'system' ID ';';
-epackage : 'package' PACKAGE '{' (annotation* eclass)+ '}';
+epackage : 'package' packageName '{' (annotation* eclass)+ '}';
+packageName : ID
+		| ID '.' packageName;
 eclass	 : 'class' ID '{' (annotation* attribute | annotation* method)* '}' #ConcreteClass
 			|'abstract class' ID '{' (attribute | method)* '}' #AbstractClass
 		;
@@ -43,5 +45,4 @@ fragment
 EscapeSequence
         : '\\' ('b' | 't' | 'n' | 'f' | 'r' | '\'' | '\"' | ('0'..'3')('0'..'7') | ('0'..'7')('0'..'7')|('0'..'7'));
 ID      : ('a'..'z'|'A'..'Z'|'_'|[0-9])+;
-PACKAGE : ('a'..'z'|'A'..'Z'|'.'|[0-9])+;
 WS      : (' ' | '\t' | '\n') {skip();};
