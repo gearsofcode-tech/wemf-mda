@@ -1,0 +1,19 @@
+/*[- */ fileNamePattern=%sConstants.js /* -]*/
+/*[- */ genfolder=webapp /* -]*/
+/*[- */ subpackage=js/apps/ServicesApp /* -]*/
+/*[- */ global=true /* -]*/
+
+(function(){
+	
+	function SystemConstants(){
+		
+		var constants = {};
+		
+		return constants;
+	}
+	
+	
+	angular.module('ServicesApp')
+		.factory('SystemConstants', SystemConstants);
+	
+})();

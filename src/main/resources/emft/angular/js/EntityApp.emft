@@ -1,0 +1,40 @@
+/*[- */ fileNamePattern=%sApp.js /* -]*/
+/*[- */ genfolder=webapp /* -]*/
+/*[- */ subpackage=js/apps/%sApp /* -]*/
+(function(){
+	
+	'use strict';
+	
+	function [(${clazz.name})]App($routeProvider){
+		
+		$routeProvider.when('/[(${#strings.toLowerCase(clazz.name)})]/list', {
+			templateUrl: 'list.html',
+			controller: 'List[(${clazz.name})]Controller',
+			controllerAs: "vm"
+		});
+	
+		$routeProvider.when('/[(${#strings.toLowerCase(clazz.name)})]/detail/:[(${#strings.toLowerCase(clazz.name)})]Id', {
+			templateUrl: 'detail.html',
+			controller: 'Detail[(${clazz.name})]Controller',
+			controllerAs: "vm"
+		});
+		
+		$routeProvider.when('/[(${#strings.toLowerCase(clazz.name)})]/update/:[(${#strings.toLowerCase(clazz.name)})]Id', {
+			templateUrl: 'update.html',
+			controller: 'Update[(${clazz.name})]Controller',
+			controllerAs: "vm"
+		});
+
+		
+		$routeProvider.otherwise({redirectTo:'/[(${#strings.toLowerCase(clazz.name)})]/list'});
+	}
+
+	
+	
+	[(${clazz.name})]App.$inject = ['$routeProvider'];
+	
+	angular
+	.module('[(${clazz.name})]App', ['ngRoute', 'ServicesApp'])
+	.config([(${clazz.name})]App);
+	
+})();

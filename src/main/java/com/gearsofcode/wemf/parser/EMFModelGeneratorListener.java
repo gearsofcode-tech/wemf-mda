@@ -129,6 +129,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterEpackage(EpackageContext ctx) {
+		System.out.println("enter package " + ctx.getText());
 		ePackage.setName(ctx.getChild(1).getText());
 	}
 
@@ -136,6 +137,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterConcreteClass(ConcreteClassContext ctx) {
+		System.out.println("enter Class " + ctx.getText());
 		int i = 0;
 		while (!"class".equals(ctx.getChild(i).getText()))i++;
 		String className = ctx.getChild(i+1).getText();
@@ -166,6 +168,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterAttribute(AttributeContext ctx) {
+		System.out.println(String.format("enter Attribute [%s] %s", String.valueOf(annotations.size()), ctx.getText()));
 		int index = 0;
 		while (index<ctx.getChildCount() && !":".equals(ctx.getChild(index).getText()))
 			index++;
@@ -220,6 +223,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterMethod(MethodContext ctx) {
+		System.out.println("enter Method " + ctx.getText());
 		int index = 0;
 		while (!"(".equals(ctx.getChild(index).getText()))
 			index++;
@@ -266,6 +270,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterParameter(ParameterContext ctx) {
+		System.out.println("enter parameter " + ctx.getText());
 		String paramName = ctx.getChild(0).getText();
 		String paramType = ctx.getChild(2).getText();
 		Optional<EParameter> optParam = currentMethod.getEParameters().stream().filter(param -> param.getName().equals(paramName)).findFirst();
@@ -337,6 +342,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterAnnotation(AnnotationContext ctx) {
+		System.out.println("enterAnnotation " + ctx.getText());
 		EAnnotation	annot = EcoreFactory.eINSTANCE.createEAnnotation();
 		String annotId = ctx.getChild(1).getText();
 		annot.setSource(annotId);

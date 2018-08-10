@@ -1,0 +1,11 @@
+/*[- */ fileNamePattern=ServicesApp.js /* -]*/
+/*[- */ genfolder=webapp /* -]*/
+/*[- */ subpackage=js/apps/ServicesApp /* -]*/
+/*[- */ global=true /* -]*/
+
+(function(){
+	
+	angular
+		.module('ServicesApp', ['ngRoute']);
+	
+})();

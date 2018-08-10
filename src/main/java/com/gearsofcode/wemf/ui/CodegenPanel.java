@@ -112,7 +112,8 @@ public class CodegenPanel extends JPanel {
 		lstSource = new JList<String>();
 		lstSource.addListSelectionListener(new ListSelectionListener() {
 			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
+			public void valueChanged(ListSelectionEvent evt) {
+				if (evt.getValueIsAdjusting()) return;
 				sourceSelected();
 			}
 		});

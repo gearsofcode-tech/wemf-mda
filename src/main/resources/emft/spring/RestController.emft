@@ -30,7 +30,7 @@ public class [(${clazz.name})]Controller {
 	@Autowired
 	[(${clazz.name})]Facade [(${#strings.toLowerCase(clazz.name)})]Facade;
 
-	@GetMapping("/consultarPorId/{id}")
+	@GetMapping("/findById/{id}")
 	public [(${clazz.name})]DTO getById(@PathVariable Long id){
 		[(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})] = [(${#strings.toLowerCase(clazz.name)})]Facade.getById(id);
 		[(${clazz.name})]DTO [(${#strings.toLowerCase(clazz.name)})]DTO = toDTO([(${#strings.toLowerCase(clazz.name)})]);
@@ -38,7 +38,7 @@ public class [(${clazz.name})]Controller {
 	}
 	
 	
-	@GetMapping("/excluir/{id}")
+	@GetMapping("/remove/{id}")
 	public void remove(@PathVariable Long id){
 		[(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})] = [(${#strings.toLowerCase(clazz.name)})]Facade.getById(id);
 		[(${#strings.toLowerCase(clazz.name)})]Facade.remove([(${#strings.toLowerCase(clazz.name)})]);
@@ -46,18 +46,18 @@ public class [(${clazz.name})]Controller {
 	
 	
 	
-	@PostMapping("/atualizar")
-	public void atualizar(@RequestBody [(${clazz.name})]DTO [(${#strings.toLowerCase(clazz.name)})]){
+	@PostMapping("/update")
+	public void update(@RequestBody [(${clazz.name})]DTO [(${#strings.toLowerCase(clazz.name)})]){
 		[(${clazz.name})] modelo = [(${#strings.toLowerCase(clazz.name)})]Facade.getById([# emft:parampk="${clazz}"/]);
-		atualizar(modelo, [(${#strings.toLowerCase(clazz.name)})]);
+		update(modelo, [(${#strings.toLowerCase(clazz.name)})]);
 		[(${#strings.toLowerCase(clazz.name)})]Facade.update(modelo);
 	}
 	
 	
-	@GetMapping("/consultar")
-	public PagedResult<[(${clazz.name})]DTO> getByFilter([(${clazz.name})]FilterDTO filter){
+	@PostMapping("/search")
+	public PagedResult<[(${clazz.name})]DTO> getByFilter(@RequestBody [(${clazz.name})]FilterDTO filter){
 		PagedResult<[(${clazz.name})]DTO> result = new PagedResult<[(${clazz.name})]DTO>(filter.getPageSize());
-		Long totalRecords = participanteFacade.getTotalRecords(filter);
+		Long totalRecords = [(${#strings.toLowerCase(clazz.name)})]Facade.getTotalRecords(filter);
 		result.setTotalRecords(totalRecords);
 		List<[(${clazz.name})]> lst = [(${#strings.toLowerCase(clazz.name)})]Facade.getByFilter(filter);
 		result.setList(lst.stream().map(x -> toDTO(x)).collect(Collectors.toList()));
@@ -65,7 +65,7 @@ public class [(${clazz.name})]Controller {
 	}
 	
 	
-	private void atualizar([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})], [(${clazz.name})]DTO dto){
+	private void update([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})], [(${clazz.name})]DTO dto){
 		[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
 		[# th:if="${attr.eType.name}=='EDate'"]
 		if ([(${#strings.toLowerCase(clazz.name)})].get[# emft:cc="${attr}"/]()!=null){

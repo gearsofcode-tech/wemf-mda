@@ -11,7 +11,7 @@ packageName : ID
 eclass	 : 'class' ID '{' (annotation* attribute | annotation* method)* '}' #ConcreteClass
 			|'abstract class' ID '{' (attribute | method)* '}' #AbstractClass
 		;
-attribute: annotation? ID ':' type cardinality? ';';
+attribute: ID ':' type cardinality? ';';
 type	: (PRIMITIVE | WRAPPER | EXTERNAL | reference); 
 PRIMITIVE: 'EBoolean' | 'EByte' | 'EChar' | 'EDouble' | 'EFloat' | 'EInt' | 'ELong' | 'EShort';
 WRAPPER: 'EBooleanObject' | 'EByteObject' | 'ECharacterObject' | 'EDoubleObject' | 'EFloatObject' | 'EIntegerObject' | 'ELongObject' | 'EShortObject' | 'EByteArray';

@@ -1,0 +1,45 @@
+/*[- */ fileNamePattern=%sService.js /* -]*/
+/*[- */ genfolder=webapp /* -]*/
+/*[- */ subpackage=js/apps/ServicesApp /* -]*/
+
+(function(){
+	
+	"use strict";
+	
+	function [(${clazz.name})]Service($http, contextPath){
+		
+		function search[(${clazz.name})](filter) {
+			return $http.post(contextPath+"/[(${#strings.toLowerCase(clazz.name)})]/search", filter);
+		}
+		
+		
+		function find[(${clazz.name})]ById(id){
+			return $http.get(contextPath+"/[(${#strings.toLowerCase(clazz.name)})]/findById/"+id);
+		}
+		
+		function update[(${clazz.name})]([(${#strings.toLowerCase(clazz.name)})]){
+			return $http.post(contextPath+"/[(${#strings.toLowerCase(clazz.name)})]/update", [(${#strings.toLowerCase(clazz.name)})]);
+		}
+		
+		function remove[(${clazz.name})](id){
+			return $http.get(contextPath+"/[(${#strings.toLowerCase(clazz.name)})]/remove/" + id);
+		}
+
+		
+		var service = {
+			search[(${clazz.name})]: search[(${clazz.name})],
+			update[(${clazz.name})]: update[(${clazz.name})],
+			remove[(${clazz.name})]: remove[(${clazz.name})],
+			find[(${clazz.name})]ById: find[(${clazz.name})]ById
+		};
+		
+		return service;
+	}
+
+	[(${clazz.name})]Service.$inject = ['$http', 'contextPath'];
+	
+	angular
+	.module('ServicesApp')
+	.factory('[(${clazz.name})]Service', [(${clazz.name})]Service);
+
+})();

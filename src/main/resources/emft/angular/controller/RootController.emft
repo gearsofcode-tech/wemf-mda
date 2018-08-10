@@ -1,0 +1,20 @@
+/*[- */ fileNamePattern=%sController.js /* -]*/
+/*[- */ genfolder=webapp /* -]*/
+/*[- */ subpackage=js/apps/%sApp /* -]*/
+(function(){
+	
+	'use strict';
+	
+	var vm = null;
+	
+	
+	function [(${clazz.name})]Controller($rootScope, $scope){
+		$rootScope.master = {};
+	}	
+	
+	[(${clazz.name})]Controller.$inject = ['$rootScope', '$scope'];
+	
+	angular.module('[(${clazz.name})]App')
+		.controller('[(${clazz.name})]Controller', [(${clazz.name})]Controller);
+	
+})();

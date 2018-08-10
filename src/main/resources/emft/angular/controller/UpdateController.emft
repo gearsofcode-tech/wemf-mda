@@ -1,0 +1,57 @@
+/*[- */ fileNamePattern=Update%sController.js /* -]*/
+/*[- */ genfolder=webapp /* -]*/
+/*[- */ subpackage=js/apps/%sApp /* -]*/
+(function() {
+	
+	'use strict';
+	
+	
+	var location;
+	var rootScope;
+	var service;
+	var vm;
+	
+	function Update[(${clazz.name})]Controller($rootScope, $scope, $routeParams, [(${clazz.name})]Service, $location){
+		vm = this;
+		rootScope = $rootScope;
+		location = $location;
+		service = [(${clazz.name})]Service;
+		$scope.model = {};
+
+		
+
+		function findById(id){
+			service.find[(${clazz.name})]ById(id)
+				.success(function(result){
+					$scope.model = result;
+				})
+				.error(function(error){
+					alert(error);
+				});
+		}
+		
+		
+		//Initial query
+		findById($routeParams.[(${#strings.toLowerCase(clazz.name)})]Id);
+		
+		
+		
+		Update[(${clazz.name})]Controller.prototype.update = function(){
+			service.update[(${clazz.name})]($scope.model)
+				.success(function(result){
+					alert('Success!');
+					location.path('/list');
+				})
+				.error(function(error){
+					alert(error);
+				});
+		}
+	}
+	
+	Update[(${clazz.name})]Controller.$inject = ['$rootScope', '$scope', '$routeParams' ,'[(${clazz.name})]Service', '$location'];
+	
+	angular
+	.module('[(${clazz.name})]App')
+	.controller('Update[(${clazz.name})]Controller', Update[(${clazz.name})]Controller);
+	
+})();

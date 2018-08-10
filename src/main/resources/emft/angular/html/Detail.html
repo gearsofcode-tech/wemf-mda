@@ -1,0 +1,27 @@
+<!--/* fileNamePattern=detail.html */-->
+<!--/* genfolder=webapp */-->
+<!--/* subpackage=html/%s */-->
+<meta charset="utf-8">
+<div class="container">
+	<form>
+		
+		<h2 th:text="${clazz.name}"></h2>
+		
+		<div th:each="attr : ${clazz.eAttributes}" class="row">
+			<div class="col">
+				<label th:for="${attr.name}" emft:label="${attr}"></label>
+			</div>
+			<div class="col">
+				<input class="form-control" th:id="${attr.name}" th:name="${attr.name}" th:attr="data-ng-model=|model.${attr.name}|" type="text" disabled="disabled"/>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+    			<a onclick="window.history.go(-1);" class="btn btn-primary">Back</a>
+    		</div>
+      	</div>
+		
+		
+	</form>
+</div>
