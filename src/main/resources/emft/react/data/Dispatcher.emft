@@ -4,4 +4,4 @@
 /*[- */ global=true /* -]*/
 import {Dispatcher} from 'flux';
 
-export default new [(${system})]Dispatcher();
+export default new Dispatcher();

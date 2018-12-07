@@ -1,9 +1,11 @@
-/*[- */ fileNamePattern=%sListView.js /* -]*/
+/*[- */ fileNamePattern=%sListContainer.js /* -]*/
 /*[- */ genfolder=front /* -]*/
-/*[- */ subpackage=src/views/ /* -]*/
+/*[- */ subpackage=src/containers/ /* -]*/
 import React, {Component} from "react";
+import {Container} from 'flux/utils';
+import [(${clazz.name})]Store from "../data/[(${clazz.name})]Store";
 
-export default class [(${clazz.name})]ListView extends Component {
+class [(${clazz.name})]ListContainer extends Component {
 
 	renderSearchFilter(){
 		return (
@@ -73,4 +75,19 @@ export default class [(${clazz.name})]ListView extends Component {
 			</div>	
 		);
 	}
+	
+	
+	static  getStores() {
+	  	return [
+	    	[(${clazz.name})]Store,
+	  	];
+	}
+	
+	static calculateState() {
+	  	return {
+	    	list: [(${clazz.name})]Store.getState().list,
+	  	};
+	}
 }
+
+export default Container.create([(${clazz.name})]ListContainer);

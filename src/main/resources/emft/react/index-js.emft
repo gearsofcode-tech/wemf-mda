@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { BrowserRouter, Route } from "react-router-dom";
 [# th:each="clazz : ${model.eClassifiers}"]
-import [(${clazz.name})]ListView from "./views/[(${clazz.name})]ListView";
+import [(${clazz.name})]ListContainer from "./containers/[(${clazz.name})]ListContainer";
 [/]
 
 ReactDOM.render(
@@ -15,7 +15,7 @@ ReactDOM.render(
 		<div>
 			<Route exact path="/" component={App} />
 			[# th:each="clazz : ${model.eClassifiers}"]
-				<Route path="/[(${clazz.name})]List/" component={[(${clazz.name})]ListView} />
+				<Route path="/[(${clazz.name})]List/" component={[(${clazz.name})]ListContainer} />
 			[/]
 		</div>
 	</BrowserRouter>, 
