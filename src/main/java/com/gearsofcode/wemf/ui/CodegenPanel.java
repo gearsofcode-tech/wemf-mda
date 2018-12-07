@@ -8,10 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -25,6 +30,8 @@ import javax.swing.event.ListSelectionListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gearsofcode.emft.EMFTemplate;
 import com.gearsofcode.wemf.EMFModelGenerationException;
@@ -35,6 +42,7 @@ import com.gearsofcode.wemf.WEMFCodeGen;
 public class CodegenPanel extends JPanel {
 
 	private static final long serialVersionUID = 9068194339016741200L;
+	private static final Logger logger = LoggerFactory.getLogger(CodegenPanel.class);
 
 	private File workspace;
 	private File project;
@@ -69,7 +77,7 @@ public class CodegenPanel extends JPanel {
 		txtWorkspace.setColumns(20);
 		txtWorkspace.setEditable(false);
 		add(txtWorkspace, gbc);
-		
+
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.CENTER;
 		
@@ -180,6 +188,35 @@ public class CodegenPanel extends JPanel {
 		add(btnCodegen, gbc);
 		
 		loadModules();
+		
+		loadWorkspace();
+	}
+	
+	
+	private void loadWorkspace() {
+		try {
+			File homeDir = new File(System.getProperty("user.home"));
+			if (homeDir.exists()) {
+				File wemfDir = new File(homeDir, ".wemf-mda");
+				if (wemfDir.exists()) {
+					File settings = new File(wemfDir, "wemf-mda.properties");
+					if (settings.exists()) {
+						Properties p = new Properties();
+						p.load(new FileInputStream(settings));
+						String workspace = p.getProperty("workspace");
+						if (workspace!=null) {
+							File file = new File(workspace);
+							if (file.exists()) {
+								workspaceSelected(file);
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (IOException e) {
+			logger.error("Could not load user preferences.", e);
+		}
 	}
 	
 	
@@ -194,6 +231,7 @@ public class CodegenPanel extends JPanel {
 	
 	private void workspaceSelected(File workspace) {
 		this.workspace = workspace;
+		saveWorkspace(workspace);
 		txtWorkspace.setText(workspace.getAbsolutePath());
 		File[] subdirs = workspace.listFiles(new FileFilter() {
 			@Override
@@ -207,6 +245,36 @@ public class CodegenPanel extends JPanel {
 	}
 	
 	
+
+	private void saveWorkspace(File workspace2) {
+		try {
+			File homeDir = new File(System.getProperty("user.home"));
+			File codeGenDir = new File(homeDir, ".wemf-mda");
+			if (!codeGenDir.exists()) {
+				codeGenDir.mkdirs();
+			}
+			if (codeGenDir.exists()) {
+				File settings = new File(codeGenDir, "wemf-mda.properties");
+				Properties properties = new Properties();
+				if (settings.exists()) {
+					properties.load(new FileInputStream(settings));
+				}
+				properties.put("workspace", workspace2.getAbsolutePath());
+				FileOutputStream fos = new FileOutputStream(settings);
+				properties.store(fos, "Properties");
+				fos.flush();
+				fos.close();
+			}
+		}
+		catch (IOException e) {
+			logger.error("Could not save user settings.");
+			e.printStackTrace();
+		}
+
+	}
+
+
+
 	private void projectSelected() {
 		
 		lstSource.setListData(new String[0]);

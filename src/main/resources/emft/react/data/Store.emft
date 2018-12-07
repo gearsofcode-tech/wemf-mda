@@ -1,0 +1,30 @@
+/*[- */ fileNamePattern=%sStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import Immutable from 'immutable';
+import {ReduceStore} from 'flux/utils';
+import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+
+class [(${clazz.name})]Store extends ReduceStore {
+  constructor() {
+    super([(${system})]Dispatcher);
+  }
+
+  getInitialState() {
+    return Immutable.OrderedMap();
+  }
+
+  reduce(state, action) {
+    switch (action.type) {
+      case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH:
+        // Do nothing for now, we will add logic here soon!
+        return state;
+
+      default:
+        return state;
+    }
+  }
+}
+
+export default new TodoStore();

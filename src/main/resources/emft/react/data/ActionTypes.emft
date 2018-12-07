@@ -1,0 +1,9 @@
+/*[- */ fileNamePattern=%sActionTypes.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+
+const [(${clazz.name})]ActionTypes = {
+  [# emft:constant="${clazz}" /]_SEARCH: '[# emft:constant="${clazz}" /]_SEARCH',
+};
+
+export default [(${clazz.name})]ActionTypes;

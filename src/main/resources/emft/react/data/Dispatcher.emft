@@ -1,0 +1,7 @@
+/*[- */ fileNamePattern=%sDispatcher.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data /* -]*/
+/*[- */ global=true /* -]*/
+import {Dispatcher} from 'flux';
+
+export default new [(${system})]Dispatcher();

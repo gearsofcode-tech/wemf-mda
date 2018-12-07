@@ -2,8 +2,9 @@
 /*[- */ genfolder=front /* -]*/
 /*[- */ subpackage=src /* -]*/
 /*[- */ global=true /* -]*/
-import React, { Component } from 'react';
-
+import React, { Component } from "react";
+import {Link} from "react-router-dom";
+import "./css/bootstrap.css";
 class App extends Component {
   render() {
     console.log('Hello');
@@ -16,7 +17,11 @@ class App extends Component {
             Learn React
             <ul>
             [# th:each="clazz : ${model.eClassifiers}"]
-            	<li>[(${clazz.name})]</li>
+            	<li>[(${clazz.name})]
+            		<ul>
+            			<li><Link to="/[(${clazz.name})]List/">List</Link></li>
+            		</ul>
+            	</li>
             [/]
             </ul>
         </header>

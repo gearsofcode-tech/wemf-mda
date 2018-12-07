@@ -35,6 +35,8 @@ public class EMFTDialect extends AbstractProcessorDialect{
 		processors.add(new DescriptionTagProcessor(PREFIX));
 		processors.add(new URLPrimaryKeyTagProcessor(PREFIX));
 		processors.add(new JavaPrimaryKeyParameterTagProcessor(PREFIX));
+		processors.add(new LblTagProcessor(PREFIX));
+		processors.add(new ConstantTagProcessor(PREFIX));
 		return processors;
 	}
 

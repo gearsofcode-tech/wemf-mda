@@ -1,0 +1,16 @@
+/*[- */ fileNamePattern=%sActions.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+
+const Actions = {
+  search(filter) {
+    [(${system})]Dispatcher.dispatch({
+      type: [(${clazz.name})]ActionTypes.[(${#strings.toUpperCase(clazz.name)})]_SEARCH,
+      filter,
+    });
+  },
+};
+
+export default Actions;

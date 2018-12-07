@@ -18,7 +18,11 @@ public interface DatabaseTypes {
 	public abstract List<DataType> getDatabaseTypes();
 	public DataType fromJavaClass(Class<?> c);
 	public default DataType getByTypeName(String typeName) {
-		Optional<DataType> dt = getDatabaseTypes().stream().filter(dataType -> dataType.getName().equals(typeName.toLowerCase())).findFirst();
+		String searchName = typeName.toLowerCase();
+		int index = searchName.indexOf("(");
+		if (index>0) searchName = searchName.substring(0, index);
+		final String compareName = searchName;
+		Optional<DataType> dt = getDatabaseTypes().stream().filter(dataType -> dataType.getName().equals(compareName)).findFirst();
 		if (dt.isPresent()) return dt.get();
 		throw new IllegalArgumentException("Unknow datatype: " + typeName);
 	}

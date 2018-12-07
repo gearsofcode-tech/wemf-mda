@@ -5,12 +5,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
+[# th:each="clazz : ${model.eClassifiers}"]
+import [(${clazz.name})]ListView from "./views/[(${clazz.name})]ListView";
+[/]
 
 ReactDOM.render(
 	<BrowserRouter>
 		<div>
 			<Route exact path="/" component={App} />
+			[# th:each="clazz : ${model.eClassifiers}"]
+				<Route path="/[(${clazz.name})]List/" component={[(${clazz.name})]ListView} />
+			[/]
 		</div>
 	</BrowserRouter>, 
 	document.getElementById('root')

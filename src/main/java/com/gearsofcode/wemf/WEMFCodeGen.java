@@ -2,7 +2,11 @@ package com.gearsofcode.wemf;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,16 +39,60 @@ public class WEMFCodeGen {
 		File sourceDir = new File(projectDir, "src/main/resources/");
 		File rootGen = new File(projectDir, "src/main");
 		
+		try {
+			copyStaticResources(projectDir, modules);
+		}
+		catch (IOException e) {
+			String msg = "Error copying static resources.";
+			logger.error(msg, e);
+			return;
+		}
+		
 		EMFTemplateProcessor templateProcessor = new EMFTemplateProcessor();
 		
 		if (sourceDir.exists()) {
 			File[] arquivosWEMF = getWEMFFiles(sourceDir, sources);
-			List<EMFTemplate> lstArquivosEMFT = getEMFTemplates(getSourceDir(), modules, templates);
+			List<EMFTemplate> lstArquivosEMFT = getEMFTemplates(getEMFTSourceDir(), modules, templates);
 			generateCode(rootGen, templateProcessor, arquivosWEMF, lstArquivosEMFT, classifiers);
 		}
 		else {
 			logger.error("Didn't find maven directories structure. '.wemf' were expected at '/src/main/resources'.");
 		}
+	}
+	
+	
+	private static void copyStaticResources(File projectDir, List<String> modules) throws IOException {
+		File emftFolder = getEMFTSourceDir();
+		for (File f : emftFolder.listFiles()) {
+			if (f.isDirectory() && modules.contains(f.getName())) {
+				File staticResources = new File(f, "static");
+				if (staticResources.exists() && staticResources.isDirectory()) {
+					logger.info("Copying static resources for module '"+f.getName()+"'.");
+					copy(staticResources, projectDir);
+				}
+			}
+		}
+	}
+	
+	
+	private static void copy(File source, File dest) throws IOException {
+		File[] files = source.listFiles();
+		for (File f : files) {
+			if (f.isDirectory()) {
+				copy(f, new File(dest, f.getName()));
+			}
+			else {
+				Path sourcePath = f.toPath();
+				File destFile = new File(dest, f.getName());
+				dest.mkdirs();
+				Path destPath = destFile.toPath();
+				if (!destFile.exists()) {
+					logger.info(String.format("Copying static resource: %s ---> %s", sourcePath.toString(), destPath.toString()));
+					Files.copy(sourcePath, destPath);
+				}
+			}
+		}
+		
 	}
 
 	
@@ -136,7 +184,7 @@ public class WEMFCodeGen {
 	 * */
 	public static List<String> getEMFTModules() {
 		List<String> modules = new ArrayList<String>();
-		File sourceDir = getSourceDir();
+		File sourceDir = getEMFTSourceDir();
 		if (sourceDir.exists()) {
 			File [] subdirs = sourceDir.listFiles(new FileFilter() {
 				@Override
@@ -224,7 +272,7 @@ public class WEMFCodeGen {
 
 	
 	public static List<EMFTemplate> getEMFTemplates(List<String> lstModules) {
-		File sourceDir = getSourceDir();
+		File sourceDir = getEMFTSourceDir();
 		return getEMFTemplates(sourceDir, lstModules, new ArrayList<String>());
 	}
 
@@ -232,7 +280,7 @@ public class WEMFCodeGen {
 	/**
 	 * Finds where project is located.
 	 * */
-	private static File getSourceDir() {
+	private static File getEMFTSourceDir() {
 		File currentDir = new File(ClassLoader.getSystemResource(".").getFile());
 		while (currentDir.getParentFile()!=null && !currentDir.getName().equals("target") && !currentDir.getName().equals("bin"))
 			currentDir = currentDir.getParentFile();
