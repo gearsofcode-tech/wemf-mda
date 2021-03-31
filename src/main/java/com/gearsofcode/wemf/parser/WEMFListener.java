@@ -74,6 +74,18 @@ public interface WEMFListener extends ParseTreeListener {
 	 */
 	void exitAbstractClass(WEMFParser.AbstractClassContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code Enumeration}
+	 * labeled alternative in {@link WEMFParser#eclass}.
+	 * @param ctx the parse tree
+	 */
+	void enterEnumeration(WEMFParser.EnumerationContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Enumeration}
+	 * labeled alternative in {@link WEMFParser#eclass}.
+	 * @param ctx the parse tree
+	 */
+	void exitEnumeration(WEMFParser.EnumerationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link WEMFParser#attribute}.
 	 * @param ctx the parse tree
 	 */
@@ -154,23 +166,23 @@ public interface WEMFListener extends ParseTreeListener {
 	 */
 	void exitAnnotation(WEMFParser.AnnotationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link WEMFParser#annotParameters}.
+	 * Enter a parse tree produced by {@link WEMFParser#enumValues}.
 	 * @param ctx the parse tree
 	 */
-	void enterAnnotParameters(WEMFParser.AnnotParametersContext ctx);
+	void enterEnumValues(WEMFParser.EnumValuesContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link WEMFParser#annotParameters}.
+	 * Exit a parse tree produced by {@link WEMFParser#enumValues}.
 	 * @param ctx the parse tree
 	 */
-	void exitAnnotParameters(WEMFParser.AnnotParametersContext ctx);
+	void exitEnumValues(WEMFParser.EnumValuesContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link WEMFParser#annotParam}.
+	 * Enter a parse tree produced by {@link WEMFParser#enumValue}.
 	 * @param ctx the parse tree
 	 */
-	void enterAnnotParam(WEMFParser.AnnotParamContext ctx);
+	void enterEnumValue(WEMFParser.EnumValueContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link WEMFParser#annotParam}.
+	 * Exit a parse tree produced by {@link WEMFParser#enumValue}.
 	 * @param ctx the parse tree
 	 */
-	void exitAnnotParam(WEMFParser.AnnotParamContext ctx);
+	void exitEnumValue(WEMFParser.EnumValueContext ctx);
 }

@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EParameter;
@@ -21,11 +24,12 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EClassifierImpl;
 
 import com.gearsofcode.wemf.WEMFSyntaxException;
-import com.gearsofcode.wemf.parser.WEMFParser.AnnotParamContext;
 import com.gearsofcode.wemf.parser.WEMFParser.AnnotationContext;
 import com.gearsofcode.wemf.parser.WEMFParser.AttributeContext;
 import com.gearsofcode.wemf.parser.WEMFParser.CardinalityContext;
 import com.gearsofcode.wemf.parser.WEMFParser.ConcreteClassContext;
+import com.gearsofcode.wemf.parser.WEMFParser.EnumValueContext;
+import com.gearsofcode.wemf.parser.WEMFParser.EnumerationContext;
 import com.gearsofcode.wemf.parser.WEMFParser.EpackageContext;
 import com.gearsofcode.wemf.parser.WEMFParser.MethodContext;
 import com.gearsofcode.wemf.parser.WEMFParser.ParameterContext;
@@ -47,6 +51,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 	 * */
 	private static Map<String, EDataType> typeMap;
 	private Map<String, EClassifier> classifierMap;
+	private boolean debug = false;
 	
 	/**
 	 * Keeps track of declared classes.
@@ -58,6 +63,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 	 * */
 	private EPackage ePackage;
 	private EClass currentClass;
+	private EEnum currentEnum;
 	private EOperation currentMethod;
 	private ETypedElement currentTypedElement;
 	private Stack<EAnnotation> annotations = new Stack<EAnnotation>();
@@ -91,6 +97,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 		typeMap.put("EByte", EcorePackage.eINSTANCE.getEByte());
 		typeMap.put("EByteObject", EcorePackage.eINSTANCE.getEByteObject());
 		typeMap.put("EByteArray", EcorePackage.eINSTANCE.getEByteArray());
+		typeMap.put("EBigDecimal", EcorePackage.eINSTANCE.getEBigDecimal());
 	}
 
 
@@ -129,7 +136,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterEpackage(EpackageContext ctx) {
-		System.out.println("enter package " + ctx.getText());
+		if (debug) System.out.println("enter package " + ctx.getText());
 		ePackage.setName(ctx.getChild(1).getText());
 	}
 
@@ -137,7 +144,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterConcreteClass(ConcreteClassContext ctx) {
-		System.out.println("enter Class " + ctx.getText());
+		if (debug) System.out.println("enter Class " + ctx.getText());
 		int i = 0;
 		while (!"class".equals(ctx.getChild(i).getText()))i++;
 		String className = ctx.getChild(i+1).getText();
@@ -168,7 +175,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterAttribute(AttributeContext ctx) {
-		System.out.println(String.format("enter Attribute [%s] %s", String.valueOf(annotations.size()), ctx.getText()));
+		if (debug) System.out.println(String.format("enter Attribute [%s] %s", String.valueOf(annotations.size()), ctx.getText()));
 		int index = 0;
 		while (index<ctx.getChildCount() && !":".equals(ctx.getChild(index).getText()))
 			index++;
@@ -185,6 +192,8 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 				EReference eReference = optRef.get();
 				currentTypedElement = eReference;
 				eReference.setEType(getType(type));
+				//Esvaziar as anotações
+				while (!annotations.isEmpty()) annotations.pop();
 			}
 			else {
 				EReference eRef = EcoreFactory.eINSTANCE.createEReference();
@@ -215,6 +224,8 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 			}
 			else{
 				currentTypedElement = optAttr.get();
+				//Esvaziar as anotações
+				while (!annotations.isEmpty()) annotations.pop();
 			}
 		}
 	}
@@ -223,7 +234,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterMethod(MethodContext ctx) {
-		System.out.println("enter Method " + ctx.getText());
+		if (debug) System.out.println("enter Method " + ctx.getText());
 		int index = 0;
 		while (!"(".equals(ctx.getChild(index).getText()))
 			index++;
@@ -242,6 +253,10 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 			currentClass.getEOperations().add(eOp);
 			currentMethod = eOp;
 			currentTypedElement = eOp;
+			while (!annotations.isEmpty()) {
+				EAnnotation annot = annotations.pop();
+				eOp.getEAnnotations().add(annot);
+			}
 		}
 		
 		
@@ -270,7 +285,7 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterParameter(ParameterContext ctx) {
-		System.out.println("enter parameter " + ctx.getText());
+		if (debug) System.out.println("enter parameter " + ctx.getText());
 		String paramName = ctx.getChild(0).getText();
 		String paramType = ctx.getChild(2).getText();
 		Optional<EParameter> optParam = currentMethod.getEParameters().stream().filter(param -> param.getName().equals(paramName)).findFirst();
@@ -317,10 +332,19 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 		public String classifierName;
 
 
-
 		public ProxyClassifier(String classifierName) {
 			this.classifierName = classifierName;
 		}
+
+
+		@Override
+		public EList<EAnnotation> getEAnnotations() {
+			EClassifier actualClassifier = classifierMap.get(classifierName);
+			if (actualClassifier != null) return actualClassifier.getEAnnotations();
+			throw new UnsupportedOperationException();
+		}
+		
+		
 	}
 
 
@@ -342,25 +366,13 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 
 	@Override
 	public void enterAnnotation(AnnotationContext ctx) {
-		System.out.println("enterAnnotation " + ctx.getText());
+		if (debug) System.out.println("enterAnnotation " + ctx.getText());
 		EAnnotation	annot = EcoreFactory.eINSTANCE.createEAnnotation();
 		String annotId = ctx.getChild(1).getText();
 		annot.setSource(annotId);
-		annotations.push(annot);
-	}
-
-
-
-	@Override
-	public void enterAnnotParam(AnnotParamContext ctx) {
-		EAnnotation annot = annotations.pop();
-		int i=0;
-		while(!"=".equals(ctx.getChild(i).getText()))i++;
-		String name = ctx.getChild(i-1).getText();
-		String value = ctx.getChild(i+1).getText();
-		value = value.substring(1, value.length()-1);
-		annot.getDetails().put(name, value);
-		
+		if (ctx.getChildCount()>2){
+			annot.getDetails().put("text", ctx.getChild(3).getText());
+		}
 		annotations.push(annot);
 	}
 
@@ -371,6 +383,43 @@ public class EMFModelGeneratorListener extends WEMFBaseListener {
 		eAnnot.setSource(SYSTEM_NAME_ANNOTATION);
 		eAnnot.getDetails().put("name", ctx.getChild(1).getText());
 		ePackage.getEAnnotations().add(eAnnot);
+	}
+
+
+	@Override
+	public void enterEnumeration(EnumerationContext ctx) {
+		if (debug) System.out.println("enter Enumeration " + ctx.getText());
+		int i = 0;
+		while (!"enum".equals(ctx.getChild(i).getText()))i++;
+		String enumName = ctx.getChild(i+1).getText();
+		if (!classifierMap.containsKey(enumName)) {
+			EEnum enumClass = EcoreFactory.eINSTANCE.createEEnum();
+			while (!annotations.isEmpty()) {
+				EAnnotation annot = annotations.pop();
+				enumClass.getEAnnotations().add(annot);
+			}
+			enumClass.setName(enumName);
+			ePackage.getEClassifiers().add(enumClass);
+			currentEnum = enumClass;
+			classifierMap.put(enumClass.getName(), enumClass);
+		}
+		else {
+			currentEnum = (EEnum) classifierMap.get(enumName);
+		}
+	}
+
+
+	@Override
+	public void enterEnumValue(EnumValueContext ctx) {
+		if (!secondPass){
+			if (debug) System.out.println("enter enum value " + ctx.getText());
+			String enumName = ctx.getChild(0).getText();
+			String enumValue = ctx.getChild(2).getText();
+			EEnumLiteral eLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+			eLiteral.setName(enumName);
+			eLiteral.setLiteral(enumValue.replaceAll("'", "\""));
+			currentEnum.getELiterals().add(eLiteral);
+		}
 	}
 
 }

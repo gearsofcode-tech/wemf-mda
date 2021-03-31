@@ -90,6 +90,18 @@ public class WEMFBaseListener implements WEMFListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterEnumeration(WEMFParser.EnumerationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEnumeration(WEMFParser.EnumerationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAttribute(WEMFParser.AttributeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -186,25 +198,25 @@ public class WEMFBaseListener implements WEMFListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnnotParameters(WEMFParser.AnnotParametersContext ctx) { }
+	@Override public void enterEnumValues(WEMFParser.EnumValuesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAnnotParameters(WEMFParser.AnnotParametersContext ctx) { }
+	@Override public void exitEnumValues(WEMFParser.EnumValuesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnnotParam(WEMFParser.AnnotParamContext ctx) { }
+	@Override public void enterEnumValue(WEMFParser.EnumValueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAnnotParam(WEMFParser.AnnotParamContext ctx) { }
+	@Override public void exitEnumValue(WEMFParser.EnumValueContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
