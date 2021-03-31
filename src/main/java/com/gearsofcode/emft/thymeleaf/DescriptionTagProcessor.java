@@ -1,6 +1,6 @@
 package com.gearsofcode.emft.thymeleaf;
 
-import org.eclipse.emf.ecore.ETypedElement;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
@@ -38,7 +38,7 @@ public class DescriptionTagProcessor extends AbstractAttributeTagProcessor{
 		
 		final IStandardExpression expression = parser.parseExpression(context, attributeValue);
 		
-		final ETypedElement emfTypedElement = (ETypedElement) expression.execute(context);
+		final ENamedElement emfTypedElement = (ENamedElement) expression.execute(context);
 		
 		String typeName = emfTypedElement.getName();
 		
@@ -64,8 +64,11 @@ public class DescriptionTagProcessor extends AbstractAttributeTagProcessor{
 			else {
 				if(typeName.substring(i,i+1).matches("[A-Z]") && typeName.substring(i-1,i).matches("[a-z]")){
 					strb.append(" ");
+					strb.append(typeName.substring(i, i+1).toUpperCase());
 				} 
-				strb.append(typeName.substring(i, i+1).toLowerCase());
+				else {
+					strb.append(typeName.substring(i, i+1).toLowerCase());
+				}
 			}
 		}
 		return strb.toString();

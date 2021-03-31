@@ -57,6 +57,12 @@ public class TypeMapper {
 			case "EDate":
 				javaType = "Date";
 				break;
+			case "EBigDecimal":
+				javaType = "BigDecimal";
+				break;
+			case "EByteArray":
+				javaType = "byte[]";
+				break;
 			default:
 				javaType = emfType;
 		}	
@@ -97,7 +103,13 @@ public class TypeMapper {
 				break;			
 			case "Date":
 				eType = "EDate";
-				break;			
+				break;
+			case "BigDecimal":
+				eType = "EBigDecimal";
+				break;
+			case "byte[]":
+				eType = "EByteArray";
+				break;
 			default:
 				eType = javaType;
 		}	
@@ -133,7 +145,7 @@ public class TypeMapper {
 				javaType = "Double";
 				break;
 			case "EBoolean":
-				javaType = "Boolean";
+				javaType = "boolean";
 				break;
 			case "EBooleanObject":
 				javaType = "Boolean";
@@ -146,6 +158,12 @@ public class TypeMapper {
 				break;
 			case "EDate":
 				javaType = "String";
+				break;
+			case "EBigDecimal":
+				javaType = "String";
+				break;
+			case "EByteArray":
+				javaType = "byte[]";
 				break;
 			default:
 				javaType = emfType + "DTO";

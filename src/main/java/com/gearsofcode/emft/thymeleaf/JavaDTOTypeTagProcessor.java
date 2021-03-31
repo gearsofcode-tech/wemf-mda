@@ -1,5 +1,6 @@
 package com.gearsofcode.emft.thymeleaf;
 
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.ETypedElement;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
@@ -50,6 +51,9 @@ public class JavaDTOTypeTagProcessor extends AbstractAttributeTagProcessor{
 		
 		String javaType = TypeMapper.getJavaDTOType(typeName);
 		
+		boolean hasDTOAnnotation = emfTypedElement.getEType().getEAnnotations().stream().filter(annot -> "DTO".equals(annot.getSource())).findAny().isPresent();
+		
+		if (emfTypedElement.getEType() instanceof EEnum || hasDTOAnnotation) javaType = typeName;
 	
 		model.add(modelFactory.createText(javaType));
 		

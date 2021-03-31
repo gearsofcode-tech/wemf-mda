@@ -46,6 +46,7 @@ public class DataModel implements Serializable {
 			ResultSet rsColumns = null;
 			ResultSet rsPrimaryKeys = null;
 			ResultSet rsTables = metaData.getTables(null, schema, null, new String[]{"TABLE"});
+			ResultSet rsForeignKeys = null;
 			Set<String> primaryKeys;
 			
 			String tableName;
@@ -72,6 +73,15 @@ public class DataModel implements Serializable {
 					primaryKeys.add(rsPrimaryKeys.getString("COLUMN_NAME"));
 				}
 				
+				Map<String, ReferencedColumn> mapForeignKeys = new HashMap<String, ReferencedColumn>();
+				ReferencedColumn refColumn;
+				
+				rsForeignKeys = metaData.getImportedKeys(null, schema, tableName);
+				while(rsForeignKeys.next()) {
+					refColumn = new ReferencedColumn(rsForeignKeys.getString("PKTABLE_NAME"), rsForeignKeys.getString("PKCOLUMN_NAME"));
+					mapForeignKeys.put(rsForeignKeys.getString("FKCOLUMN_NAME"), refColumn);
+				}
+				rsForeignKeys.close();
 				
 				rsColumns = metaData.getColumns(null, schema, tableName, null);
 				while(rsColumns.next()){
@@ -96,6 +106,7 @@ public class DataModel implements Serializable {
 					column.allowNull(isNullable);
 					column.setPrimaryKey(isPrimaryKey);
 					column.setOrdinalPosition(ordinalPosition);
+					column.setReferencedColumn(mapForeignKeys.get(columnName));
 					table.addColumn(column);
 				}
 			}

@@ -1,4 +1,4 @@
-package com.gearsofcode.wemf.reveng.database.selic;
+package com.gearsofcode.wemf.reveng.database.naming.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;

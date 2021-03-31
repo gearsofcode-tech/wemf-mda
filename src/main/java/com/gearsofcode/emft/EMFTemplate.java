@@ -10,19 +10,19 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.thymeleaf.context.Context;
 
 import com.gearsofcode.wemf.EMFModelGenerationException;
-import com.gearsofcode.wemf.parser.EMFModelGeneratorListener;
 
 /**
- * Represents a ".emft" file.
+ * Represents a template file and helps with code generation.
  * */
-public class EMFTemplate {
+public abstract class EMFTemplate {
 
 	private static final Logger logger = LoggerFactory.getLogger(EMFTemplate.class);
 	
-	private String module;
-	private File file;
+	protected String module;
+	protected File file;
 	
 	public EMFTemplate(String module, File file) {
 		this.module = module;
@@ -49,11 +49,12 @@ public class EMFTemplate {
 	 *  In this last example, because genfolder != "java", subpackage is just a subdirectory name.
 	 *  
 	 * @param root base directory where files will be saved. 
-	 * @param eClass current processing class.
+	 * @param ctx current processing context.
 	 * @return file where the contents will be written.
 	 * @throws EMFModelGenerationException if it is not possible to determine where the file will be saved.
 	 */
-	public File getGeneratedFile(File root, EClassifier eClass) throws EMFModelGenerationException {
+	public File getGeneratedFile(File root, Context ctx) throws EMFModelGenerationException {
+		EClassifier eClass = (EClassifier) ctx.getVariable("clazz");
 		String fileNamePattern = getFileNamePattern();
 		String subpackage = getSubpackage();
 		subpackage = String.format(subpackage, eClass.getName());
@@ -65,15 +66,17 @@ public class EMFTemplate {
 		String fileName = String.format(fileNamePattern, eClass.getName());
 		String generatedFile = subpackage + "/" + fileName;
 		
-		if ("java".equals(genfolder)) {
+		if ("java".equals(genfolder)||"test".equals(genfolder)) {
 			String dirName = fullPackage.replaceAll("\\.", "/");
 			generatedFile = dirName + "/" + fileName;
 		}
-		
-		
+				
 		File genRoot = root;
 		if (genfolder!=null && !genfolder.isEmpty()) {
 			genRoot = new File(root, genfolder);
+		}
+		if ("test".equals(genfolder)) {
+			genRoot = new File(root.getParentFile(), "test/java");
 		}
 		return new File(genRoot, generatedFile);
 	}
@@ -84,25 +87,7 @@ public class EMFTemplate {
 	 * In this case, the fileNamePattern receives the system name as parameter.
 	 * 
 	 * */
-	public File getGeneratedFile(File root, EPackage epkg) throws EMFModelGenerationException {
-		String fileNamePattern = getFileNamePattern();
-		String subpackage = getSubpackage();
-		String genfolder = getGenfolder();
-	
-		String systemName = epkg.getEAnnotation(EMFModelGeneratorListener.SYSTEM_NAME_ANNOTATION).getDetails().get("name");
-		String generatedFile = subpackage + "/" + String.format(fileNamePattern, systemName);
-		
-		if ("java".equals(genfolder)) {
-			generatedFile = epkg.getName() + "/" + subpackage;
-			generatedFile = generatedFile.replaceAll("\\.", "/");
-			generatedFile += "/" + String.format(fileNamePattern, systemName);
-		}
-		File genRoot = root;
-		if (genfolder!=null && !genfolder.isEmpty()) {
-			genRoot = new File(root, genfolder);
-		}
-		return new File(genRoot, generatedFile);
-	}
+	public abstract File getGeneratedFile(File root, EPackage epkg) throws EMFModelGenerationException;
 
 	
 	/**
@@ -110,7 +95,7 @@ public class EMFTemplate {
 	 * @return the value of the fileNamePattern property.
 	 * @throws EMFModelGenerationException if the property cannot be read.
 	 */
-	private String getFileNamePattern() throws EMFModelGenerationException {
+	protected String getFileNamePattern() throws EMFModelGenerationException {
 		return getProperty("fileNamePattern", "%s");
 	}
 	
@@ -119,7 +104,7 @@ public class EMFTemplate {
 	 * @return the value of the subpackage property.
 	 * @throws EMFModelGenerationException if the property cannot be read.
 	 */
-	private String getSubpackage() throws EMFModelGenerationException {
+	protected String getSubpackage() throws EMFModelGenerationException {
 		return getProperty("subpackage", "");
 	}
 	
@@ -128,7 +113,7 @@ public class EMFTemplate {
 	 * @return the value of the genfolder property.
 	 * @throws EMFModelGenerationException if the property cannot be read.
 	 */
-	private String getGenfolder() throws EMFModelGenerationException {
+	protected String getGenfolder() throws EMFModelGenerationException {
 		return getProperty("genfolder", "");
 	}
 	
@@ -140,7 +125,7 @@ public class EMFTemplate {
 	 * @return either the value of property, or the default value.
 	 * @throws EMFModelGenerationException if property cannot be read.
 	 */
-	private String getProperty(String propName, String defaultValue) throws EMFModelGenerationException {
+	protected final String getProperty(String propName, String defaultValue) throws EMFModelGenerationException {
 		try(Scanner scanner = new Scanner(file)){
 			String linha;
 			Pattern p = Pattern.compile(propName+"=(\\S+)");
@@ -151,6 +136,7 @@ public class EMFTemplate {
 				if (m.find()) {
 					return m.group(1).trim();
 				}
+				if (linha.startsWith("package")) break;
 			}
 			return defaultValue;
 		}
@@ -162,31 +148,50 @@ public class EMFTemplate {
 	}
 
 	
+	
 	/**
 	 * @return the name of the file.
 	 */
-	public String getName() {
+	public final String getName() {
 		return file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(module));
 	}
 
+	
+	
 	/**
 	 * @return absolute path of the template.
 	 */
-	public String getFilename() {
+	public final String getFilename() {
 		return file.getAbsolutePath();
 	}
 
+	
+	
 	/**
 	 * @return the value of the "global" property.
 	 * @throws EMFModelGenerationException
 	 */
-	public boolean isGlobal() throws EMFModelGenerationException  {
+	public final boolean isGlobal() throws EMFModelGenerationException  {
 		return "true".equals(getProperty("global", "false"));
 	}
+
+	
+	
+	/**
+	 * This method is called in loop to determine if it will generate code.
+	 * */
+	public abstract boolean willProcess(Context ctx) throws EMFModelGenerationException; 
+	
 	
 	@Override
 	public String toString() {
 		int index = getFilename().indexOf(module);
 		return getFilename().substring(index);
+	}
+
+
+
+	public boolean isRuleTemplate() {
+		return false;
 	}
 }

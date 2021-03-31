@@ -11,12 +11,12 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -168,7 +168,7 @@ public class CodegenPanel extends JPanel {
 		lstTemplate = new JList<EMFTemplate>();
 		lstTemplate.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		JScrollPane jspTemplate = new JScrollPane(lstTemplate);
-		jspTemplate.setPreferredSize(new Dimension(300, 200));
+		jspTemplate.setPreferredSize(new Dimension(400, 200));
 		add(jspTemplate, gbc);
 
 		
@@ -291,13 +291,14 @@ public class CodegenPanel extends JPanel {
 		File[] sources = resources.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
-				return f.getName().endsWith("wemf");
+				return f.getName().endsWith("wemf") || f.getName().endsWith("nail");
 			}
 		});
 		
 		if (sources!=null) {
 			String[] data = new String[sources.length];
 			for (int i=0;i<sources.length;i++) data[i] = sources[i].getName();
+			Arrays.sort(data);
 			lstSource.setListData(data);
 		}
 	}
@@ -313,10 +314,15 @@ public class CodegenPanel extends JPanel {
 				File source = new File(project, "src/main/resources/" + lstSource.getSelectedValue());
 				EMFModelGenerator emfgen = new EMFModelGenerator();
 				try {
+					boolean isNail = source.getName().endsWith("nail");
+					if (isNail) {
+						return;
+					}
 					EPackage p = emfgen.generateModel(source);
 					EList<EClassifier> lst = p.getEClassifiers();
 					String[] data = new String[lst.size()];
 					for (int i=0;i<lst.size();i++) data[i] = lst.get(i).getName(); 
+					Arrays.sort(data);
 					lstClass.setListData(data);
 				}
 				catch (EMFModelGenerationException e) {

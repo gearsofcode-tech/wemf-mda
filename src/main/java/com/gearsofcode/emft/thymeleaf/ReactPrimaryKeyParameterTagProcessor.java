@@ -1,10 +1,7 @@
 package com.gearsofcode.emft.thymeleaf;
 
-import java.util.Optional;
-
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.ETypedElement;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
@@ -18,17 +15,20 @@ import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import com.gearsofcode.emft.metamodel.AttributeAnnotations;
+
+
 /**
- * Tag that imports java.util.List only if it is necessary.
+ * Tag to help print the primary keys as react key.
  * @author Carlos Padoa
  *
  */
-public class ImportJavaListTagProcessor extends AbstractAttributeTagProcessor{
+public class ReactPrimaryKeyParameterTagProcessor extends AbstractAttributeTagProcessor{
 
-	private static final String ATTR_NAME = "importJavaList";
+	private static final String ATTR_NAME = "reactkey";
 	private static final int PRECEDENCE = 10000;
 	
-	public ImportJavaListTagProcessor(final String dialectPrefix) {
+	public ReactPrimaryKeyParameterTagProcessor(final String dialectPrefix) {
 		super(TemplateMode.TEXT, dialectPrefix, null, false, ATTR_NAME, true, PRECEDENCE, true);
 	}
 
@@ -43,17 +43,27 @@ public class ImportJavaListTagProcessor extends AbstractAttributeTagProcessor{
 		
 		final EClass eClass = (EClass) expression.execute(context);
 		
-		Optional<EStructuralFeature> optFeat = eClass.getEStructuralFeatures().stream().filter(feat -> feat.getUpperBound()>1 || feat.getUpperBound()==ETypedElement.UNBOUNDED_MULTIPLICITY).findFirst();
+		final IModelFactory modelFactory = context.getModelFactory();
 		
-		if (optFeat.isPresent()) {
-			final IModelFactory modelFactory = context.getModelFactory();
-			
-			final IModel model = modelFactory.createModel();
-			
-			model.add(modelFactory.createText("import java.util.List;"));
-			
-			handler.replaceWith(model, false);
-		}
+		final IModel model = modelFactory.createModel();
+		
+		String label = getJavaPrimaryKeys(eClass);
+		
+	
+		model.add(modelFactory.createText(label));
+		
+		handler.setBody(model, false);
+		
 	}
 
+	private String getJavaPrimaryKeys(EClass eClass) {
+		StringBuilder strb = new StringBuilder();
+		for (EAttribute attr:  eClass.getEAllAttributes()) {
+			if (attr.getEAnnotation(AttributeAnnotations.ID)!=null) {
+				if (strb.length()>0)strb.append("+");
+				strb.append("model.").append(attr.getName());
+			}
+		}
+		return strb.toString();
+	}
 }

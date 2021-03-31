@@ -1,6 +1,6 @@
 package com.gearsofcode.emft.thymeleaf;
 
-import org.eclipse.emf.ecore.ETypedElement;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
@@ -38,7 +38,7 @@ public class LblTagProcessor extends AbstractAttributeTagProcessor{
 		
 		final IStandardExpression expression = parser.parseExpression(context, attributeValue);
 		
-		final ETypedElement emfTypedElement = (ETypedElement) expression.execute(context);
+		final ENamedElement emfTypedElement = (ENamedElement) expression.execute(context);
 		
 		String typeName = emfTypedElement.getName();
 		

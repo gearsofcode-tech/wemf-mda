@@ -16,8 +16,8 @@ public class WEMFCodeGenApplication extends JFrame{
 	private CodegenPanel codegenPanel;
 	
 	public WEMFCodeGenApplication() {
-		super("WEMFCodeGen");
-		setSize(new Dimension(980,380));
+		super("WEMFCodeGen - SELIC");
+		setSize(new Dimension(1080,380));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridBagLayout());

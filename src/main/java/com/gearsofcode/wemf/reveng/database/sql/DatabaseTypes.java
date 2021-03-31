@@ -21,9 +21,9 @@ public interface DatabaseTypes {
 		String searchName = typeName.toLowerCase();
 		int index = searchName.indexOf("(");
 		if (index>0) searchName = searchName.substring(0, index);
-		final String compareName = searchName;
-		Optional<DataType> dt = getDatabaseTypes().stream().filter(dataType -> dataType.getName().equals(compareName)).findFirst();
+		final String compareName = searchName.trim();
+		Optional<DataType> dt = getDatabaseTypes().stream().filter(dataType -> dataType.getName().equalsIgnoreCase(compareName)).findFirst();
 		if (dt.isPresent()) return dt.get();
-		throw new IllegalArgumentException("Unknow datatype: " + typeName);
+		throw new IllegalArgumentException("Unknow datatype: '" + typeName + "'");
 	}
 }

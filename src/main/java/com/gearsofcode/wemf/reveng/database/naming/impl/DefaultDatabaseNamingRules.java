@@ -1,4 +1,4 @@
-package com.gearsofcode.wemf.reveng.database.selic;
+package com.gearsofcode.wemf.reveng.database.naming.impl;
 
 import com.gearsofcode.wemf.reveng.database.model.Column;
 import com.gearsofcode.wemf.reveng.database.model.Table;
@@ -11,7 +11,7 @@ import com.gearsofcode.wemf.reveng.database.naming.DatabaseNamingRules;
  * */
 public class DefaultDatabaseNamingRules implements DatabaseNamingRules {
 
-	private DefaultColumnClassCodes felixColumnClassCodes = new DefaultColumnClassCodes();
+	private DefaultColumnClassCodes defaultColumnClassCodes = new DefaultColumnClassCodes();
 
 
 
@@ -75,7 +75,7 @@ public class DefaultDatabaseNamingRules implements DatabaseNamingRules {
 			return false;
 		if (names[0].length() != 4)
 			return false;
-		if (!this.felixColumnClassCodes.hasCode(names[1]))
+		if (!this.defaultColumnClassCodes.hasCode(names[1]))
 			return false;
 		return names[2].length() >= 2;
 	}
@@ -84,25 +84,47 @@ public class DefaultDatabaseNamingRules implements DatabaseNamingRules {
 
 	@Override
 	public String getJavaMemberName(Column column) {
-		return camelCaseWithoutPrefix(column.getName());
+		return camelCase(column.getName());
 	}
 
 
 
 	private String camelCaseWithoutPrefix(String string) {
 		String name = string;
+		String prefix = null;
 		int index = string.indexOf("_");
 		if (index > 0) {
 			name = string.substring(index+1);
+			prefix = string.substring(0, index);
 		}
 		StringBuilder strb = new StringBuilder();
 		boolean upperCase = false;
+		if ("id".equalsIgnoreCase(prefix)) {
+			strb.append("id");
+		}
 		for (int i=0;i<name.length();i++) {
 			if (name.toCharArray()[i]=='_')continue;
-			upperCase = i>0 && name.toCharArray()[i-1]=='_';
+			upperCase = "id".equals(strb.toString()) || (i>0 && name.toCharArray()[i-1]=='_');
 			if (upperCase)strb.append(name.substring(i, i+1).toUpperCase());
 			else strb.append(name.substring(i, i+1).toLowerCase());
 		}
+		
+		return strb.toString();
+	}
+	
+	
+	
+	private String camelCase(String string) {
+		String name = string;
+		boolean upperCase = false;
+		StringBuilder strb = new StringBuilder();
+		for (int i=0;i<name.length();i++) {
+			if (name.toCharArray()[i]=='_')continue;
+			upperCase = (i>0 && name.toCharArray()[i-1]=='_');
+			if (upperCase)strb.append(name.substring(i, i+1).toUpperCase());
+			else strb.append(name.substring(i, i+1).toLowerCase());
+		}
+		
 		return strb.toString();
 	}
 

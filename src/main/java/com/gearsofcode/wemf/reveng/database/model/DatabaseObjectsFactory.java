@@ -2,11 +2,11 @@ package com.gearsofcode.wemf.reveng.database.model;
 
 import com.gearsofcode.wemf.reveng.database.naming.ColumnClassCodes;
 import com.gearsofcode.wemf.reveng.database.naming.DatabaseNamingRules;
-import com.gearsofcode.wemf.reveng.database.selic.DefaultColumnClassCodes;
-import com.gearsofcode.wemf.reveng.database.selic.DefaultDatabaseNamingRules;
+import com.gearsofcode.wemf.reveng.database.naming.impl.DefaultColumnClassCodes;
+import com.gearsofcode.wemf.reveng.database.naming.impl.DefaultDatabaseNamingRules;
 import com.gearsofcode.wemf.reveng.database.sql.DatabaseTypes;
+import com.gearsofcode.wemf.reveng.database.sql.DatabaseTypesFactory;
 import com.gearsofcode.wemf.reveng.database.sql.SQLBuilder;
-import com.gearsofcode.wemf.reveng.database.sql.oracle.OracleDatabaseTypes;
 import com.gearsofcode.wemf.reveng.database.sql.oracle.OracleSQLBuilder;
 
 /**
@@ -22,7 +22,7 @@ public class DatabaseObjectsFactory {
 
 	private static final DatabaseNamingRules databaseNamingRules = new DefaultDatabaseNamingRules();
 	private static final ColumnClassCodes columnClassCodes = new DefaultColumnClassCodes();
-	private static final DatabaseTypes databaseTypes = new OracleDatabaseTypes();
+	private static final DatabaseTypes databaseTypes = DatabaseTypesFactory.getDatabaseTypes();
 
 
 	/**

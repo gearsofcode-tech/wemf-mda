@@ -1,7 +1,6 @@
 package com.gearsofcode.emft.thymeleaf;
 
 import org.eclipse.emf.ecore.ENamedElement;
-import org.eclipse.emf.ecore.ETypedElement;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;

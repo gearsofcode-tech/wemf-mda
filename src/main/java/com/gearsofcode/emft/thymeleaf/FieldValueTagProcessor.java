@@ -1,11 +1,7 @@
 package com.gearsofcode.emft.thymeleaf;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.eclipse.emf.ecore.EAnnotation;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EModelElement;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.ETypedElement;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
@@ -20,60 +16,66 @@ import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.templatemode.TemplateMode;
 
 
-/**
- * Tag that prints all the EMF Annotations as Java Annotations.
- * @author Carlos Padoa
- *
- */
-public class JavaAnnotationsTagProcessor extends AbstractAttributeTagProcessor{
 
-	private static final String ATTR_NAME = "javaAnnotations";
+public class FieldValueTagProcessor extends AbstractAttributeTagProcessor {
+
+	private static final String ATTR_NAME = "field";
 	private static final int PRECEDENCE = 10000;
-	private List<String> wEMFAnnotations = Arrays.asList("NoSearchFilter", "SearchFilter", "SearchResult");
-	
-	public JavaAnnotationsTagProcessor(final String dialectPrefix) {
+
+
+
+	public FieldValueTagProcessor(final String dialectPrefix) {
 		super(TemplateMode.TEXT, dialectPrefix, null, false, ATTR_NAME, true, PRECEDENCE, true);
 	}
 
+
+
 	@Override
 	protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, IElementTagStructureHandler handler) {
-		
+
 		final IEngineConfiguration config = context.getConfiguration();
-		
+
 		final IStandardExpressionParser parser = StandardExpressions.getExpressionParser(config);
-		
+
 		final IStandardExpression expression = parser.parseExpression(context, attributeValue);
-		
-		final EModelElement eElem = (EModelElement) expression.execute(context);
-		
-		StringBuilder strb = new StringBuilder();
-		for (EAnnotation eAnnot : eElem.getEAnnotations()) {
-			if (wEMFAnnotations.contains(eAnnot.getSource())) {
-				continue;
-			}
-			if (eElem instanceof EClass) {
-				strb.append("\n");
-			}
-			else {
-				strb.append("\n\t");
-			}
-			strb.append("@").append(eAnnot.getSource());
-			if (!eAnnot.getDetails().isEmpty()) {
-				strb.append("(");
-				String text = eAnnot.getDetails().get("text");
-				if (text.length()>=2) strb.append(text.substring(1, text.length()-1));
-				else strb.append(text);
-				strb.append(")");
-			}
-		}
-		
+
+		final ETypedElement emfTypedElement = (ETypedElement) expression.execute(context);
+
+		String value = getRandomValueForField(emfTypedElement);
+
 		final IModelFactory modelFactory = context.getModelFactory();
-		
+
 		final IModel model = modelFactory.createModel();
-		
-		model.add(modelFactory.createText(strb.toString()));
-		
+
+		model.add(modelFactory.createText(value));
+
 		handler.replaceWith(model, false);
 	}
 
+
+
+	private static String getRandomValueForField(ETypedElement attr) {
+		String typeName = attr.getEType().getName();
+		if (attr.getEType() instanceof EEnum){
+			String capitalized = typeName.substring(0, 1).toUpperCase()+typeName.substring(1);
+			return capitalized + ".values()[0]";
+		}
+		switch (typeName) {
+			case "EDate":
+			case "EBigDecimal":
+			case "EString":
+				return "\"" + attr.getName() + "\"";
+			case "EBoolean":
+				return "Boolean.TRUE";
+			case "EInt":
+			case "EIntegerObject":
+				return "999";
+			case "ELong":
+				return "888L";
+		}
+		if (attr.getUpperBound()==ETypedElement.UNBOUNDED_MULTIPLICITY||attr.getUpperBound()>1){
+			return "new LinkedList<" + typeName + ">()";
+		}
+		return "new " + typeName + "()";
+	}
 }

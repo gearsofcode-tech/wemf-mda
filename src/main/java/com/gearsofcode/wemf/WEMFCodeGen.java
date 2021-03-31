@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,8 +15,13 @@ import org.eclipse.emf.ecore.EPackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gearsofcode.emft.EMFClassifierTemplate;
+import com.gearsofcode.emft.EMFMethodTemplate;
 import com.gearsofcode.emft.EMFTemplate;
 import com.gearsofcode.emft.EMFTemplateProcessor;
+import com.gearsofcode.nail.NAILModelGenerator;
+import com.gearsofcode.nail.RuleTemplate;
+import com.gearsofcode.nail.metamodel.NAILModel;
 
 /**
  * This is the "main" class for generating code.
@@ -101,18 +105,30 @@ public class WEMFCodeGen {
 	 * Generates code.
 	 * @param rootGen target directory for generated files.
 	 * @param templateProcessor
-	 * @param wemfFiles files containing the written model.
-	 * @param lstEMFTFiles template files.
+	 * @param sourceFiles files containing the written model.
+	 * @param templateFiles template files.
 	 */
-	private static void generateCode(File rootGen, EMFTemplateProcessor templateProcessor, File[] wemfFiles, List<EMFTemplate> lstEMFTFiles, List<String>classifiers) {
+	private static void generateCode(File rootGen, EMFTemplateProcessor templateProcessor, File[] sourceFiles, List<EMFTemplate> templateFiles, List<String>classifiers) {
 		try {
 			EMFModelGenerator emfGen = new EMFModelGenerator();
+			NAILModelGenerator nailGen = new NAILModelGenerator();
 			EPackage model = null;
-			for (File fWEMF : wemfFiles) {
-				model = emfGen.generateModel(fWEMF);
-				for (EMFTemplate template : lstEMFTFiles) {
-					logger.info(String.format("Executing template '%s' with file '%s'", template.getName(), fWEMF.getName()));
-					templateProcessor.process(model, template, rootGen, classifiers);
+			NAILModel nailModel = null;
+			for (File source : sourceFiles) {
+				boolean isWEMF = source.getName().endsWith("wemf");
+				boolean isNAIL = source.getName().endsWith("nail");
+				if (isWEMF) {
+					model = emfGen.generateModel(source);
+				}
+				else if (isNAIL) {
+					nailModel = nailGen.generateModel(source);
+					File parent = source.getParentFile();
+					File wemfFile = new File(parent, nailModel.getWemfFile());
+					model = emfGen.generateModel(wemfFile);
+				}
+				for (EMFTemplate template : templateFiles) {
+					logger.info(String.format("Executing template '%s' with file '%s'", template.getName(), source.getName()));
+					templateProcessor.process(model, nailModel, template, rootGen, classifiers);
 				}
 			}
 		}
@@ -120,6 +136,7 @@ public class WEMFCodeGen {
 			String msg = "Error generating code.";
 			logger.error(msg, e);
 		}
+		logger.info("\n\n >>> DONE <<<");
 	}
 
 
@@ -131,11 +148,11 @@ public class WEMFCodeGen {
 		File[] arquivosWEMF = sourceDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
-				return f.getName().endsWith(".wemf") && (sources.isEmpty() || sources.contains(f.getName()));
+				return (f.getName().endsWith(".wemf") || f.getName().endsWith("nail")) && (sources.isEmpty() || sources.contains(f.getName()));
 			}
 		});
 		if (arquivosWEMF.length==0) {
-			logger.warn("No '.wemf' found. No code will be generated.");
+			logger.warn("No '.wemf' or '.nail' found. No code will be generated.");
 		}
 		for (File f: arquivosWEMF) logger.info(String.format("Found file '%s'.",  f.getName()));
 		return arquivosWEMF;
@@ -246,17 +263,25 @@ public class WEMFCodeGen {
 
 
 	/**
-	 * Gets template files (*.emft, *.html) recursively.
+	 * Gets template files (*.emft, *.html, *.emfmt) recursively.
 	 * */
-	private static void getTemplateFiles(List<EMFTemplate> emftFiles, String module, File subdir) {
+	private static void getTemplateFiles(List<EMFTemplate> lstTemplates, String module, File subdir) {
 		File[] templates = subdir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
-				return f.getName().endsWith(".emft") || f.getName().endsWith(".html");
+				return f.getName().endsWith(".emft") || f.getName().endsWith(".html") || f.getName().endsWith(".emfmt") || f.getName().endsWith(".rulet");
 			}
 		});
 		for (File f: templates) {
-			emftFiles.add(new EMFTemplate(module, f));
+			if (f.getName().endsWith("emfmt")){
+				lstTemplates.add(new EMFMethodTemplate(module, f));
+			}
+			else if (f.getName().endsWith("rulet")) {
+				lstTemplates.add(new RuleTemplate(module, f));
+			}
+			else{
+				lstTemplates.add(new EMFClassifierTemplate(module, f));
+			}
 		}
 		File[] subdirs = subdir.listFiles(new FileFilter() {
 			@Override
@@ -265,7 +290,7 @@ public class WEMFCodeGen {
 			}
 		});
 		for (int i=0; i<subdirs.length;i++) {
-			getTemplateFiles(emftFiles, module, subdirs[i]);
+			getTemplateFiles(lstTemplates, module, subdirs[i]);
 		}
 	}
 

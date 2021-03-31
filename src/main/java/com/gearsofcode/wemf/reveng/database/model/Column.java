@@ -23,6 +23,7 @@ public class Column implements Comparable<Column>, Serializable {
 	private boolean allowNull;
 	private String prefix;
 	private int ordinalPosition;
+	private ReferencedColumn referencedColumn;
 
 	public String getName() {
 		return name;
@@ -230,5 +231,17 @@ public class Column implements Comparable<Column>, Serializable {
 
 	public void setOrdinalPosition(int ordinalPosition) {
 		this.ordinalPosition = ordinalPosition;
+	}
+
+
+
+	public ReferencedColumn getReferencedColumn() {
+		return referencedColumn;
+	}
+
+
+
+	public void setReferencedColumn(ReferencedColumn referencedColumn) {
+		this.referencedColumn = referencedColumn;
 	}
 }
