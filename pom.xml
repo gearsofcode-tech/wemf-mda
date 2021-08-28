@@ -73,6 +73,11 @@
          </dependency>
 	</dependencies>
 	
+	<scm>
+		<developerConnection>scm:git:https://github.com/SamuraiCharlie/wemf-mda.git</developerConnection>
+	</scm>
+	
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -86,6 +91,10 @@
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
