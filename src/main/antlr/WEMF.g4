@@ -1,7 +1,7 @@
 grammar WEMF;
 
 @header{
-package com.gearsofcode.wemf.parser;
+package tech.gearsofcode.wemf.parser;
 }
 prog: system epackage ;
 system	 : 'system' ID ';';

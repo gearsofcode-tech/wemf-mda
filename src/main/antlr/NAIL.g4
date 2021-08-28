@@ -1,7 +1,7 @@
 grammar NAIL;
 
 @header{
-package com.gearsofcode.nail.parser;
+package tech.gearsofcode.nail.parser;
 }
 
 prog: import_declaration entity_declaration rules_declaration validation_declaration;
