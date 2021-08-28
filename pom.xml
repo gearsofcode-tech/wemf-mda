@@ -3,7 +3,7 @@
 
 	<groupId>selic.wemf</groupId>
 	<artifactId>wemf-mda</artifactId>
-	<version>1.0.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>WEMF :: MDA</name>
 
@@ -75,7 +75,8 @@
 	
 	<scm>
 		<developerConnection>scm:git:https://github.com/SamuraiCharlie/wemf-mda.git</developerConnection>
-	</scm>
+	  <tag>1.0.0</tag>
+  </scm>
 	
 	
 	<build>
