@@ -1,0 +1,42 @@
+IMPORT Teste001.wemf
+ENTITY Aluno
+RULES-SECTION
+	RULE NomeObrigatorio
+		ON FIELD nome
+		ON ERROR 'Nome é obrigatório'
+		DEFINED AS 'Todo aluno deve possuir um nome.'
+		CONSTRAINTS
+			REQUIRED
+		END-CONSTRAINTS
+		
+		
+	RULE CpfDataNascimentoObrigatorio
+		ON FIELDS cpf, dataNascimento
+		ON ERROR 'CPF e data de nascimento sao obrigatorios'
+		DEFINED AS 'Todo aluno deve possuir um cpf e uma data de nascimento.'
+		CONSTRAINTS
+			ASSERT-TRUE IS-NOT-EMPTY(cpf) AND IS-NOT-NULL(dataNascimento)
+		END-CONSTRAINTS
+		
+	UPDATE-RULE	CpfJaExiste	
+		ON FIELD cpf
+		ON ERROR 'CPF ja cadastrado'
+		CONSTRAINTS
+			ASSERT-FALSE REPOSITORY-EXISTE-CPF(cpf)
+		END-CONSTRAINTS
+	
+	DELETE-RULE AlunoInscrito
+		ON FIELD anoInscricao
+		ON ERROR 'Aluno do ano 2020 nao pode ser excluido'
+		CONSTRAINTS
+			ASSERT-FALSE anoInscricao EQUALS 2020
+		END-CONSTRAINTS
+END-RULES-SECTION
+
+VALIDATE-ON-INSERT
+	NomeObrigatorio
+END-VALIDATE-ON-INSERT
+
+VALIDATE-ON-UPDATE
+	NomeObrigatorio
+END-VALIDATE-ON-UPDATE	

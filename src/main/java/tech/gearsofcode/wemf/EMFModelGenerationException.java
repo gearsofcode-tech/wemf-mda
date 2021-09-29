@@ -2,7 +2,7 @@ package tech.gearsofcode.wemf;
 
 
 /**
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  * Thrown whenever is not possible to generate the EMF model from a ".wemf" file.
  */

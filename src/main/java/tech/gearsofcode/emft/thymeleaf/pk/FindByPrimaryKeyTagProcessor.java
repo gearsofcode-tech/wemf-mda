@@ -22,7 +22,7 @@ import tech.gearsofcode.emft.metamodel.AttributeAnnotations;
 
 /**
  * Tag to help print the JPA query to find by primary keys.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class FindByPrimaryKeyTagProcessor extends AbstractAttributeTagProcessor{

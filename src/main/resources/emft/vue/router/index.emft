@@ -1,0 +1,29 @@
+/*[- */ fileNamePattern=main.js /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=router/ /* -]*/
+/*[- */ global=true /* -]*/
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+[# th:each="clazz : ${model.eClassifiers}"/]
+import [(${clazz.name})]List from '../views/[(${clazz.name})]List.vue'
+import [(${clazz.name})]View from '../views/[(${clazz.name})]View.vue'
+import [(${clazz.name})]Create from '../views/[(${clazz.name})]Create.vue'
+import [(${clazz.name})]Update from '../views/[(${clazz.name})]Update.vue'
+[/]
+
+Vue.use(VueRouter);
+
+const routes = [
+    { path: '/', name: 'Home', component: Home },
+    [# th:each="clazz : ${model.eClassifiers}"/]
+    { path: '/[# emft:dashed="${clazz}"/]-list', name: '[(${clazz.name})]List', component: [(${clazz.name})]List },
+    { path: '/[# emft:dashed="${clazz}"/]-view', name: '[(${clazz.name})]View', component: [(${clazz.name})]View },
+    { path: '/[# emft:dashed="${clazz}"/]-create', name: '[(${clazz.name})]Create', component: [(${clazz.name})]Create },
+    { path: '/[# emft:dashed="${clazz}"/]-update/:id', name: '[(${clazz.name})]Update', component: [(${clazz.name})]Update},
+];
+
+const router = new VueRouter({
+    routes
+});
+
+export default router;

@@ -23,7 +23,7 @@ import tech.gearsofcode.wemf.parser.WEMFParser;
 /**
  * Façade to generate model from ".wemf" file.
  *
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class EMFModelGenerator {

@@ -3,7 +3,7 @@ package tech.gearsofcode.wemf.reveng.database.model;
 /**
  * Represents a table's primary key.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class PrimaryKey {
 

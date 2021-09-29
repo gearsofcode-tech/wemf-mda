@@ -19,7 +19,7 @@ import tech.gearsofcode.emft.metamodel.TypeMapper;
 
 /**
  * Tag to help print the Java type correspondent to a EMF Type.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class JavaTypeTagProcessor extends AbstractAttributeTagProcessor{

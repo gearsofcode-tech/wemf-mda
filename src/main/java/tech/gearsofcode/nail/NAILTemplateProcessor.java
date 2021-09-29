@@ -25,7 +25,7 @@ import tech.gearsofcode.wemf.EMFModelGenerator;
 import tech.gearsofcode.wemf.parser.EMFModelGeneratorListener;
 
 /**
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  * Uses Thymeleaf to process templates against models.
  */

@@ -5,7 +5,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 
 /**
  * Helps to map EMF types to Java types. 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class TypeMapper {
@@ -41,6 +41,12 @@ public class TypeMapper {
 				break;
 			case "EDoubleObject":
 				javaType = "Double";
+				break;
+			case "EFloat":
+				javaType = "float";
+				break;
+			case "EFloatObject":
+				javaType = "Float";
 				break;
 			case "EBoolean":
 				javaType = "boolean";
@@ -88,6 +94,12 @@ public class TypeMapper {
 				break;
 			case "long":
 				eType = "ELong";
+				break;
+			case "Float":
+				eType = "EFloatObject";
+				break;
+			case "float":
+				eType = "EFloat";
 				break;
 			case "Boolean":
 				eType = "EBooleanObject";
@@ -143,6 +155,12 @@ public class TypeMapper {
 				break;
 			case "EDoubleObject":
 				javaType = "Double";
+				break;
+			case "EFloat":
+				javaType = "Float";
+				break;
+			case "EFloatObject":
+				javaType = "Float";
 				break;
 			case "EBoolean":
 				javaType = "boolean";

@@ -12,7 +12,7 @@ import tech.gearsofcode.wemf.reveng.database.sql.exception.CannotBuildSQLExcepti
 /**
  * Specifies Oracle SQL syntax.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class OracleSQLBuilder implements SQLBuilder {

@@ -12,7 +12,7 @@ import tech.gearsofcode.wemf.reveng.database.naming.ColumnClassCodes;
  * Each column's name must have a class code. The class enumerates some default
  * class codes.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class DefaultColumnClassCodes implements ColumnClassCodes {
 

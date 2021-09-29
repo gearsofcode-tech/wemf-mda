@@ -1,0 +1,101 @@
+/*[- */ fileNamePattern=%sView.vue /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=views/ /* -]*/
+<template>
+    <div>
+        <div>
+            <div class="container100">
+                <div>
+                    <h1>Consulta [# emft:lbl="${clazz}" /]</h1>
+                    <div class="grupoErroValidacao">
+                        <span class="erroValidacao">
+                            {{errorMessage}}
+                        </span>
+                    </div>
+                </div>
+                
+                
+                <form>
+                	<div class="botoesAcao">
+                        &nbsp;
+                    </div>
+                    <div class="formulario">
+						
+						<div class="linhaFormulario">
+							[# th:each="attr, itStat : ${clazz.eAttributes}"]
+							<div class="container20">
+								<label>[# emft:lbl="${attr}" /]</label>
+								<input id="[(${attr.name})]" type="text" v-model="model.[(${attr.name})]" disabled="disabled"/>
+							</div>
+						    [/]
+						    [# th:each="ref, itStat : ${clazz.eReferences}"]
+					    	<div class="container20">
+								<label>[# emft:lbl="${ref}" /]</label>
+								<div>
+									<input id="[(${ref.name})]Nome" type="text" v-model="nome[# emft:cc="${ref}" /]" disabled="disabled"/>
+								</div>
+							</div>
+						    [/]
+						</div>
+						<div>
+							<div>
+								<Link to="/[(${clazz.name})]Create/"><button type="button" className="btn btn-secondary my-2">INCLUIR</button></Link>
+								<router-link v-bind:to="updateLink"><button type="button">ALTERAR</button></router-link>
+							</div>
+						</div>
+					</div>
+				</form>
+
+                </div>
+                    <br/>
+                    <div class="cabecalhoFormulario">
+                        &nbsp;
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        </div>	
+    </div>    
+</template>
+
+
+<script>
+
+export default {
+
+    computed: {
+        model(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/view/model'];
+        },
+        
+        
+        [# th:each="ref, itStat : ${clazz.eReferences}"]
+        nome[# emft:cc="${ref}" /](){
+        	let [# emft:lcc="${clazz}"/] = this.$store.getters['[# emft:dashed="${clazz}"/]/view/model'];
+        	let [(${ref.name})] = [# emft:lcc="${clazz}"/].[(${ref.name})];
+        	if ([(${ref.name})]) return [(${ref.name})].nome;
+        	return '';
+        },
+        [/]
+        
+        
+        updateLink(){
+        	let [# emft:lcc="${clazz}"/] = this.$store.getters['[# emft:dashed="${clazz}"/]/view/model']; 
+            let id = [# emft:jspk="${clazz}"/];
+            return "/[# emft:dashed="${clazz}"/]-update/" + id;
+
+        },
+        
+
+        errorMessage(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/view/errorMessage'];
+        }
+    },
+
+
+    created(){
+		this.$store.dispatch('[# emft:dashed="${clazz}"/]/view/load', 1);
+    }
+   
+}
+</script>

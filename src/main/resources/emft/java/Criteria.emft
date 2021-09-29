@@ -1,0 +1,50 @@
+/*[- */ fileNamePattern=%sCriteria.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=web.dto /* -]*/
+/*[- */ appliesTo=Entity /* -]*/
+package [(${clazz.epackage.name})].web.dto;
+
+
+public class [(${clazz.name})]Criteria {
+
+	private Integer pageSize;
+	private Integer page;
+
+
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
+	[# th:if="${attr.upperBound} == 1"]
+	private [# emft:javaDTOType="${attr}"/] [(${attr.name})];
+	[/]
+[/]
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
+	[# th:if="${attr.upperBound} == 1"]
+	public [# emft:javaDTOType="${attr}"/] get[# emft:cc="${attr}" /]() {
+		return [(${attr.name})];
+	}
+
+	public void set[# emft:cc="${attr}" /]([# emft:javaDTOType="${attr}"/] [(${attr.name})]) {
+		this.[(${attr.name})] = [(${attr.name})];
+	}
+	[/]
+[/]
+
+
+
+
+	public Integer getPageSize(){
+		return pageSize;
+	} 
+	
+	public void setPageSize(Integer size){
+		this.pageSize = size;
+	}
+	
+	
+	public Integer getPage(){
+		return page;
+	}
+	
+	public void setPage(Integer page){
+		this.page = page;
+	}	
+}

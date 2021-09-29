@@ -1,0 +1,19 @@
+/*[- */ fileNamePattern=index.js /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=store/ /* -]*/
+import Vue from 'vue';
+import Vuex from 'vuex';
+[# th:each="clazz : ${model.eClassifiers}"/]
+import [(${clazz.name})]Store from './modules/[(${clazz.name})]Store.js';
+[/]
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+    namespaced: true,
+    modules: {
+    	[# th:each="clazz : ${model.eClassifiers}"/]
+        '[# emft:dashed="${clazz}"]': [(${clazz.name})]Store,
+        [/]
+    }
+})

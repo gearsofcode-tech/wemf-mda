@@ -1,0 +1,34 @@
+/*[- */ fileNamePattern=%sStore.js /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=store/modules/ /* -]*/
+import Axios from "axios";
+import baseUrl from "../baseUrl";
+import [(${clazz.name})]ViewStore from './[(${clazz.name})]ViewStore';
+import [(${clazz.name})]CreateStore from './[(${clazz.name})]CreateStore';
+import [(${clazz.name})]UpdateStore from './[(${clazz.name})]UpdateStore';
+import [(${clazz.name})]ListStore from './[(${clazz.name})]ListStore';
+
+export default {
+    namespaced: true,
+    
+    modules: {
+    	'view' : [(${clazz.name})]ViewStore,
+    	'create' : [(${clazz.name})]CreateStore,
+    	'update' : [(${clazz.name})]UpdateStore,
+    	'list' : [(${clazz.name})]ListStore
+    },
+
+    state: {
+    },
+    
+    getters:{
+    },
+
+
+    mutations:{
+    },
+
+    
+    actions:{
+    }
+};

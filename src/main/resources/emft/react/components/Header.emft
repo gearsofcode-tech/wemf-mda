@@ -1,0 +1,30 @@
+/*[- */ fileNamePattern=Header.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/components /* -]*/
+/*[- */ global=true /* -]*/
+import React, {Component} from "react";
+import ReactDOM from "react-dom";
+import {Link} from "react-router-dom";
+
+[# th:each="clazz : ${model.eClassifiers}"]
+import [(${clazz.name})]ListContainer from "../containers/[(${clazz.name})]ListContainer";
+import [(${clazz.name})]CreateContainer from "../containers/[(${clazz.name})]CreateContainer";
+[/]
+
+export default class Header extends Component {
+
+	render(){
+		return(
+			<nav className="navbar navbar-expand-sm navbar-light bg-light">
+				<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+				    <div className="navbar-nav">
+				      [# th:each="clazz : ${model.eClassifiers}"]
+						<Link className="nav-item nav-link" to="/[(${clazz.name})]List/">[(${clazz.name})]</Link>			
+					  [/]
+				    </div>
+				  </div>
+						
+			</nav>	
+		);
+	}
+}

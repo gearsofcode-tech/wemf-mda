@@ -20,7 +20,7 @@ import tech.gearsofcode.emft.metamodel.TypeMapper;
 
 /**
  * Tag to help print the Java type (of a Data Transfer Object) correspondent to a EMF Type.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class JavaDTOTypeTagProcessor extends AbstractAttributeTagProcessor{

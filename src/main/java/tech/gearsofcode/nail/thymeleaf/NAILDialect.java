@@ -10,7 +10,7 @@ import org.thymeleaf.standard.StandardDialect;
 /**
  * 
  * Thymeleaf dialect with helper tags to generate code.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class NAILDialect extends AbstractProcessorDialect{

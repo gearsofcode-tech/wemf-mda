@@ -17,7 +17,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 /**
  * Tag to help print a constant for a given field..
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class ConstantTagProcessor extends AbstractAttributeTagProcessor{

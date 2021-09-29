@@ -1,0 +1,83 @@
+/*[- */ fileNamePattern=%sCreateStore.js /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=store/modules/ /* -]*/
+import Axios from "axios";
+import baseUrl from "../baseUrl";
+
+export default {
+    namespaced: true,
+
+    state: {
+        errors: {},
+        errorMessage: '',
+        model: {}
+        
+    },
+    
+    getters:{
+    	model(state){
+    		return state.model;
+    	},
+    
+
+        errorMessage(state){
+            return state.errorMessage;
+        },
+
+
+        errors(state){
+            return state.errors;
+        },
+
+    },
+
+
+    mutations:{
+    	setModel(state, model){
+    		state.model = model;
+    	},
+    	
+
+        setErrorMessage(state, msg){
+            state.errorMessage = msg;
+        },
+
+        setErrors(state, erros){
+            state.errors = erros;
+        },
+
+    },
+
+    
+    actions:{
+
+        doCreate(context){
+            const createUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/solicitar-inclusao`;
+            const model = context.state.model;
+            Axios.post(createUrl, model)
+                .then(response => {
+                    context.commit('setInsert', false);
+                    context.dispatch('consultar');
+                })
+                .catch(error => {
+                    if (error.response && error.response.data && error.response.data.erros){
+                        context.commit('setErrors', error.response.data.erros)
+                    }
+                    else if (error.request){
+                        context.commit('setErrorMessage', 'Erro incluindo [# emft:lbl="${clazz}" /]. O serviço está indisponível');
+                    }
+                    else{
+                        context.commit('setErrorMessage', 'Erro incluindo [# emft:lbl="${clazz}" /]. Ocorreu um erro inesperado');
+                    }
+                });
+            
+        },
+
+
+        
+        
+        clear(context){
+            context.commit('setModel', {});
+        }
+    }
+};

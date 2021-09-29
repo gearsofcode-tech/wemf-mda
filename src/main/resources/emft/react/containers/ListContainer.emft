@@ -2,76 +2,212 @@
 /*[- */ genfolder=front /* -]*/
 /*[- */ subpackage=src/containers/ /* -]*/
 import React, {Component} from "react";
-import {Container} from 'flux/utils';
-import [(${clazz.name})]Store from "../data/[(${clazz.name})]Store";
+import {Container} from "flux/utils";
+import [(${clazz.name})]ListStore from "../data/[(${clazz.name})]ListStore";
+import [(${clazz.name})]Actions from "../data/[(${clazz.name})]Actions";
+import {Link} from "react-router-dom";
+import Alert from "../components/Alert";
+import BasePage from "../components/BasePage";
+import ValidationError from "../components/ValidationError";
+import Pagination from "../components/Pagination";
+[# th:each="eType: ${clazz.getReferencedETypes()}"]
+import Modal[(${eType.name})] from "../components/Modal[(${eType.name})]"; 
+[/]
+import $ from "jquery";
 
-class [(${clazz.name})]ListContainer extends Component {
+class [(${clazz.name})]ListContainer extends BasePage {
 
+	constructor(props){
+		super(props);
+		this.search = this.search.bind(this);
+		this.update = this.update.bind(this);
+		this.delete = this.delete.bind(this);
+		this.navigate = this.navigate.bind(this);
+	}
+
+[# th:each="ref: ${clazz.getEReferences()}"]
+	select[(${ref.name})]([# emft:lcc="${ref}"/]){
+		[(${clazz.name})]Actions.updateFilter('[# emft:lcc="${ref}"/]', [# emft:lcc="${ref}"/]);
+		$("#modal[(${ref.name})]").modal('hide');
+	}
+[/]
+	
+	pageTitle(){
+		return "[(${clazz.name})] :: search";
+	}
+
+
+	delete(model){
+		[(${clazz.name})]Actions.delete(model, this.state.filter);
+	}
+	
+	
+	update(model){
+		this.props.history.push(`../[(${clazz.name})]Modify/${[# emft:reactkey="${clazz}"/]}`);
+	}
+
+	[# emft:hasNoAnnotation="${clazz}" source="NoSearchFilter"]
+	search(){
+		this.updateFilter("page", 1);
+		[(${clazz.name})]Actions.search(this.state.filter);
+	}
+
+	navigate(i){
+		this.updateFilter("page", i);
+		[(${clazz.name})]Actions.search(this.state.filter);
+	}
+	
+	updateFilter(field, value){
+		[(${clazz.name})]Actions.updateFilter(field, value);
+	}
+	[/]
+	
+	[# emft:hasAnnotation="${clazz}" source="NoSearchFilter"]
+	search(){
+		[(${clazz.name})]Actions.search();
+	}
+
+	navigate(i){
+		[(${clazz.name})]Actions.search();
+	}
+	[/]
+	
 	renderSearchFilter(){
 		return (
 			<div>
-				<div className="row">
-					[# th:each="attr, itStat : ${clazz.eAttributes}"]
-					<div className="col-sm-3">
-						<label for="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
-						<input className="form-control" id="[(${attr.name})]" name="[(${attr.name})]" type="text" placeholder="enter [# emft:lbl="${attr}"/]"/>
-					</div>
-					[# th:if="${(itStat.index+1) % 4==0}"]
-				<div class="w-100"></div>	
-					[/]
-				    [/]
-				</div>
-				
-				<div className="row">
-					<div className="col">
-						<button className="btn btn-primary" data-ng-click="search();">Search</button>
-					</div>
+				<div>
+					<form>
+						[# emft:hasNoAnnotation="${clazz}" source="NoSearchFilter"]
+						<div className="row">
+							[# th:each="attr, itStat : ${clazz.eAttributes}"]
+							[# emft:hasAnnotation="${attr}" source="SearchFilter"]
+							<div className="col-md-3">
+								<div className="form-group">
+									<label htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+									<input className="form-control" id="[(${attr.name})]" name="[(${attr.name})]" type="text" placeholder=""  onChange={event => this.updateFilter('[(${attr.name})]', event.target.value)}/>
+								</div>
+								<ValidationError error={this.state.errors.[(${attr.name})]} />
+							</div>
+						    [/][/]
+						    
+						    [# th:each="ref, itStat : ${clazz.eReferences}"]
+						    [# emft:hasAnnotation="${ref}" source="SearchFilter"]
+					    	<div className="col-md-3">
+								<label htmlFor="[(${ref.name})]">[# emft:lbl="${ref}" /]</label>
+								<div className="input-group mb-3">
+									<input className="form-control" id="[(${ref.name})]Id" type="text" placeholder="code"  onChange={event => this.updateFilter('[(${ref.name})]', {id: event.target.value})}/>
+									<input className="form-control" id="[(${ref.name})]Name" type="text" disabled="disabled"/>
+									<div className="input-group-append">
+										<button className="btn btn-outline-secondary btn-small" type="button" onClick={(e)=>$("#modal[(${ref.name})]").modal()}><i className="fas fa-fw fa-search"></i></button>
+									</div>
+								</div>
+								<ValidationError error={this.state.errors.[(${ref.name})]} />
+							</div>
+						    [/][/]
+						</div>
+						[/]
+						<div className="row">
+							<div className="col text-right">
+								<Link to="/[(${clazz.name})]Create/"><button type="button" className="btn btn-secondary my-2">add new</button></Link>
+								<button type="button" className="btn btn-primary" onClick={() => this.search()}>search</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
+		);
+	}
+
+
+
+	renderRow(model){
+		return (
+			<tr key={[# emft:reactkey="${clazz}" /]}>
+				<td>
+					<Link to={`/[(${clazz.name})]View/${[# emft:reactkey="${clazz}" /]}`}><i className="fas fa-fw fa-search"></i></Link>
+				</td>
+				[# th:each="attr : ${clazz.eAttributes}"]
+				[# emft:hasAnnotation="${attr}" source="SearchResult"]
+				<td>
+					{model.[(${attr.name})]}
+				</td>
+				[/][/]
+				[# th:each="ref : ${clazz.eReferences}"]
+				[# emft:hasAnnotation="${ref}" source="SearchResult"]
+				<td>
+					{model.[(${ref.name})].name}
+				</td>
+				[/][/]
+				<td>
+					<button type="button" className="btn btn-secondary btn-sm" onClick={() => this.update(model)}>update</button>
+					<button type="button" className="btn btn-danger btn-sm" onClick={() => this.delete(model)}>delete</button>
+				</td>
+			</tr>
 		);
 	}
 	
 	
 	
 	renderTable(){
+		if (this.state.list && this.state.list.length > 0){
+			return (
+				<table className="table table-bordered">
+					<thead>
+						<tr>
+							<th></th>
+							[# th:each="attr : ${clazz.eAttributes}"]
+							[# emft:hasAnnotation="${attr}" source="SearchResult"]
+							<th>
+								[# emft:lbl="${attr}" /]
+							</th>
+							[/][/]
+							[# th:each="ref : ${clazz.eReferences}"]
+							[# emft:hasAnnotation="${ref}" source="SearchResult"]
+							<th>
+								[# emft:lbl="${ref}" /]
+							</th>
+							[/][/]
+							<th>
+								Actions
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+	                        this.state.list ? this.state.list.map(model => this.renderRow(model)) : null
+	                    }
+					</tbody>
+				</table>
+			);
+		}
+		return null;
+	}
+	
+	
+	renderPagination(){
+		if (this.state.list.length==0) return null;
 		return (
-			<div>
-				<div className="row">
-					<table className="table">
-						<thead>
-							<tr>
-								[# th:each="attr : ${clazz.eAttributes}"]
-								<th>
-									<label>[# emft:lbl="${attr}" /]</label>
-								</th>
-								[/]
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<button className="btn btn-primary btn-sm" id="btnDetalhar">Detail</button>
-									<button className="btn btn-warning btn-sm" id="btnAlterar">Update</button>
-									<button className="btn btn-danger btn-sm" id="btnExcluir">Remove</button>
-								</td>
-								[# each="attr : ${clazz.eAttributes}"]
-								<td></td>
-								[/]
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			<Pagination id="[# emft:lcc="${clazz}" /]-search" navigate={this.navigate}/>
 		);
 	}
 
 
-	render(){
+	renderPage(){
 		return(
-			<div className="container-fluid">
-				{this.renderSearchFilter()}					
-				<br/><br/>
-				{this.renderTable()}
+			<div>
+				<div className="card">
+					<div className="card-header">
+						<h1 className="card-title">[# emft:lbl="${clazz}" /] search</h1>
+					</div>
+					<div className="card-body">
+						{this.renderSearchFilter()}
+					</div>
+				</div>
+				<div  className="card">					
+					<Alert message={this.state.message}/>
+					{this.renderTable()}
+					{this.renderPagination()}
+				</div>
 			</div>	
 		);
 	}
@@ -79,15 +215,31 @@ class [(${clazz.name})]ListContainer extends Component {
 	
 	static  getStores() {
 	  	return [
-	    	[(${clazz.name})]Store,
+	    	[(${clazz.name})]ListStore
 	  	];
 	}
 	
+	[# emft:hasAnnotation="${clazz}" source="NoSearchFilter"]
 	static calculateState() {
+		const nextState = [(${clazz.name})]ListStore.getState();
 	  	return {
-	    	list: [(${clazz.name})]Store.getState().list,
+	    	list: nextState.list,
+	    	message: nextState.message
 	  	};
 	}
+	[/]
+	
+	[# emft:hasNoAnnotation="${clazz}" source="NoSearchFilter"]
+	static calculateState() {
+		const nextState = [(${clazz.name})]ListStore.getState();
+	  	return {
+	    	list: nextState.list,
+	    	filter: nextState.filter,
+	    	errors: nextState.errors,
+	    	message: nextState.message
+	  	};
+	}
+	[/]
 }
 
 export default Container.create([(${clazz.name})]ListContainer);

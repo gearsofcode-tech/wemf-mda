@@ -20,7 +20,7 @@ import tech.gearsofcode.emft.metamodel.AttributeAnnotations;
 
 /**
  * Tag to help print the primary keys as react key.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class ReactPrimaryKeyParameterTagProcessor extends AbstractAttributeTagProcessor{

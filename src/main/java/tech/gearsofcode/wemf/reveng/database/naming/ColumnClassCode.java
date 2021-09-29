@@ -3,7 +3,7 @@ package tech.gearsofcode.wemf.reveng.database.naming;
 /**
  * Represents an acronym used in the column's nomenclature.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class ColumnClassCode {
 

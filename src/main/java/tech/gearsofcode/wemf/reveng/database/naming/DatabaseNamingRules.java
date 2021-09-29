@@ -6,7 +6,7 @@ import tech.gearsofcode.wemf.reveng.database.model.Table;
 /**
  * This interface defines naming rules to use with the database objects.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public interface DatabaseNamingRules {
 

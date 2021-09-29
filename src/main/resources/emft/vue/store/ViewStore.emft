@@ -1,0 +1,82 @@
+/*[- */ fileNamePattern=%sViewStore.js /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=store/modules/ /* -]*/
+import Axios from "axios";
+import baseUrl from "../baseUrl";
+
+export default {
+    namespaced: true,
+
+    state: {
+        errors: {},
+        errorMessage: '',
+        model: {}
+        
+    },
+    
+    getters:{
+    	model(state){
+    		return state.model;
+    	},
+
+    
+        errorMessage(state){
+            return state.errorMessage;
+        },
+    },
+
+
+    mutations:{
+    	setModel(state, model){
+    		state.model = model;
+    	},
+    	
+        setErrorMessage(state, msg){
+            state.errorMessage = msg;
+        },
+    },
+
+    
+    actions:{
+    	load(context, id){
+            const searchUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/consultar-por-id/${id}`;
+            Axios.get(searchUrl)
+                .then(response => {
+                    context.commit('setModel', response.data);
+                })
+                .catch(error => {
+                    context.commit('setErrorMessage', 'Erro carregando [# emft:lbl="${clazz}" /]');
+                });
+            
+        },
+    
+        
+
+
+        remove(context, model){
+            const deleteUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/excluir/${model.codigo}`;
+            Axios.get(deleteUrl, model)
+                .then(response => {
+                    context.commit('setErrorMessage', null);
+                    context.dispatch('consultar');
+                })
+                .catch(error => {
+                    if (error.response){
+                        context.commit('setErrorMessage', error.response.data.mensagem)
+                    }
+                    else if (error.request){
+                        context.commit('setErrorMessage', 'Erro excluindo [# emft:lbl="${clazz}" /]. O serviço está indisponível');
+                    }
+                    else{
+                        context.commit('setErrorMessage', 'Erro excluindo [# emft:lbl="${clazz}" /]. Ocorreu um erro inesperado');
+                    }
+                });
+            
+        },
+        
+        
+        clear(context){
+            context.commit('setModel', {});
+        }
+    }
+};

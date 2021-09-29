@@ -30,7 +30,7 @@ import tech.gearsofcode.wemf.EMFModelGenerator;
 import tech.gearsofcode.wemf.parser.EMFModelGeneratorListener;
 
 /**
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  * Uses Thymeleaf to process templates against models.
  */
@@ -75,7 +75,7 @@ public class EMFTemplateProcessor {
 		ctx.setVariable("system", model.getEAnnotation(EMFModelGeneratorListener.SYSTEM_NAME_ANNOTATION).getDetails().get("name"));
 		PrintWriter pw = new PrintWriter(System.out);
 		for (EClassifier e: model.getEClassifiers()) {
-			ctx.setVariable("clazz", e);
+			ctx.setVariable("clazz", new Clazz(e));
 			templateEngine.process(template, ctx, pw);
 			pw.write("\n");
 		}
@@ -117,7 +117,7 @@ public class EMFTemplateProcessor {
 						if (optAttr.isPresent())lstAttributes.add(optAttr.get());
 						if (optRef.isPresent())lstAttributes.add(optRef.get());
 					}
-					ctx.setVariable("clazz", clazz);
+					ctx.setVariable("clazz", new Clazz(clazz));
 					ctx.setVariable("rule", r);
 					ctx.setVariable("attributes", lstAttributes);
 					while (template.willProcess(ctx)) {
@@ -149,7 +149,7 @@ public class EMFTemplateProcessor {
 				Optional<EClassifier> optEClassifier = model.getEClassifiers().stream().filter(e -> e.getName().equals(nailModel.getEntity())).findFirst();
 				if (!optEClassifier.isPresent()) throw new EMFModelGenerationException(String.format("Did not find class '%s'.", nailModel.getEntity()));
 				EClassifier clazz = optEClassifier.get();
-				ctx.setVariable("clazz", clazz);
+				ctx.setVariable("clazz", new Clazz(clazz));
 				ctx.setVariable("nail", nailModel);
 				
 				file = template.getGeneratedFile(root, ctx);
@@ -198,7 +198,7 @@ public class EMFTemplateProcessor {
 				File file;
 				for (EClassifier e: model.getEClassifiers()) {
 					if (!classifiers.isEmpty() && !classifiers.contains(e.getName())) continue;
-					ctx.setVariable("clazz", e);
+					ctx.setVariable("clazz", new Clazz(e));
 					while (template.willProcess(ctx)) {
 						file = template.getGeneratedFile(root, ctx);
 						if (!file.getParentFile().exists()){

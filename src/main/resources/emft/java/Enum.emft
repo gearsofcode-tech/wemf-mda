@@ -1,0 +1,39 @@
+/*[- */ fileNamePattern=%s.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=domain /* -]*/
+/*[- */ targetType=EEnum /* -]*/
+package [(${clazz.epackage.name})].domain;
+
+
+[# emft:javaAnnotations="${clazz}"/]
+public enum [(${clazz.name})] {
+[# th:each="attr, itStat : ${clazz.getELiterals()}"]
+	
+		[(${attr.name})]([(${attr.literal})])[# th:block th:if="${itStat.count} < ${itStat.size}"],[/][# th:block th:if="${itStat.count} == ${itStat.size}"];[/]
+	
+[/]
+
+	private String code;
+
+
+
+	private [(${clazz.name})](String code){
+		this.code = code;
+	}
+	
+	
+	
+	public String toString(){
+		return code;
+	}
+	
+	
+	public static [(${clazz.name})] fromString(String s) {
+		for ([(${clazz.name})] e : [(${clazz.name})].values()) {
+			if (e.name().equalsIgnoreCase(s)) {
+				return e;
+			}
+		}
+		return null;
+	}
+}

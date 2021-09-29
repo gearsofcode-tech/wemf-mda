@@ -16,7 +16,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 /**
  * Tag to decapitalize the first letter of a string.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class LowerCamelCaseTagProcessor extends AbstractAttributeTagProcessor{

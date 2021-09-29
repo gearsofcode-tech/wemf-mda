@@ -39,7 +39,7 @@ import tech.gearsofcode.wemf.parser.WEMFParser.SystemContext;
  * This class traverses the tree 2 times. On the first time, it maps basic classes.
  * On the second pass, it associates types correctly.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  */
 public class EMFModelGeneratorListener extends WEMFBaseListener {
 

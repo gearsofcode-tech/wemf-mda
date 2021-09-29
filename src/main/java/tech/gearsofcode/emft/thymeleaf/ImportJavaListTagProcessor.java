@@ -20,7 +20,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 /**
  * Tag that imports java.util.List only if it is necessary.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class ImportJavaListTagProcessor extends AbstractAttributeTagProcessor{

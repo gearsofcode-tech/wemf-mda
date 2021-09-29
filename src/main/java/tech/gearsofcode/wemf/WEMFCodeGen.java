@@ -27,7 +27,7 @@ import tech.gearsofcode.nail.metamodel.NAILModel;
  * This is the "main" class for generating code.
  * See {@link #run(File, String...)}
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class WEMFCodeGen {

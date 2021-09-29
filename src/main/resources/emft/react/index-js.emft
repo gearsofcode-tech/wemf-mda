@@ -6,18 +6,26 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { BrowserRouter, Route } from "react-router-dom";
+import IndexContainer from "./containers/IndexContainer";
+
 [# th:each="clazz : ${model.eClassifiers}"]
 import [(${clazz.name})]ListContainer from "./containers/[(${clazz.name})]ListContainer";
+import [(${clazz.name})]CreateContainer from "./containers/[(${clazz.name})]CreateContainer";
+import [(${clazz.name})]ModifyContainer from "./containers/[(${clazz.name})]ModifyContainer";
+import [(${clazz.name})]ViewContainer from "./containers/[(${clazz.name})]ViewContainer";
 [/]
 
 ReactDOM.render(
 	<BrowserRouter>
-		<div>
-			<Route exact path="/" component={App} />
+		<App>
+			<Route exact path="/" component={IndexContainer} />
 			[# th:each="clazz : ${model.eClassifiers}"]
-				<Route path="/[(${clazz.name})]List/" component={[(${clazz.name})]ListContainer} />
+			<Route path="/[(${clazz.name})]List/" component={[(${clazz.name})]ListContainer}/>
+			<Route path="/[(${clazz.name})]Create/" component={[(${clazz.name})]CreateContainer}/>
+			<Route path="/[(${clazz.name})]Modify/:id" component={[(${clazz.name})]ModifyContainer}/>
+			<Route path="/[(${clazz.name})]View/:id" component={[(${clazz.name})]ViewContainer}/>
 			[/]
-		</div>
+		</App>
 	</BrowserRouter>, 
 	document.getElementById('root')
 );

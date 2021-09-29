@@ -16,7 +16,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 /**
  * Tag to capitalize the first letter of a string.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class CamelCaseTagProcessor extends AbstractAttributeTagProcessor{

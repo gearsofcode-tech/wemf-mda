@@ -7,7 +7,7 @@ import tech.gearsofcode.wemf.reveng.database.sql.exception.CannotBuildSQLExcepti
 /**
  * Defines an interface for stablishing SQL syntax to be used with SQL Generation.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public interface SQLBuilder {
 	public void startTableDefinition(Table table);

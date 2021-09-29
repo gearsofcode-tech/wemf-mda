@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Represents a database table.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class Table implements Comparable<Table>, Serializable {
 

@@ -1,16 +1,263 @@
 /*[- */ fileNamePattern=%sActions.js /* -]*/
 /*[- */ genfolder=front /* -]*/
 /*[- */ subpackage=src/data/ /* -]*/
-import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
-import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+import [(${clazz.name})]ActionTypes from "./[(${clazz.name})]ActionTypes";
+import [(${system})]Dispatcher from "./[(${system})]Dispatcher";
+import Axios from "axios";
+import toastr from "toastr";
+import applicationPath from "../util/ApplicationPath";
+import PaginationActionTypes from "./PaginationActionTypes";
+[# th:each="eType: ${clazz.getReferencedETypes()}"]
+import [(${eType.name})]Actions from "../data/[(${eType.name})]Actions";
+import [(${eType.name})]ActionTypes from "../data/[(${eType.name})]ActionTypes";
+[/]
 
 const Actions = {
-  search(filter) {
-    [(${system})]Dispatcher.dispatch({
-      type: [(${clazz.name})]ActionTypes.[(${#strings.toUpperCase(clazz.name)})]_SEARCH,
-      filter,
-    });
-  },
+
+	[# th:each="eType: ${clazz.getReferencedETypes()}"]
+	search[(${eType.name})]List([# emft:lcc="${eType}"/]){
+		[(${eType.name})]Actions.searchFor([# emft:cc="${eType}"/]ActionTypes.[# emft:constant="${clazz}" /]_LIST_SEARCH_[# emft:constant="${eType}" /]);
+	},
+	
+	search[(${eType.name})]Create([# emft:lcc="${eType}"/]){
+		[(${eType.name})]Actions.searchFor([# emft:cc="${eType}"/]ActionTypes.[# emft:constant="${clazz}" /]_CREATE_SEARCH_[# emft:constant="${eType}" /]);
+	},
+	
+	search[(${eType.name})]Modify([# emft:lcc="${eType}"/]){
+		[(${eType.name})]Actions.searchFor([# emft:cc="${eType}"/]ActionTypes.[# emft:constant="${clazz}" /]_MODIFY_SEARCH_[# emft:constant="${eType}" /]);
+	},	
+	[/]
+
+
+	insert(model){
+		const createUrl = `${applicationPath()}/api/v1/[# emft:dashed="${clazz}"/]/insert`;
+  		Axios.post(createUrl, model)
+            .then(response => {
+                const createAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_INSERT
+                };
+                [(${system})]Dispatcher.dispatch(createAction);
+                toastr.success("New [# emft:lbl="${clazz}" /] added successfully");
+            })
+            .catch(error => {
+                const createErrorAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_INSERT_ERROR,
+                    message: error.response ? error.response.data.message : "It was not possible to complete the desired action. Service is unavailable.",
+                    errors: (error.response ? error.response.data.errors : {})
+                };
+                [(${system})]Dispatcher.dispatch(createErrorAction);
+            });
+	},
+	
+	
+	
+	update(model){
+		const requestAction = {
+            type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_MODIFY_REQUEST
+        };
+        [(${system})]Dispatcher.dispatch(requestAction);
+		const modifyUrl = `${applicationPath()}/api/v1/[# emft:dashed="${clazz}"/]/update`;
+  		Axios.post(modifyUrl, model)
+            .then(response => {
+                const modifyAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_MODIFY
+                };
+                [(${system})]Dispatcher.dispatch(modifyAction);
+                toastr.success("[# emft:lbl="${clazz}" /] was updated successfully")
+            })
+            .catch(error => {
+                const modifyErrorAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_MODIFY_ERROR
+                };
+                [(${system})]Dispatcher.dispatch(modifyErrorAction);
+            });
+	},
+	
+	
+	
+	confirmDelete(model){
+        const confirmDeleteAction = {
+            type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_CONFIRM_DELETE,
+            model: model
+        };
+        [(${system})]Dispatcher.dispatch(confirmDeleteAction);
+    },
+	
+	
+	delete(model, filter){
+		const deleteUrl = `${applicationPath()}/api/v1/[# emft:dashed="${clazz}"/]/delete/${[# emft:reactkey="${clazz}"/]}`;
+  		Axios.get(deleteUrl)
+            .then(response => {
+                const deleteAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_DELETE
+                };
+                [(${system})]Dispatcher.dispatch(deleteAction);
+                toastr.success("[# emft:lbl="${clazz}" /] was deleted successfully");
+                this.search(filter);
+            })
+            .catch(error => {
+                const deleteErrorAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_DELETE_ERROR,
+                    message: (error.response ? error.response.data.message : "It was not possible to complete the desired action. Service is unavailable.")
+                };
+                [(${system})]Dispatcher.dispatch(deleteErrorAction);
+            });
+	},
+	
+	
+	
+	load(id) {
+        const loadUrl = `${applicationPath()}/api/v1/[# emft:dashed="${clazz}"/]/find-by-id/${id}`;
+        Axios.get(loadUrl)
+          .then(response => {
+              const loadAction = {
+                  type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_LOAD,
+                  model: response.data,
+                  filter: null
+              };
+              [(${system})]Dispatcher.dispatch(loadAction);
+          })
+          .catch(error => {
+              console.log(error);
+              const loadErrorAction = {
+                  type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_LOAD_ERROR
+              };
+              [(${system})]Dispatcher.dispatch(loadErrorAction);
+          });
+    },
+    
+    
+    searchModal(filter) {
+        //Valid form
+        const executingAction = {
+          type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_MODAL_SEARCH_REQUEST,
+          errors: {}
+        }
+        [(${system})]Dispatcher.dispatch(executingAction);
+    		const searchUrl = `${applicationPath()}/api/v1/[# emft:dashed="${clazz}"/]/find`;
+    		Axios.post(searchUrl, filter)
+              .then(response => {
+                  const listAction = {
+                      type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_MODAL_SEARCH,
+                      list: response.data.list,
+                      filter: filter
+                  };
+                  [(${system})]Dispatcher.dispatch(listAction);
+                  
+                  const paginationAction = {
+                        type: PaginationActionTypes.UPDATE_PAGINATION,
+                        control: '[# emft:lcc="${clazz}" /]-modal-search',
+                        page: filter.page,
+                        pageSize: filter.pageSize,
+                        totalRecords: response.data.totalRecords
+                    };
+                    [(${system})]Dispatcher.dispatch(paginationAction);
+              })
+              .catch(error => {
+              	console.log(error);
+                  const listErrorAction = {
+                      type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_MODAL_SEARCH_ERROR
+                  };
+                  [(${system})]Dispatcher.dispatch(listErrorAction);
+              });
+    	},
+
+
+	[# emft:hasNoAnnotation="${clazz}" source="NoSearchFilter"]
+  	search(filter) {
+      //Validate form
+      var errors = {
+        [# th:each="attr, itStat : ${clazz.eAttributes}"]
+        [# emft:hasAnnotation="${attr}" source="SearchFilter"]
+          [(${attr.name})]Invalid: false[# th:block th:if="${itStat.count} < ${itStat.size}"],[/]
+        [/][/]
+      };
+
+      //Invalid form
+      if (false[# th:each="attr, itStat : ${clazz.eAttributes}"][# emft:hasAnnotation="${attr}" source="SearchFilter"]||errors.[(${attr.name})]Invalid[/][/]){
+        const validationErrorAction = {
+          type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_VALIDATION_ERROR,
+          errors: errors
+        };
+        [(${system})]Dispatcher.dispatch(validationErrorAction);
+      }
+      else{
+        //Valid form
+        const executingAction = {
+          type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH_REQUEST,
+          errors: errors
+        }
+        [(${system})]Dispatcher.dispatch(executingAction);
+    		const searchUrl = `${applicationPath()}/api/v1/[# emft:dashed="${clazz}"/]/find`;
+    		Axios.post(searchUrl, filter)
+              .then(response => {
+                  const listAction = {
+                      type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH,
+                      list: response.data.list,
+                      filter: filter
+                  };
+                  [(${system})]Dispatcher.dispatch(listAction);
+                  
+                  const paginationAction = {
+                        type: PaginationActionTypes.UPDATE_PAGINATION,
+                        control: '[# emft:lcc="${clazz}" /]-search',
+                        page: filter.page,
+                        pageSize: filter.pageSize,
+                        totalRecords: response.data.totalRecords
+                    };
+                    [(${system})]Dispatcher.dispatch(paginationAction);
+              })
+              .catch(error => {
+              	console.log(error);
+                  const listErrorAction = {
+                      type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH_ERROR
+                  };
+                  [(${system})]Dispatcher.dispatch(listErrorAction);
+              });
+    	}},
+  
+  
+
+
+	updateFilter(field, value) {
+    	[(${system})]Dispatcher.dispatch({
+      		type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_UPDATE_FILTER,
+      		field,
+      		value
+    	});
+  	},
+  	[/]	
+
+	[# emft:hasAnnotation="${clazz}" source="NoSearchFilter"]
+	search() {
+  		const searchUrl = `${applicationPath()}/api/v1/[# emft:dashed="${clazz}"/]/find`;
+  		Axios.post(searchUrl)
+            .then(response => {
+                const listAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH,
+                    list: response.data,
+                    filter: null
+                };
+                [(${system})]Dispatcher.dispatch(listAction);
+            })
+            .catch(error => {
+            	console.log(error);
+                const listErrorAction = {
+                    type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH_ERROR
+                };
+                [(${system})]Dispatcher.dispatch(listErrorAction);
+            });
+  	},
+  	[/]
+  	
+  	updateModel(field, value) {
+    	[(${system})]Dispatcher.dispatch({
+      		type: [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_UPDATE_MODEL,
+      		field,
+      		value
+    	});
+  	}
+  	
 };
 
 export default Actions;

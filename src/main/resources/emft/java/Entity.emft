@@ -1,19 +1,29 @@
 /*[- */ fileNamePattern=%s.java /* -]*/
 /*[- */ genfolder=java /* -]*/
-/*[- */ subpackage=model /* -]*/
-package [(${clazz.epackage.name})].model;
+/*[- */ subpackage=domain /* -]*/
+/*[- */ appliesTo=Entity /* -]*/
+package [(${clazz.epackage.name})].domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Embeddable;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import javax.persistence.JoinColumn;
 import java.util.Date;
+import java.math.BigDecimal;
+import java.io.Serializable;
 [# emft:importJavaList="${clazz}" /]
 
 [# emft:javaAnnotations="${clazz}"/]
-public class [(${clazz.name})] {
-[# th:each="attr : ${clazz.getEAttributes()}"]
+public class [(${clazz.name})] implements Serializable{
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
 	[# th:if="${attr.upperBound} == 1"]
 	[# emft:javaAnnotations="${attr}"/]
 	private [# emft:javaType="${attr}"/] [(${attr.name})];
@@ -23,7 +33,7 @@ public class [(${clazz.name})] {
 	private List<[# emft:javaType="${attr}"/]> [(${attr.name})];
 	[/]
 [/]
-[# th:each="attr : ${clazz.getEAttributes()}"]	
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
 	[# th:if="${attr.upperBound} == 1"]
 	public [# emft:javaType="${attr}"/] get[# emft:cc="${attr}" /]() {
 		return [(${attr.name})];

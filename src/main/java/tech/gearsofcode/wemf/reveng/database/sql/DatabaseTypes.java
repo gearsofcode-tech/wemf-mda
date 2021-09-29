@@ -8,7 +8,7 @@ import tech.gearsofcode.wemf.reveng.database.model.DataType;
 /**
  * Represents a group of Data Types for some database technology.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public interface DatabaseTypes {
 

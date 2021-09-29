@@ -8,7 +8,7 @@ import tech.gearsofcode.wemf.reveng.database.naming.ColumnClassCodes;
 
 /**
  * Represents a column of a database table.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class Column implements Comparable<Column>, Serializable {

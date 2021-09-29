@@ -20,7 +20,7 @@ import tech.gearsofcode.emft.metamodel.AttributeAnnotations;
 
 /**
  * Tag to help print the primary keys as method parameters.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class MethodParameterTagProcessor extends AbstractAttributeTagProcessor{

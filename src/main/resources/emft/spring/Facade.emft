@@ -1,48 +1,142 @@
 /*[- */ fileNamePattern=%sFacade.java /* -]*/
 /*[- */ genfolder=java /* -]*/
 /*[- */ subpackage=facade /* -]*/ 
+/*[- */ appliesTo=Entity /* -]*/
 package [(${clazz.epackage.name})].facade;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].domain.[(${clazz.name})];
+[# th:each="ref: ${clazz.getEReferences()}"]
+import [(${clazz.epackage.name})].domain.[(${ref.eType.name})];
+import [(${clazz.epackage.name})].web.dto.[(${ref.eType.name})]DTO;
+[/]
 import [(${clazz.epackage.name})].service.[(${clazz.name})]Service;
-import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+import [(${clazz.epackage.name})].web.dto.[(${clazz.name})]Criteria;
+import [(${clazz.epackage.name})].web.dto.[(${clazz.name})]DTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 @Service
 @Transactional
 @Component
 public class [(${clazz.name})]Facade {
 
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
 	@Autowired
-	[(${clazz.name})]Service [(${#strings.toLowerCase(clazz.name)})]Service;
-	
-	public void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
-		[(${#strings.toLowerCase(clazz.name)})]Service.include([(${#strings.toLowerCase(clazz.name)})]);
-	}
+	private [(${clazz.name})]Service [# emft:lcc="${clazz}"/]Service;
 	
 	
-	public void remove ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
-		[(${#strings.toLowerCase(clazz.name)})]Service.remove([(${#strings.toLowerCase(clazz.name)})]);
+	
+	[# th:each="eType: ${clazz.getReferencedETypes()}"]
+	@Autowired
+	private [(${eType.name})]Facade [# emft:lcc="${eType}"/]Facade;
+	[/]
+	
+	
+	
+	public void delete ([(${clazz.name})] [# emft:lcc="${clazz}"/]){
+		[# emft:lcc="${clazz}"/]Service.delete([# emft:lcc="${clazz}"/]);
 	} 
 	
-	public void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
-		[(${#strings.toLowerCase(clazz.name)})]Service.update([(${#strings.toLowerCase(clazz.name)})]);
+	public void update ([(${clazz.name})]DTO [# emft:lcc="${clazz}"/]DTO){
+		[(${clazz.name})] [# emft:lcc="${clazz}"/] = findById([# emft:dtopk="${clazz}"/]);
+		updateModel([# emft:lcc="${clazz}"/], [# emft:lcc="${clazz}"/]DTO);
+		[# emft:lcc="${clazz}"/]Service.update([# emft:lcc="${clazz}"/]);
 	}
 	
-	public [(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id){
-		return [(${#strings.toLowerCase(clazz.name)})]Service.getById(id);
+	public [(${clazz.name})] findById([# emft:idJavaType="${clazz}"/] id){
+		return [# emft:lcc="${clazz}"/]Service.findById(id);
 	}
 	
-	public List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filter){
-		return [(${#strings.toLowerCase(clazz.name)})]Service.getByFilter(filter);
+	[# emft:hasNoAnnotation="${clazz}" source="NoSearchFilter"]
+	public List<[(${clazz.name})]> findByCriteria([(${clazz.name})]Criteria [# emft:lcc="${clazz}"/]Criteria){
+		return [# emft:lcc="${clazz}"/]Service.findByCriteria([# emft:lcc="${clazz}"/]Criteria);
 	}
 	
-	public Long getTotalRecords([(${clazz.name})]FilterDTO filter){
-		return [(${#strings.toLowerCase(clazz.name)})]Service.getTotalRecords(filter);
+	public Long getTotalRecords([(${clazz.name})]Criteria [# emft:lcc="${clazz}"/]Criteria){
+		return [# emft:lcc="${clazz}"/]Service.getTotalRecords([# emft:lcc="${clazz}"/]Criteria);
+	}
+	[/]
+	
+	public List<[(${clazz.name})]> findAll(){
+		return [# emft:lcc="${clazz}"/]Service.findAll();
+	}
+	
+	
+	
+	public void insert ([(${clazz.name})]DTO [# emft:lcc="${clazz}"/]DTO){
+		[(${clazz.name})] [# emft:lcc="${clazz}"/] = toModel([# emft:lcc="${clazz}"/]DTO);
+		[# emft:lcc="${clazz}"/]Service.insert([# emft:lcc="${clazz}"/]);
+	}
+	
+	
+	public [(${clazz.name})]DTO toDTO([(${clazz.name})] [# emft:lcc="${clazz}"/]){
+		[(${clazz.name})]DTO [# emft:lcc="${clazz}"/]DTO = new [(${clazz.name})]DTO(); 	
+		[# th:each="attr : ${clazz.getEAttributes()}"]	
+		[# th:if="${attr.eType.name}=='EDate'"]
+		if ([# emft:lcc="${clazz}"/].get[# emft:cc="${attr}"/]()!=null){
+			[# emft:lcc="${clazz}"/]DTO.set[# emft:cc="${attr}"/](sdf.format([# emft:lcc="${clazz}"/].get[# emft:cc="${attr}"/]()));
+		}[/]
+		[# th:if="${attr.eType.name}!='EDate'"][# emft:lcc="${clazz}"/]DTO.set[# emft:cc="${attr}"/]([# emft:lcc="${clazz}"/].get[# emft:cc="${attr}"/]());[/]
+		[/]
+		[# th:each="ref: ${clazz.getEReferences()}"]
+		[(${ref.eType.name})] [# emft:lcc="${ref}"/] =  [# emft:lcc="${clazz}"/].get[# emft:cc="${ref}"/]();
+		if ([# emft:lcc="${ref}"/] != null){
+			[(${ref.eType.name})]DTO [# emft:lcc="${ref}"/]DTO = [# emft:lcc="${ref.eType}"/]Facade.toDTO([# emft:lcc="${ref}"/]);
+			[# emft:lcc="${clazz}"/]DTO.set[# emft:cc="${ref}"/]([# emft:lcc="${ref}"/]DTO);
+		}
+		[/]
+		return [# emft:lcc="${clazz}"/]DTO;
+	}		
+	
+	
+	public [(${clazz.name})] toModel([(${clazz.name})]DTO [(${clazz.lcc})]DTO){
+		[(${clazz.name})] [# emft:lcc="${clazz}"/] = new [(${clazz.name})](); 
+		[# th:each="attr : ${clazz.getEAttributes()}"]	
+		[# th:if="${attr.eType.name}=='EDate'"]
+		if ([(${clazz.lcc})]DTO.get[# emft:cc="${attr}"/]()!=null){
+			try{
+			[# emft:lcc="${clazz}"/].set[# emft:cc="${attr}"/](sdf.parse([(${clazz.lcc})]DTO.get[# emft:cc="${attr}"/]()));
+			}
+			catch (ParseException e) {
+				throw new IllegalArgumentException(String.format("Invalid date format for attribute '%s'.", "[(${attr.name})]"), e);
+			}
+		}[/]
+		[# th:if="${attr.eType.name}!='EDate'"][# emft:lcc="${clazz}"/].set[# emft:cc="${attr}"/]([(${clazz.lcc})]DTO.get[# emft:cc="${attr}"/]());[/]
+		[/]
+		[# th:each="ref: ${clazz.getEReferences()}"] 
+		[(${ref.eType.name})]DTO [# emft:lcc="${ref}"/]DTO = [(${clazz.lcc})]DTO.get[# emft:cc="${ref}"/]();
+		if ([# emft:lcc="${ref}"/]DTO !=null){
+			[# emft:lcc="${clazz}"/].set[# emft:cc="${ref}"/]([# emft:lcc="${ref.eType}"/]Facade.findById([# emft:refpk="${ref}"/]));
+		}
+		[/]
+		return [# emft:lcc="${clazz}"/];
+	}	
+	
+	
+	
+	public void updateModel([(${clazz.name})] [# emft:lcc="${clazz}"/], [(${clazz.name})]DTO dto){
+		[# th:each="attr : ${clazz.getEAttributes()}"]	
+		[# th:if="${attr.eType.name}=='EDate'"]
+		if ([# emft:lcc="${clazz}"/].get[# emft:cc="${attr}"/]()!=null){
+			try{
+			[# emft:lcc="${clazz}"/].set[# emft:cc="${attr}"/](sdf.parse(dto.get[# emft:cc="${attr}"/]()));
+			}
+			catch (ParseException e) {
+				throw new IllegalArgumentException(String.format("Valor de data inválida para o atributo '%s'.", "[(${attr.name})]"), e);
+			}
+		}[/]
+		[# th:if="${attr.eType.name}!='EDate'"][# emft:lcc="${clazz}"/].set[# emft:cc="${attr}"/](dto.get[# emft:cc="${attr}"/]());[/]
+		[/]
+		[# th:each="ref: ${clazz.getEReferences()}"] 
+		[(${ref.eType.name})]DTO [# emft:lcc="${ref}"/]DTO = dto.get[# emft:cc="${ref}"/](); 
+		if ([# emft:lcc="${ref}"/]DTO!=null) [# emft:lcc="${clazz}"/].set[# emft:cc="${ref}"/]([# emft:lcc="${ref.eType}"/]Facade.findById([# emft:refpk="${ref}"/]));
+		[/]
 	}
 	
 }

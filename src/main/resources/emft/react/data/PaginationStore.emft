@@ -1,0 +1,40 @@
+/*[- */ fileNamePattern=PaginationStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data /* -]*/
+/*[- */ global=true /* -]*/
+import {ReduceStore} from 'flux/utils';
+import PaginationActionTypes from './PaginationActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+
+class PaginationStore extends ReduceStore {
+
+    constructor(){
+        super([(${system})]Dispatcher);
+    }
+
+
+    getInitialState(){
+        return {
+        };
+    }
+
+
+    reduce(state, action){
+        switch (action.type){
+            case PaginationActionTypes.UPDATE_PAGINATION:
+                console.log("UPDATE PAGINATION");
+                console.log(action);
+                const stateAfterUpdate = Object.assign({}, state);
+                stateAfterUpdate[action.control] = {
+                    page: action.page,
+                    pageSize: action.pageSize,
+                    totalRecords: action.page == 1 ? action.totalRecords : (state[action.control] ? state[action.control].totalRecords : 0)
+                };
+                return stateAfterUpdate;
+            default:
+                return state;
+        }
+    }
+}
+
+export default new PaginationStore();

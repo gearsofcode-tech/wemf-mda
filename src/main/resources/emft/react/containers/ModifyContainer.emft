@@ -1,0 +1,137 @@
+/*[- */ fileNamePattern=%sModifyContainer.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/containers/ /* -]*/
+import React, {Component} from "react";
+import {Container} from "flux/utils";
+import BasePage from "../components/BasePage";
+import [(${clazz.name})]ModifyStore from "../data/[(${clazz.name})]ModifyStore";
+import [(${clazz.name})]Actions from "../data/[(${clazz.name})]Actions";
+import ValidationError from "../components/ValidationError";
+import $ from "jquery";
+import "bootstrap";
+
+class [(${clazz.name})]ModifyContainer extends BasePage {
+
+	constructor(props){
+		super(props);
+		this.update = this.update.bind(this);
+		this.goBack = this.goBack.bind(this);
+	}
+	
+	
+	
+	pageTitle(){
+		return "[(${clazz.name})] :: update";
+	}
+	
+	
+	
+	componentDidMount(){
+		[(${clazz.name})]Actions.load(this.props.match.params.id);
+	}
+
+
+
+	update(){
+		[(${clazz.name})]Actions.update(this.state.model);
+	}
+
+	
+	
+	updateModel(field, value){
+		[(${clazz.name})]Actions.updateModel(field, value);
+	}
+
+	
+	
+	goBack(){
+	    this.props.history.goBack();
+	}
+
+
+
+	renderForm(){
+		return (
+			<div>
+				<div className="row">
+					[# th:each="attr, itStat : ${clazz.eAttributes}"]
+					[# th:if="${attr.eType.name}!='EBoolean' and ${attr.eType.name}!='EBooleanObject'"]
+					<div className="col-md-3">
+						<label htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+						<input id="[(${attr.name})]" type="text" className="form-control" onChange={event => this.updateModel('[(${attr.name})]', event.target.value)} value={this.state.model.[(${attr.name})]}></input>
+						<ValidationError error={this.state.errors.[(${attr.name})]} />
+					</div>
+					[/]
+					[# th:if="${attr.eType.name}=='EBoolean' or ${attr.eType.name}=='EBooleanObject'"]
+					<div className="col-md-3">
+						<div className="form-group form-check">
+							<input id="[(${attr.name})]" type="checkbox" className="form-check-input" onChange={event => this.updateModel('[(${attr.name})]', event.target.checked)} checked={this.state.model.[(${attr.name})]}></input>
+							<label className="form-check-label" htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+							<ValidationError error={this.state.errors.[(${attr.name})]} />
+						</div>
+					</div>
+					[/]
+				    [/]
+				    [# th:each="ref, itStat : ${clazz.eReferences}"]
+				    	<div className="col-md-3">
+							<label htmlFor="[(${ref.name})]">[# emft:lbl="${ref}" /]</label>
+							<div className="input-group mb-3">
+								<input className="form-control" id="[(${ref.name})]Id" type="text" placeholder="code"  onChange={event => this.updateModel('[(${ref.name})]', {id: event.target.value})} value={this.state.[(${ref.name})]Id} />
+								<input className="form-control" id="[(${ref.name})]" type="text" disabled="disabled" value={this.state.[(${ref.name})]Name}/>
+								<div className="input-group-append">
+									<button className="btn btn-outline-secondary" type="button" onClick={(e)=>$("#modal[(${ref.eType.name})]").modal()}>choose</button>
+								</div>
+							</div>
+							<ValidationError error={this.state.errors.[(${ref.name})]} />
+						</div>
+				    [/]
+				</div>
+				<div className="row mt-3">
+					<div className="col">
+						<button className="btn btn-primary btn-sm" onClick={this.update}>update</button>
+						<button className="btn btn-secondary btn-sm" onClick={this.goBack}>cancel</button>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+
+
+	renderPage(){
+		return(
+			<div className="card">
+				<div className="card-header">
+					<h1>[# emft:lbl="${clazz}" /]</h1>
+				</div>
+				<div className="card-body">
+					{this.renderForm()}			
+				</div>		
+			</div>	
+		);
+	}
+	
+	
+	static  getStores() {
+	  	return [
+	    	[(${clazz.name})]ModifyStore
+	  	];
+	}
+	
+	
+	static calculateState() {
+		const nextState = [(${clazz.name})]ModifyStore.getState();
+	  	return {
+	    	model: nextState.model,
+	    	errors: nextState.errors,
+	    	[# th:each="ref: ${clazz.getEReferences()}"]
+			list[(${ref.eType.name})] : nextState.list[(${ref.eType.name})],
+			[(${ref.name})]Id : nextState.model.[(${ref.name})] ? nextState.model.[(${ref.name})].id[(${ref.eType.name})] : '',
+			[(${ref.name})]Name : nextState.model.[(${ref.name})] ? nextState.model.[(${ref.name})].name : '',
+			[/]
+	    	message: nextState.message
+	  	};
+	}
+}
+
+export default Container.create([(${clazz.name})]ModifyContainer);

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Represents the size of a column.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class DataSize implements Serializable {
 

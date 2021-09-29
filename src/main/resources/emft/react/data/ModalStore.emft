@@ -1,0 +1,56 @@
+/*[- */ fileNamePattern=%sModalStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import {ReduceStore} from 'flux/utils';
+import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+
+class [(${clazz.name})]ModalStore extends ReduceStore {
+
+	constructor() {
+		super([(${system})]Dispatcher);
+	}
+
+	getInitialState() {
+		return {list:[], filter:{pageSize : 30, page: 1}, message: null};
+	}
+
+	reduce(state, action) {
+		switch (action.type) {
+			
+		
+			case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_MODAL_SEARCH_EXECUTING:
+				const stateAfterExecuting = Object.assign({}, state);
+				stateAfterExecuting.list = [];
+				stateAfterExecuting.executing = true;
+				stateAfterExecuting.erros = action.erros;
+				return stateAfterExecuting;
+
+			case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_MODAL_SEARCH:
+	        	const stateAfterSearch = Object.assign({}, state);
+	        	stateAfterSearch.list = action.list;
+	        	return stateAfterSearch;
+        	
+      		case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_MODAL_SEARCH_ERROR:
+	      		const stateAfterSearchError = Object.assign({}, state);
+	        	stateAfterSearchError.list = [];
+	        	stateAfterSearchError.message = 'Could not load data due to an unexpected error.';
+	        	return stateAfterSearchError;
+        
+     		case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_UPDATE_MODAL_FILTER:
+	     		const newFilterState = Object.assign({}, state);
+	     		if (action.value === '') {
+					delete newFilterState.filter[action.field];
+				}
+				else{
+	     			newFilterState.filter[action.field] = action.value;
+	     		}
+		        return newFilterState;
+
+      		default:
+        		return state;
+    }
+  }
+}
+
+export default new [(${clazz.name})]ModalStore();

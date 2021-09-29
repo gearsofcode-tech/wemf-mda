@@ -18,7 +18,7 @@ import tech.gearsofcode.wemf.reveng.database.naming.DatabaseNamingRules;
 /**
  * This class generates ".nail" files from an existing database.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class NAILDatabaseReverseEngineer { 

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Represents a group of Column Class Codes to use in a naming scheme.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public interface ColumnClassCodes {
 

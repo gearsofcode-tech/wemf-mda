@@ -1,0 +1,16 @@
+/*[- */ fileNamePattern=%sEntityRender.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/ /* -]*/
+render[(${clazz.name})]([# emft:lcc="${clazz}"/]){
+	return (
+		<table className="table">
+			<tbody>			
+				[# th:each="attr : ${clazz.eAttributes}"]
+				<tr>
+					<td>[# emft:lbl="${attr}" /]</td><td>{[# emft:lcc="${clazz}"/].[(${attr.name})]}</td>
+				</tr>
+				[/]
+			</tbody>
+		</table>
+	);
+}

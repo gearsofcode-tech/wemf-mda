@@ -10,7 +10,7 @@ import tech.gearsofcode.wemf.reveng.database.sql.oracle.OracleDatabaseTypes;
  * @TODO: refactor to allow more than one technology. Currently, only ORACLE and MYSQL are
  *        supported.
  *        
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class DatabaseTypesFactory {
 

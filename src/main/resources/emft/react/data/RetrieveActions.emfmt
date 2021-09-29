@@ -1,0 +1,136 @@
+/*[- */ fileNamePattern=%sActions.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import [# emft:cc="${operation}" /]ActionTypes from "./[# emft:cc="${operation}" /]ActionTypes";
+import [(${system})]Dispatcher from "./[(${system})]Dispatcher";
+import Axios from "axios";
+import applicationPath from "../util/ApplicationPath";
+
+const Actions = {
+	[# th:if="${operation.upperBound == -1}"]
+	[# emft:hasAnnotation="${operation}" source="POST"]
+  	[(${operation.name})](filter) {
+  		const executingAction = {
+			type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_EXECUTING,
+		};
+		[(${system})]Dispatcher.dispatch(executingAction);
+  		const searchUrl = `${applicationPath()}/rest/[# emft:dashed="${clazz}" /]/[# emft:dashed="${operation}" /]`;
+  		Axios.post(searchUrl, filter)
+            .then(response => {
+                const listAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /],
+                    list: response.data,
+                    filter: filter
+                };
+                [(${system})]Dispatcher.dispatch(listAction);
+            })
+            .catch(error => {
+            	console.log(error);
+                const listErrorAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_ERROR
+                };
+                [(${system})]Dispatcher.dispatch(listErrorAction);
+            });
+  	},
+  	[/]
+  	[# emft:hasAnnotation="${operation}" source="GET"]
+  	[(${operation.name})](filter) {
+  		const executingAction = {
+			type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_EXECUTING,
+		};
+		[(${system})]Dispatcher.dispatch(executingAction);
+  		const searchUrl = `${applicationPath()}/rest/[# emft:dashed="${clazz}" /]/[# emft:dashed="${operation}" /]?[# th:each="attr, itStat : ${operation.eParameters}"][(${attr.name})]=${filter.[(${attr.name})]}[# th:block th:if="${itStat.count} < ${itStat.size}"]&[/][/]`;
+  		Axios.get(searchUrl)
+            .then(response => {
+                const listAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /],
+                    list: response.data,
+                    filter: filter
+                };
+                [(${system})]Dispatcher.dispatch(listAction);
+            })
+            .catch(error => {
+            	console.log(error);
+                const listErrorAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_ERROR
+                };
+                [(${system})]Dispatcher.dispatch(listErrorAction);
+            });
+  	},
+  	[/]
+  	[/]
+  	[# th:if="${operation.upperBound == 1}"]
+  	[# emft:hasAnnotation="${operation}" source="POST"]
+  	[(${operation.name})](filter) {
+  		const executingAction = {
+			type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_EXECUTING,
+		};
+		[(${system})]Dispatcher.dispatch(executingAction);
+  		const searchUrl = `${applicationPath()}/rest/[# emft:dashed="${clazz}" /]/[# emft:dashed="${operation}" /]`;
+  		Axios.post(searchUrl, filter)
+            .then(response => {
+                const listAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /],
+                    model: response.data,
+                    filter: filter
+                };
+                [(${system})]Dispatcher.dispatch(listAction);
+            })
+            .catch(error => {
+            	console.log(error);
+                const listErrorAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_ERROR
+                };
+                [(${system})]Dispatcher.dispatch(listErrorAction);
+            });
+  	},
+  	[/]
+  	[# emft:hasAnnotation="${operation}" source="GET"]
+  	[(${operation.name})](filter) {
+  		const executingAction = {
+			type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_EXECUTING,
+		};
+		[(${system})]Dispatcher.dispatch(executingAction);
+  		const searchUrl = `${applicationPath()}/rest/[# emft:dashed="${clazz}" /]/[# emft:dashed="${operation}" /]?[# th:each="attr, itStat : ${operation.eParameters}"][(${attr.name})]=${filter.[(${attr.name})]}[# th:block th:if="${itStat.count} < ${itStat.size}"]&[/][/]`;
+  		Axios.get(searchUrl)
+  		     .then(response => {
+                const listAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /],
+                    model: response.data,
+                    filter: filter
+                };
+                [(${system})]Dispatcher.dispatch(listAction);
+            })
+            .catch(error => {
+            	console.log(error);
+                const listErrorAction = {
+                    type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_ERROR
+                };
+                [(${system})]Dispatcher.dispatch(listErrorAction);
+            });
+  	},
+  	[/]
+  	[/]
+  	
+  	
+  
+	updateFilter(field, value) {
+    	[(${system})]Dispatcher.dispatch({
+      		type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_UPDATE_FILTER,
+      		field,
+      		value
+    	});
+  	},
+  	
+  	
+  	updateModel(field, value) {
+    	[(${system})]Dispatcher.dispatch({
+      		type: [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_UPDATE_MODEL,
+      		field,
+      		value
+    	});
+  	}
+  	
+};
+
+export default Actions;

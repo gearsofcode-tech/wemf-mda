@@ -1,0 +1,181 @@
+/*[- */ fileNamePattern=%sRepositoryMogwai.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=repository.mogwai /* -]*/
+/*[- */ appliesTo=Entity /* -]*/
+package [(${clazz.epackage.name})].repository.mogwai;
+
+import java.util.List;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import br.ufrj.coppe.mogwai.core.MTransaction;
+import br.ufrj.coppe.mogwai.structure.MGraph;
+import br.ufrj.coppe.mogwai.structure.MVertex;
+import br.ufrj.coppe.mogwai.structure.MEdge;
+import br.ufrj.coppe.mogwai.exception.MQueryException;
+import java.text.SimpleDateFormat;
+import [(${clazz.epackage.name})].domain.[(${clazz.name})];
+import [(${clazz.epackage.name})].repository.[(${clazz.name})]Repository;
+import [(${clazz.epackage.name})].web.dto.[(${clazz.name})]Criteria;
+
+
+
+public class [(${clazz.name})]RepositoryMogwai implements [(${clazz.name})]Repository {
+
+	
+	private MGraph g;
+	
+	
+	
+	public [(${clazz.name})]RepositoryMogwai(MGraph graph){
+		this.g = graph;
+	}
+	
+	
+	
+	@Override
+	public void insert ([(${clazz.name})] [(${clazz.lcc})]){
+		try (MTransaction tx = g.getDatabase().beginTx()){
+			MVertex n = g.addVertex();
+			n.setLabel("[# emft:constant="${clazz}"/]");
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
+	[# th:if="${attr.upperBound} == 1"]
+			n.property("[(${attr.name})]", [(${clazz.lcc})].get[# emft:cc="${attr}" /]());
+	[/]
+[/]			
+			tx.commit();
+		}
+	}
+	
+	@Override
+	public void delete ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		try (MTransaction tx = g.getDatabase().beginTx()){
+			String mql = String.format("select ([(${clazz.lcc})]:[# emft:constant="${clazz}"/]) where [(${clazz.lcc})].[(${clazz.idAttributes[0].name})] = %s;", [(${clazz.lcc})].get[# emft:cc="${clazz.idAttributes[0]}"/]());
+			MGraph selected = g.getDatabase().executeSelect(mql);
+			selected.vertices().forEachRemaining(v -> v.remove());
+			tx.commit();
+		}
+		catch (MQueryException e) {
+			throw new RuntimeException(e);
+		}
+	} 
+	
+	@Override
+	public void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		String updateStmt = String.format("update (#%s:[# emft:constant="${clazz}"/]) {", [(${clazz.lcc})].get[# emft:cc="${clazz.idAttributes[0]}"/]());
+		StringBuilder mql = new StringBuilder();
+		mql.append(updateStmt);
+[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
+	[# th:if="${attr.upperBound} == 1"]
+		mql.append("[(${attr.name})]").append(":").append([(${clazz.lcc})].get[# emft:cc="${attr}" /]()).append(", ");
+	[/]
+[/]
+		
+		mql.delete(mql.length()-2, mql.length());
+		mql.append("}");
+		try (MTransaction tx = g.getDatabase().beginTx()){
+			g.getDatabase().executeUpdate(mql.toString());
+			tx.commit();
+		}
+		catch (MQueryException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public [(${clazz.name})] findById([# emft:idJavaType="${clazz}"/] id){
+		[(${clazz.name})] [(${clazz.lcc})] = null;
+		try (MTransaction tx = g.getDatabase().beginTx()){
+			String mql = String.format("select ([(${clazz.lcc})]:[# emft:constant="${clazz}"/]) where [(${clazz.lcc})].[(${clazz.idAttributes[0].name})] = %s;", [(${clazz.lcc})].get[# emft:cc="${clazz.idAttributes[0]}"/]());
+			MGraph selected = g.getDatabase().executeSelect(mql);
+			Iterator<MVertex> vertices = selected.vertices();
+			if (vertices.hasNext()) {
+				MVertex v = vertices.next();
+				[(${clazz.lcc})] = toEntity(v);
+			}
+			tx.commit();
+		}
+		catch (MQueryException e) {
+			throw new RuntimeException(e);
+		}
+		return user;
+	}
+	
+	private User toEntity(MVertex v){
+		[(${clazz.name})] [(${clazz.lcc})] = new [(${clazz.name})]();
+	[# th:each="attr : ${clazz.getEStructuralFeatures()}"]
+	[# th:if="${attr.upperBound} == 1"]
+		[(${clazz.lcc})].set[# emft:cc="${attr}" /](v.property("[(${attr.name})]").value());
+	[/]
+	[/]		
+		return [(${clazz.lcc})];
+	}
+	
+	@Override
+	public List<[(${clazz.name})]> findByCriteria([(${clazz.name})]Criteria criteria){
+		String mql = toMQL(criteria);		
+		List<[(${clazz.name})]> result = new LinkedList<[(${clazz.name})]>();
+		try (MTransaction tx = g.getDatabase().beginTx()){
+			MGraph selected = g.getDatabase().executeSelect(mql.toString());
+			Iterator<MVertex> vertices = selected.vertices();
+			vertices.forEachRemaining(v -> result.add(toEntity(v)));
+			tx.commit();
+		}
+		catch (MQueryException e) {
+			throw new RuntimeException(e);
+		}
+		return result;
+	}
+	
+	
+	private String toMQL([(${clazz.name})]Criteria criteria) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		StringBuilder mql = new StringBuilder("select ([(${clazz.lcc})]:[# emft:constant="${clazz}"/]) where ");
+		[# th:each="attr : ${clazz.eAttributes}"]
+		
+		[# th:switch="${attr.eAttributeType.name}"]
+		[# th:case="'EString'"]
+		if (criteria.get[# emft:cc="${attr}"/]() != null && !criteria.get[# emft:cc="${attr}"/]().isEmpty()){
+			mql.append("[(${clazz.lcc})].[(${attr.name})] = '").append(criteria.get[# emft:cc="${attr}"/]()).append("' and ");
+		}
+		[/]
+		[# th:case="'EDate'"]
+		try {
+			if (!criteria.get[# emft:cc="${attr}"/]().isEmpty()){
+				mql.append(String.format("[(${clazz.lcc})].[(${attr.name})] = '%s'", sdf.parse(criteria.get[# emft:cc="${attr}"/]())));
+			}
+		}
+		catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+		[/]
+		[# th:case="*"]if (criteria.get[# emft:cc="${attr}"/]() != null) mql.append(String.format("[(${clazz.lcc})].[(${attr.name})] = %s", criteria.get[# emft:cc="${attr}"/]())).append(" and ");[/]
+		[/]
+		
+		[/]
+		
+		mql.delete(mql.length()-5, mql.length());
+		return mql.toString();
+	}
+	
+	@Override
+	public Long getTotalRecords([(${clazz.name})]Criteria criteria){
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public List<[(${clazz.name})]> findAll(){
+		List<[(${clazz.name})]> result = new LinkedList<[(${clazz.name})]>();
+		try (MTransaction tx = g.getDatabase().beginTx()){
+			String mql = "select (:[# emft:cc="${clazz}"/])";
+			MGraph selected = g.getDatabase().executeSelect(mql);
+			Iterator<MVertex> vertices = selected.vertices();
+			vertices.forEachRemaining(v -> result.add(toEntity(v)));
+			tx.commit();
+		}
+		catch (MQueryException e) {
+			throw new RuntimeException(e);
+		}
+		return result;
+	}
+}

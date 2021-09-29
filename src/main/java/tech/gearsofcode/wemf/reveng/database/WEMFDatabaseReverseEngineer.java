@@ -17,7 +17,7 @@ import tech.gearsofcode.wemf.reveng.database.naming.DatabaseNamingRules;
 /**
  * This class generates ".wemf" files from an existing database.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class WEMFDatabaseReverseEngineer {

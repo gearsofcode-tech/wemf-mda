@@ -1,6 +1,6 @@
 /*[- */ fileNamePattern=index.html /* -]*/
 /*[- */ genfolder=front /* -]*/
-/*[- */ subpackage=src /* -]*/
+/*[- */ subpackage=public /* -]*/
 /*[- */ global=true /* -]*/
 <!doctype html>
 <html>
@@ -10,6 +10,6 @@
   </head>
   <body>
     <section id="root"></section>
-    <script src="./index.js"></script>
+    <script src="./index.js" type="text/babel"></script>
   </body>
 </html>

@@ -1,0 +1,41 @@
+/*[- */ fileNamePattern=IndexContainer.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/containers/ /* -]*/
+/*[- */ global=true /* -]*/
+import React, {Component} from "react";
+import { NavLink  } from 'react-router-dom'
+[# th:each="clazz : ${model.eClassifiers}"]
+import [(${clazz.name})]ListContainer from "./[(${clazz.name})]ListContainer";
+import [(${clazz.name})]CreateContainer from "./[(${clazz.name})]CreateContainer";
+import [(${clazz.name})]ModifyContainer from "./[(${clazz.name})]ModifyContainer";
+[/]
+
+export default class IndexContainer extends Component {
+
+	constructor(props){
+		super(props);
+	}
+
+
+
+	renderIndex(){
+		return (
+			<div>
+				<h1>Olá mundo!</h1>
+				<p>
+					Essa aplicação foi gerada utilizando o WEMF-MDA
+				</p>
+			</div>
+		);
+	}
+		
+
+	render(){
+		return(
+			<div className="container-fluid">
+				{this.renderIndex()}					
+			</div>	
+		);
+	}
+
+}

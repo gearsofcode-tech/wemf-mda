@@ -13,13 +13,14 @@ import tech.gearsofcode.emft.thymeleaf.pk.IdJavaTypeTagProcessor;
 import tech.gearsofcode.emft.thymeleaf.pk.JSTagProcessor;
 import tech.gearsofcode.emft.thymeleaf.pk.MethodDeclarationTagProcessor;
 import tech.gearsofcode.emft.thymeleaf.pk.MethodParameterTagProcessor;
+import tech.gearsofcode.emft.thymeleaf.pk.RefTagProcessor;
 import tech.gearsofcode.emft.thymeleaf.pk.RestPathTagProcessor;
 import tech.gearsofcode.emft.thymeleaf.pk.RestPathVariableTagProcessor;
 
 /**
  * 
  * Thymeleaf dialect with helper tags to generate code.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class EMFTDialect extends AbstractProcessorDialect{
@@ -62,6 +63,7 @@ public class EMFTDialect extends AbstractProcessorDialect{
 		processors.add(new RestPathVariableTagProcessor(PREFIX));
 		processors.add(new FindByPrimaryKeyTagProcessor(PREFIX));
 		processors.add(new JSTagProcessor(PREFIX));
+		processors.add(new RefTagProcessor(PREFIX));
 		return processors;
 	}
 

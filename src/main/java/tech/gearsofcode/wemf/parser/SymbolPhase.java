@@ -8,7 +8,7 @@ import tech.gearsofcode.wemf.parser.WEMFParser.ConcreteClassContext;
 /**
  * This class is used to traverse the tree and identify all classes defined by the user.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class SymbolPhase extends WEMFBaseListener{
 

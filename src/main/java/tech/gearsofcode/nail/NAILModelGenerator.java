@@ -24,7 +24,7 @@ import tech.gearsofcode.wemf.EMFModelGenerationException;
 /**
  * Façade to generate model from ".nail" file.
  *
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class NAILModelGenerator {

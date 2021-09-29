@@ -3,7 +3,7 @@ package tech.gearsofcode.wemf.reveng.database.sql.exception;
 /**
  * Thrown when an error occurs during SQL generation.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class CannotBuildSQLException extends Exception {
 

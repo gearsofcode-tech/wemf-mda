@@ -1,0 +1,160 @@
+/*[- */ fileNamePattern=%sList.vue /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=views/ /* -]*/
+<template>
+    <div>
+        <div>
+            <div class="container100">
+                <div>
+                    <h1>Consulta [# emft:lbl="${clazz}" /]</h1>
+                    <div class="grupoErroValidacao">
+                        <span class="erroValidacao">
+                            {{errorMessage}}
+                        </span>
+                    </div>
+                </div>
+                
+                
+                <form>
+                	<div class="botoesAcao">
+                        <button type="button" class="botao linkAcao botaoReiniciar" @click="clear()">Reiniciar</button>
+                    </div>
+                    <div class="formulario">
+						[# emft:hasNoAnnotation="${clazz}" source="NoSearchFilter"]
+						<div class="linhaFormulario">
+							[# th:each="attr, itStat : ${clazz.eAttributes}"]
+							[# emft:hasAnnotation="${attr}" source="SearchFilter"]
+							<div class="container20">
+								<label>[# emft:lbl="${attr}" /]</label>
+								<input id="[(${attr.name})]" type="text" v-model="parameters.[(${attr.name})]"/>
+							</div>
+						    [/][/]
+						    [# th:each="ref, itStat : ${clazz.eReferences}"]
+						    [# emft:hasAnnotation="${ref}" source="SearchFilter"]
+					    	<div class="container20">
+								<label>[# emft:lbl="${ref}" /]</label>
+								<div>
+									<input id="[(${ref.name})]Codigo" type="text"/>
+									<input id="[(${ref.name})]Nome" type="text" disabled="disabled"/>
+									<button class="botao" type="button">buscar</button>
+								</div>
+							</div>
+						    [/][/]
+						</div>
+						[/]
+						<div>
+							<div>
+								<Link to="/[(${clazz.name})]Create/"><button type="button" className="btn btn-secondary my-2">INCLUIR</button></Link>
+								<button type="button" class="botao" @click="search()">CONSULTAR</button>
+							</div>
+						</div>
+					</div>
+				</form>
+
+                </div>
+                    <br/>
+                    <div class="cabecalhoFormulario">
+                        <span id="textoFiltroAplicado" class="informacoesPesquisa">
+                            <b>Filtros aplicados: </b>
+                            {{filtrosAplicados}}
+                        </span>
+                    </div>
+                    <br/>
+                </div>
+
+                <div class="selic-gridPesquisa selic-grid selic-gridOnly">
+                    <div class="selic-grid-pager-panel selic-gridPaginationTop">
+                    </div>
+                    <div class="selic-grid-contents-wrapper selic-grid-render-container">
+                        <table class="tabelaResultado">
+                            <thead>
+                                <tr>
+                                    [# th:each="attr : ${clazz.eAttributes}"]
+									<th>
+										<label>[# emft:lbl="${attr}" /]</label>
+									</th>
+									[/]
+                                    <th>
+                                        &nbsp;
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="[# emft:lcc="${clazz}"/] in data" v-bind:key="[# emft:jspk="${clazz}"/]">
+                                    [# th:each="attr : ${clazz.eAttributes}"]
+									[# th:if="${attr.eType.name}!='EBoolean'"]
+									<td>
+										{{[# emft:lcc="${clazz}"/].[(${attr.name})]}}
+									</td>
+									[/]
+									[# th:if="${attr.eType.name}=='EBoolean'"]
+									<td className="text-center">
+										{{[# emft:lcc="${clazz}"/].[(${attr.name})] ? "Sim" : "Não"}}
+									</td>
+									[/]
+									[/]
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="selic-grid-pager-panel selic-gridPaginationBottom">
+                        <div class="selic-grid-pager-container">
+                            <div class="selic-grid-pager-control">
+                                <button class="selic-grid-pager-first"></button>
+                                <button class="selic-grid-pager-previous"></button>
+                                <input id="inputPagina" type="number" class="selic-grid-pager-control-input inputPaginacao"></input>
+                                <span class="selic-grid-pager-max-pages-number spanPaginacao"><abbr></abbr> totalDePaginas</span>
+                                <button class="selic-grid-pager-next"></button>
+                                <button class="selic-grid-pager-last"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </div>    
+</template>
+
+
+<script>
+
+export default {
+
+    computed: {
+        data(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/list/data'];
+        },
+
+        errorMessage(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/list/errorMessage'];
+        },
+        
+        
+        parameters(){
+        	return this.$store.getters['[# emft:dashed="${clazz}"/]/list/parameters'];
+        },
+        
+        filtrosAplicados(){
+        	return this.$store.getters['[# emft:dashed="${clazz}"/]/list/filtrosAplicados'];
+        }
+    },
+
+
+    created(){
+
+    },
+    
+    methods: {
+		search(){
+	        this.$store.dispatch('[# emft:dashed="${clazz}"/]/list/search');
+	    },
+	    
+	    
+	    clear(){
+	        this.$store.dispatch('[# emft:dashed="${clazz}"/]/list/clear');
+	    }
+    }
+}
+</script>

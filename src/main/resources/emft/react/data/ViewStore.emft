@@ -1,0 +1,38 @@
+/*[- */ fileNamePattern=%sViewStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import {ReduceStore} from 'flux/utils';
+import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+
+class [(${clazz.name})]ViewStore extends ReduceStore {
+
+	constructor() {
+		super([(${system})]Dispatcher);
+	}
+
+	getInitialState() {
+		return {model: {}, errors:{}, message: null};
+	}
+
+	reduce(state, action) {
+		switch (action.type) {
+		        
+		    case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_LOAD:
+				const stateAfterLoad = Object.assign({}, state);
+				stateAfterLoad.model = action.model;
+				return stateAfterLoad;
+			
+			case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_LOAD_ERROR:
+		        const stateAfterLoadError = Object.assign({}, state);
+				stateAfterLoadError.model = {};
+				stateAfterLoadError.message = "Could not load data due to an unexpected error.";
+				return stateAfterLoadError;
+
+      default:
+        return state;
+    }
+  }
+}
+
+export default new [(${clazz.name})]ViewStore();

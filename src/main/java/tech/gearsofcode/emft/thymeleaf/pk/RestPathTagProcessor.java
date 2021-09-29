@@ -21,7 +21,7 @@ import tech.gearsofcode.emft.metamodel.TypeMapper;
 
 /**
  * Tag to help print the primary keys as method declaration parameters.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class RestPathTagProcessor extends AbstractAttributeTagProcessor{

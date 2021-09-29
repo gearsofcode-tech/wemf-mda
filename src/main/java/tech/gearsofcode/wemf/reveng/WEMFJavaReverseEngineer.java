@@ -9,7 +9,7 @@ import tech.gearsofcode.emft.metamodel.TypeMapper;
 /**
  * This class generates ".wemf" files from existing Java code.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class WEMFJavaReverseEngineer {

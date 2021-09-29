@@ -20,7 +20,7 @@ import tech.gearsofcode.emft.metamodel.AttributeAnnotations;
 
 /**
  * Tag to help print the primary keys as URL parameters.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class URLPrimaryKeyTagProcessor extends AbstractAttributeTagProcessor{

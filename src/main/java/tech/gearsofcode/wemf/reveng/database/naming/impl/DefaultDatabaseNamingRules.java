@@ -7,7 +7,7 @@ import tech.gearsofcode.wemf.reveng.database.naming.DatabaseNamingRules;
 /**
  * This class stablishes some default database naming rules:
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class DefaultDatabaseNamingRules implements DatabaseNamingRules {
 

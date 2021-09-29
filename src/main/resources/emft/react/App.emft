@@ -5,29 +5,21 @@
 import React, { Component } from "react";
 import {Link} from "react-router-dom";
 import "./css/bootstrap.css";
+
+import Header from './components/Header';
+
 class App extends Component {
-  render() {
-    console.log('Hello');
-    return (
-      <div>
-        <header>
-          <p>
-            Hello World
-          </p>
-            Learn React
-            <ul>
-            [# th:each="clazz : ${model.eClassifiers}"]
-            	<li>[(${clazz.name})]
-            		<ul>
-            			<li><Link to="/[(${clazz.name})]List/">List</Link></li>
-            		</ul>
-            	</li>
-            [/]
-            </ul>
-        </header>
-      </div>
-    );
-  }
+
+	render() {
+    	return (
+    		<div>
+	    	    <Header/>
+	  			<div id="main">
+	    			{this.props.children}
+	  			</div>
+  			</div>
+    	);
+  	}
 }
 
 export default App;

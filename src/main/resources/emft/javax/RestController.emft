@@ -1,0 +1,103 @@
+/*[- */ fileNamePattern=%sRest.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=rest /* -]*/
+/*[- */ appliesTo=Entity /* -]*/
+package [(${clazz.epackage.name})].rest;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.text.ParseException;
+import javax.inject.Inject;
+import javax.ws.rs.PUT;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import [(${clazz.epackage.name})].domain.[(${clazz.name})];
+import [(${clazz.epackage.name})].web.dto.[(${clazz.name})]DTO;
+import [(${clazz.epackage.name})].web.dto.[(${clazz.name})]Criteria;
+import [(${clazz.epackage.name})].facade.[(${clazz.name})]Facade;
+import [(${clazz.epackage.name})].web.util.PagedResult;
+[# emft:importJavaList="${clazz}" /]
+
+
+@Path("/[(${#strings.toLowerCase(clazz.name)})]")
+public class [(${clazz.name})]Rest {
+
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	@Inject
+	[(${clazz.name})]Facade [(${#strings.toLowerCase(clazz.name)})]Facade;
+
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+	public [(${clazz.name})]DTO findById(@PathParam("id") [# emft:idJavaType="${clazz}"/] id){
+		[(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})] = [(${#strings.toLowerCase(clazz.name)})]Facade.findById(id);
+		[(${clazz.name})]DTO [(${#strings.toLowerCase(clazz.name)})]DTO = toDTO([(${#strings.toLowerCase(clazz.name)})]);
+		return [(${#strings.toLowerCase(clazz.name)})]DTO;
+	}
+	
+	
+	@DELETE
+	@Path("/{id}")
+	public void delete(@PathParam("id") [# emft:idJavaType="${clazz}"/] id){
+		[(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})] = [(${#strings.toLowerCase(clazz.name)})]Facade.findById(id);
+		[(${#strings.toLowerCase(clazz.name)})]Facade.delete([(${#strings.toLowerCase(clazz.name)})]);
+	}
+	
+	
+	@PUT
+	@Path("/{id}")
+	public void update([(${clazz.name})]DTO [# emft:lcc="${clazz}"/]DTO){
+		[(${clazz.name})] [# emft:lcc="${clazz}"/] = [(${#strings.toLowerCase(clazz.name)})]Facade.findById([# emft:dtopk="${clazz}"/]);
+		update([# emft:lcc="${clazz}"/], [# emft:lcc="${clazz}"/]DTO);
+		[(${#strings.toLowerCase(clazz.name)})]Facade.update([# emft:lcc="${clazz}"/]);
+	}
+	
+	
+	@POST
+	@Path("/find-by-criteria")
+	@Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+	public PagedResult<[(${clazz.name})]DTO> findByCriteria([(${clazz.name})]Criteria [# emft:lcc="${clazz}"/]Criteria){
+		PagedResult<[(${clazz.name})]DTO> result = new PagedResult<[(${clazz.name})]DTO>([# emft:lcc="${clazz}"/]Criteria.getPageSize());
+		Long totalRecords = [(${#strings.toLowerCase(clazz.name)})]Facade.getTotalRecords([# emft:lcc="${clazz}"/]Criteria);
+		result.setTotalRecords(totalRecords);
+		List<[(${clazz.name})]> lst = [(${#strings.toLowerCase(clazz.name)})]Facade.findByCriteria([# emft:lcc="${clazz}"/]Criteria);
+		result.setList(lst.stream().map(x -> toDTO(x)).collect(Collectors.toList()));
+		return result;
+	}
+	
+	
+	private void update([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})], [(${clazz.name})]DTO dto){
+		[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
+		[# th:if="${attr.eType.name}=='EDate'"]
+		if ([(${#strings.toLowerCase(clazz.name)})].get[# emft:cc="${attr}"/]()!=null){
+			try{
+			[(${#strings.toLowerCase(clazz.name)})].set[# emft:cc="${attr}"/](sdf.parse(dto.get[# emft:cc="${attr}"/]()));
+			}
+			catch (ParseException e) {
+				throw new IllegalArgumentException(String.format("Valor de data inválida para o atributo '%s'.", "[(${attr.name})]"), e);
+			}
+		}[/]
+		[# th:if="${attr.eType.name}!='EDate'"][(${#strings.toLowerCase(clazz.name)})].set[# emft:cc="${attr}"/](dto.get[# emft:cc="${attr}"/]());[/]
+		[/]
+	}		
+	
+	
+	private [(${clazz.name})]DTO toDTO([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
+		[(${clazz.name})]DTO [(${#strings.toLowerCase(clazz.name)})]DTO = new [(${clazz.name})]DTO(); 	
+		[# th:each="attr : ${clazz.getEStructuralFeatures()}"]	
+		[# th:if="${attr.eType.name}=='EDate'"]
+		if ([(${#strings.toLowerCase(clazz.name)})].get[# emft:cc="${attr}"/]()!=null){
+			[(${#strings.toLowerCase(clazz.name)})]DTO.set[# emft:cc="${attr}"/](sdf.format([(${#strings.toLowerCase(clazz.name)})].get[# emft:cc="${attr}"/]()));
+		}[/]
+		[# th:if="${attr.eType.name}!='EDate'"][(${#strings.toLowerCase(clazz.name)})]DTO.set[# emft:cc="${attr}"/]([(${#strings.toLowerCase(clazz.name)})].get[# emft:cc="${attr}"/]());[/]
+		[/]
+		return [(${#strings.toLowerCase(clazz.name)})]DTO;
+	}	
+}

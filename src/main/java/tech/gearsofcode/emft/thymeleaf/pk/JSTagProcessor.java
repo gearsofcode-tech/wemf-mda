@@ -21,7 +21,7 @@ import tech.gearsofcode.emft.metamodel.TypeMapper;
 
 /**
  * Tag to help print the concatenation of primary keys as Javascript code.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class JSTagProcessor extends AbstractAttributeTagProcessor{

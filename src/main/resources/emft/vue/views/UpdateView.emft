@@ -1,0 +1,118 @@
+/*[- */ fileNamePattern=%sUpdate.vue /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=views/ /* -]*/
+<template>
+    <div>
+        <div>
+            <div class="container100">
+                <div>
+                    <h1>Atualiza [# emft:lbl="${clazz}" /]</h1>
+                    <div class="grupoErroValidacao">
+                        <span class="erroValidacao">
+                            {{errorMessage}}
+                        </span>
+                    </div>
+                </div>
+                
+                
+                <form>
+                	<div class="botoesAcao">
+                        &nbsp;
+                    </div>
+                    <div class="formulario">
+						
+						<div class="linhaFormulario">
+							[# th:each="attr, itStat : ${clazz.eAttributes}"]
+							<div class="container20">
+								<label>[# emft:lbl="${attr}" /]</label>
+								<input id="[(${attr.name})]" type="text" v-model="model.[(${attr.name})]"/>
+								<erro-validacao v-bind:mensagem="errors.[(${attr.name})]" />
+							</div>
+						    [/]
+						    [# th:each="ref, itStat : ${clazz.eReferences}"]
+					    	<div class="container20">
+								<label>[# emft:lbl="${ref}" /]</label>
+								<div>
+									<input id="[(${ref.name})]Codigo" type="text" v-model="codigo[# emft:cc="${ref}" /]"/>
+									<input id="[(${ref.name})]Nome" type="text" v-model="nome[# emft:cc="${ref}" /]" disabled="disabled"/>
+									<button class="botao" type="button">buscar</button>
+									<erro-validacao v-bind:mensagem="errors.[(${ref.name})]" />
+								</div>
+							</div>
+						    [/]
+						</div>
+						<div>
+							<div>
+								<Link to="/[(${clazz.name})]Create/"><button type="button" className="btn btn-secondary my-2">INCLUIR</button></Link>
+								<button type="button" class="botao" @click="update()">ATUALIZAR</button>
+							</div>
+						</div>
+					</div>
+				</form>
+
+                </div>
+                    <br/>
+                    <div class="cabecalhoFormulario">
+                        &nbsp;
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        </div>	
+    </div>    
+</template>
+
+
+<script>
+import ErroValidacao from '../components/ErroValidacao.vue';
+
+
+export default {
+	
+	components: {
+        'erro-validacao' : ErroValidacao
+    },
+    
+    
+    
+    computed: {
+        model(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/update/model'];
+        },
+
+        errorMessage(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/update/errorMessage'];
+        },
+        
+        errors(){
+            return this.$store.getters['departamento/update/errors'];
+        },
+        
+        [# th:each="ref, itStat : ${clazz.eReferences}"]
+       	codigo[# emft:cc="${ref}" /](){
+        	let [# emft:lcc="${clazz}"/] = this.$store.getters['[# emft:dashed="${clazz}"/]/update/model'];
+        	let [(${ref.name})] = [# emft:lcc="${clazz}"/].[(${ref.name})];
+        	if ([(${ref.name})]) return [# emft:jspk="${ref.eType}" /];
+        	return '';
+        },
+        
+        nome[# emft:cc="${ref}" /](){
+        	let [# emft:lcc="${clazz}"/] = this.$store.getters['[# emft:dashed="${clazz}"/]/update/model'];
+        	let [(${ref.name})] = [# emft:lcc="${clazz}"/].[(${ref.name})];
+        	if ([(${ref.name})]) return [(${ref.name})].nome;
+        	return '';
+        },
+        
+        [/]
+        
+    },
+
+
+    
+    methods: {
+		update(){
+	        this.$store.dispatch('[# emft:dashed="${clazz}"/]/update/doUpdate');
+	    }
+    }
+}
+</script>

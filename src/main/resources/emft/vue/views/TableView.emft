@@ -1,0 +1,103 @@
+/*[- */ fileNamePattern=%sList.vue /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=views/ /* -]*/
+<template>
+    <div>
+        <div>
+            <div class="container100">
+                <div>
+                    <h1>Tabela de [# emft:lbl="${clazz}" /]</h1>
+                    <div class="grupoErroValidacao">
+                        <span class="erroValidacao">
+                            {{mensagem}}
+                        </span>
+                    </div>
+                </div>
+                
+                </div>
+                    <br/>
+                    <div class="cabecalhoFormulario">
+                        <span id="textoFiltroAplicado" class="informacoesPesquisa">
+                            <b>Filtros aplicados: </b>
+                            Consulta efetuada em {{new Date().toLocaleString()}}
+                        </span>
+                    </div>
+                    <br/>
+                </div>
+
+                <div class="selic-gridPesquisa selic-grid selic-gridOnly">
+                    <div class="selic-grid-pager-panel selic-gridPaginationTop">
+                    </div>
+                    <div class="selic-grid-contents-wrapper selic-grid-render-container">
+                        <table class="tabelaResultado">
+                            <thead>
+                                <tr>
+                                    [# th:each="attr : ${clazz.eAttributes}"]
+									<th>
+										<label>[# emft:lbl="${attr}" /]</label>
+									</th>
+									[/]
+                                    <th>
+                                        &nbsp;
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="[# emft:lcc="${clazz}"/] in lista" v-bind:key="[# emft:lcc="${clazz}"/].codigo">
+                                    [# th:each="attr : ${clazz.eAttributes}"]
+									[# th:if="${attr.eType.name}!='EBoolean'"]
+									<td>
+										{{[# emft:lcc="${clazz}"/].[(${attr.name})]}}
+									</td>
+									[/]
+									[# th:if="${attr.eType.name}=='EBoolean'"]
+									<td className="text-center">
+										{{[# emft:lcc="${clazz}"/].[(${attr.name})] ? "Sim" : "Não"}}
+									</td>
+									[/]
+									[/]
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="selic-grid-pager-panel selic-gridPaginationBottom">
+                        <div class="selic-grid-pager-container">
+                            <div class="selic-grid-pager-control">
+                                <button class="selic-grid-pager-first"></button>
+                                <button class="selic-grid-pager-previous"></button>
+                                <input id="inputPagina" type="number" class="selic-grid-pager-control-input inputPaginacao"></input>
+                                <span class="selic-grid-pager-max-pages-number spanPaginacao"><abbr></abbr> totalDePaginas</span>
+                                <button class="selic-grid-pager-next"></button>
+                                <button class="selic-grid-pager-last"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </div>    
+</template>
+
+
+<script>
+
+export default {
+
+    computed: {
+        lista(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/lista'];
+        },
+
+        mensagem(){
+            return this.$store.getters['[# emft:dashed="${clazz}"/]/errorMessage'];
+        }
+    },
+
+
+    created(){
+        this.$store.dispatch('[# emft:dashed="${clazz}"/]/search');
+    }
+}
+</script>

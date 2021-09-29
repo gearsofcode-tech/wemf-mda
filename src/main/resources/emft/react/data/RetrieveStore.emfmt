@@ -1,0 +1,75 @@
+/*[- */ fileNamePattern=%sStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import {ReduceStore} from 'flux/utils';
+import [# emft:cc="${operation}" /]ActionTypes from './[# emft:cc="${operation}" /]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+
+class [# emft:cc="${operation}" /]Store extends ReduceStore {
+
+	constructor() {
+		super([(${system})]Dispatcher);
+	}
+
+	[# emft:hasAnnotation="${operation}" source="POST"]
+	getInitialState() {
+		return {list:[], filter:{pageSize : 20, page: 1}, model: null, executing: false};
+	}
+	[/]
+	[# emft:hasAnnotation="${operation}" source="GET"]
+	getInitialState() {
+		return {list:[], filter:{pageSize : 20, page: 1 [# th:block th:if="${operation.eParameters.size > 0}"],[/][# th:each="attr, itStat : ${operation.eParameters}"][(${attr.name})]:""[# th:block th:if="${itStat.count} < ${itStat.size}"],[/][/]}, model: null};
+	}
+	[/]
+
+	reduce(state, action) {
+		switch (action.type) {
+			[# th:if="${operation.upperBound == 1}"]
+			case [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]:
+	        	const stateAfterList = Object.assign({}, state);
+	        	stateAfterList.model = action.model;
+	        	stateAfterList.executing=false;
+	        	return stateAfterList;
+	        [/]
+	        [# th:if="${operation.upperBound == -1}"]
+	        case [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]:
+	        	const stateAfterList = Object.assign({}, state);
+	        	stateAfterList.list = action.list;
+	        	stateAfterList.executing=false;
+	        	return stateAfterList;
+	        [/]
+	        case [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_EXECUTING:
+	        	const stateAfterExecuting = Object.assign({}, state);
+	        	stateAfterExecuting.executing=true;
+	        	return stateAfterSearchError;
+        	
+      		case [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_ERROR:
+	      		alert('Impossível executar a operação. Um erro ocorreu.');
+	        	const stateAfterSearchError = Object.assign({}, state);
+	        	stateAfterSearchError.list = [];
+	        	stateAfterExecuting.executing=false;
+	        	return stateAfterSearchError;
+        
+     		case [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_UPDATE_FILTER:
+	     		const newFilterState = Object.assign({}, state);
+	     		if (action.value === '') {
+					delete newFilterState.filter[action.field];
+				}
+				else{
+	     			newFilterState.filter[action.field] = action.value;
+	     		}
+		        return newFilterState;
+	        
+	        case [# emft:cc="${operation}" /]ActionTypes.[# emft:constant="${operation}" /]_UPDATE_MODEL:
+	     		const newModelState = Object.assign({}, state);
+	     		newModelState.model[action.field] = action.value;
+	     		console.log(newModelState.model);
+		        return newModelState;
+
+      default:
+        return state;
+    }
+  }
+}
+
+export default new [# emft:cc="${operation}" /]Store();

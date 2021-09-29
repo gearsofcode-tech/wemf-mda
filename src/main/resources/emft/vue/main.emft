@@ -1,0 +1,24 @@
+/*[- */ fileNamePattern=main.js /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ global=true /* -]*/
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+
+Vue.config.productionTip = false
+
+new Vue({
+    router,
+    store,
+    watch: {
+        $route(to, from){
+        	[# th:each="clazz : ${model.eClassifiers}"/]
+            if (to.path.startsWith('/[# emft:dashed="${clazz}"/]-update/')){   
+		        store.dispatch('[# emft:dashed="${clazz}"/]/update/load', to.params.id);
+            }
+            [/]
+        }
+    },
+    render: h => h(App)
+}).$mount('#app')

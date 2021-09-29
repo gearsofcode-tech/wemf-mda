@@ -11,7 +11,7 @@ import tech.gearsofcode.wemf.reveng.database.sql.DatabaseTypes;
 /**
  * Enumerates Oracle's relational data types.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class OracleDatabaseTypes implements DatabaseTypes {
 

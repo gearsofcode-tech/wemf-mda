@@ -1,0 +1,13 @@
+/*[- */ fileNamePattern=%sActionTypes.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+
+const [# emft:cc="${operation}" /]ActionTypes = {
+	[# emft:constant="${operation}" /]: '[# emft:constant="${operation}" /]',
+	[# emft:constant="${operation}" /]_EXECUTING: '[# emft:constant="${operation}" /]_EXECUTING',
+  	[# emft:constant="${operation}" /]_ERROR: '[# emft:constant="${operation}" /]_ERROR',
+  	[# emft:constant="${operation}" /]_UPDATE_FILTER: '[# emft:constant="${operation}" /]_UPDATE_FILTER',
+  	[# emft:constant="${operation}" /]_UPDATE_MODEL: '[# emft:constant="${operation}" /]_UPDATE_MODEL'
+};
+
+export default [# emft:cc="${operation}" /]ActionTypes;

@@ -1,0 +1,124 @@
+/*[- */ fileNamePattern=%sViewContainer.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/containers/ /* -]*/
+import React, {Component} from "react";
+import {Container} from "flux/utils";
+import [(${clazz.name})]ViewStore from "../data/[(${clazz.name})]ViewStore";
+import [(${clazz.name})]Actions from "../data/[(${clazz.name})]Actions";
+import BasePage from "../components/BasePage";
+import Alert from "../components/Alert";
+import $ from "jquery";
+
+import ValidationError from "../components/ValidationError";
+
+class [(${clazz.name})]ViewContainer extends BasePage {
+
+	constructor(props){
+		super(props);
+		this.modify = this.modify.bind(this);
+		this.goBack = this.goBack.bind(this);
+	}
+	
+	pageTitle(){
+		return "[(${clazz.name})]";
+	}
+
+	modify(){
+		this.props.history.push("/[(${clazz.name})]Modify/" + this.props.match.params.id);
+	}
+	
+	
+	updateModel(field, value){
+		[(${clazz.name})]Actions.updateModel(field, value);
+	}
+	
+	
+	goBack(){
+	    this.props.history.goBack();
+	}
+	
+	[# th:each="ref: ${clazz.getEReferences()}"]
+
+
+	print[(${ref.eType.name})]([# emft:lcc="${ref}"/]){
+		return (
+			<option key={[# emft:lcc="${ref}"/].id} value={[# emft:lcc="${ref}"/].id}>{[# emft:lcc="${ref}"/].description}</option>
+		);
+	}	
+	[/]
+
+
+	
+	componentDidMount(){
+		[(${clazz.name})]Actions.load(this.props.match.params.id);
+	}
+
+
+
+	renderPage(){
+		return(
+			<div className="card">
+				<div className="card-header">
+					<h1 className="card-title">[# emft:lbl="${clazz}" /]</h1>
+				</div>
+				<Alert message={this.state.message}/>
+				<div className="card-body">
+					<div>
+				<div className="row">
+					[# th:each="attr, itStat : ${clazz.eAttributes}"]
+					[# th:if="${attr.eType.name}!='EBoolean' and ${attr.eType.name}!='EBooleanObject'"]
+					<div className="col-md-3">
+						<div className="text-muted">[# emft:lbl="${attr}" /]</div>
+						{this.state.model && this.state.model.[(${attr.name})] ? this.state.model.[(${attr.name})] : null}
+					</div>
+					[/]
+					[# th:if="${attr.eType.name}=='EBoolean' or ${attr.eType.name}=='EBooleanObject'"]
+					<div className="col-md-3">
+						<div className="form-group form-check">
+							<input id="[(${attr.name})]" type="checkbox" className="form-check-input" onChange={event => this.updateModel('[(${attr.name})]', event.target.checked)} checked={this.state.model.[(${attr.name})]}></input>
+							<label className="form-check-label disabled" htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+						</div>
+					</div>
+					[/]
+					[# th:if="${itStat.count % 4 == 0}"]
+				</div>
+				<div className="row pt-2">
+					[/]
+				    [/]
+				    [# th:each="ref, itStat : ${clazz.eReferences}"]
+				    	<div className="col-md-3">
+							<div className="text-muted">[# emft:lbl="${ref}" /]</div>
+							{this.state.model && this.state.model.[(${ref.name})] ? this.state.model.[(${ref.name})].name : null}
+						</div>
+				    [/]
+				</div>
+				<div className="row mt-3">
+					<div className="col">
+						<button className="btn btn-primary" onClick={this.modify}>update</button>
+						<button className="btn btn-secondary" onClick={this.goBack}>cancel</button>
+					</div>
+				</div>
+			</div>
+				</div>		
+			</div>	
+		);
+	}
+	
+	
+	static  getStores() {
+	  	return [
+	    	[(${clazz.name})]ViewStore
+	  	];
+	}
+	
+	static calculateState() {
+		const nextState = [(${clazz.name})]ViewStore.getState();
+	  	return {
+	    	model: nextState.model,
+	    	message: nextState.message,
+	    	errors: nextState.errors
+	  	};
+	}
+}
+
+export default Container.create([(${clazz.name})]ViewContainer);

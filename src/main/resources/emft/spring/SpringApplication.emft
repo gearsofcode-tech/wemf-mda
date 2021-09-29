@@ -24,7 +24,7 @@ public class [(${system})]Application {
 
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(NurembergApplication.class, args);
+		SpringApplication.run([(${system})]Application.class, args);
 	}
 
 }

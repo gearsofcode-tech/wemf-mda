@@ -17,7 +17,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 /**
  * Tag to help print a label for a given field..
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class LblTagProcessor extends AbstractAttributeTagProcessor{

@@ -1,0 +1,218 @@
+/*[- */ fileNamePattern=%sContainer.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/containers/ /* -]*/
+import React, {Component} from "react";
+import {Container} from "flux/utils";
+import [# emft:cc="${operation}" /]Store from "../data/[# emft:cc="${operation}" /]Store";
+import [# emft:cc="${operation}" /]Actions from "../data/[# emft:cc="${operation}" /]Actions";
+
+class [# emft:cc="${operation}" /]Container extends Component {
+
+	constructor(props){
+		super(props);
+		this.[(${operation.name})] = this.[(${operation.name})].bind(this);
+	}
+
+	[(${operation.name})](){
+		[# emft:cc="${operation}" /]Actions.[(${operation.name})](this.state.filter);
+	}
+	
+	
+	updateFilter(field, value){
+		[# emft:cc="${operation}" /]Actions.updateFilter(field, value);
+	}
+
+
+	renderSearchFilter(){
+	    [# th:if="${operation.eParameters.size == 0}"]
+	    return (
+			<form>
+				<div className="row">
+					<div className="col">
+						<button type="button" className="btn btn-primary" onClick={this.[(${operation.name})]}>CONSULTAR</button>
+					</div>
+				</div>
+			</form>
+		);
+		[/]
+		[# emft:hasAnnotation="${operation}" source="POST"]
+		[# th:if="${operation.eParameters.size > 0}"]
+		return (
+			<form>
+				<div className="row">
+					[# th:each="attr, itStat : ${operation.eParameters.get(0).getEType().eAttributes}"]
+					<div className="col-md-3">
+						<div className="form-group">
+							<label htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+							<input className="form-control" id="[(${attr.name})]" name="[(${attr.name})]" type="text" placeholder=""  onChange={event => this.updateFilter('[(${attr.name})]', event.target.value)}/>
+						</div>
+					</div>
+				    [/]
+				</div>
+				
+				<div className="row">
+					<div className="col">
+						<button type="button" className="btn btn-primary" onClick={this.[(${operation.name})]}>CONSULTAR</button>
+					</div>
+				</div>
+			</form>
+		);
+		[/][/]
+		
+		[# emft:hasAnnotation="${operation}" source="GET"]
+		[# th:if="${operation.eParameters.size > 0}"]
+		return (
+			<form>
+				<div className="row">
+					[# th:each="attr, itStat : ${operation.eParameters}"]
+					<div className="col-md-3">
+						<div className="form-group">
+							<label htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+							<input className="form-control" id="[(${attr.name})]" name="[(${attr.name})]" type="text" placeholder=""  onChange={event => this.updateFilter('[(${attr.name})]', event.target.value)}/>
+						</div>
+					</div>
+				    [/]
+				</div>
+				
+				<div className="row">
+					<div className="col">
+						<button type="button" className="btn btn-primary" onClick={this.[(${operation.name})]}>CONSULTAR</button>
+					</div>
+				</div>
+			</form>
+		);
+		[/][/]
+	}
+	
+	
+	renderRow(model){
+		return (
+			<tr>
+				[# th:if="${!'EString'.equals(operation.eType.name)}"]
+				[# th:each="attr : ${operation.eType.eAttributes}"]
+				<td>
+					{model.[(${attr.name})]}
+				</td>[/]
+				[# th:each="ref : ${operation.eType.eReferences}"]
+				<td>
+					Some work needs to be done here
+				</td>[/]
+				[/]
+				[# th:if="${'EString'.equals(operation.eType.name)}"]
+				<td>
+					{model}
+				</td>
+				[/]
+			</tr>
+		);
+	}
+	
+	
+	[# th:if="${operation.upperBound == 1}"]
+	renderTable(){
+		if (!this.state.model) return null;
+		return (
+			<div>
+				<div className="row">
+					<table className="table">
+						<thead>
+							<tr>
+								[# th:if="${!'EString'.equals(operation.eType.name)}"]
+								[# th:each="attr : ${operation.eType.eAttributes}"]
+								<th>
+									<label>[# emft:lbl="${attr}" /]</label>
+								</th>
+								[/]
+								[# th:each="ref : ${operation.eType.eReferences}"]
+								<th>
+									<label>[# emft:lbl="${ref}" /]</label>
+								</th>
+								[/]
+								[/]
+								[# th:if="${!'EString'.equals(operation.eType.name)}"]
+								<th>
+									<label>[(${operation.name})]</label>
+								</th>
+								[/]
+							</tr>
+						</thead>
+						<tbody>
+							{
+                                this.state.model ? this.renderRow(this.state.model) : null
+                            }
+						</tbody>
+					</table>
+				</div>
+			</div>
+		);
+	}
+	[/]
+	[# th:if="${operation.upperBound == -1}"]
+	renderTable(){
+		if (this.state.list.length==0) return null;
+		return (
+			<div>
+				<div className="row">
+					<table className="table">
+						<thead>
+							<tr>
+								[# th:if="${!'EString'.equals(operation.eType.name)}"]
+								[# th:each="attr : ${operation.eType.eAttributes}"]
+								<th>
+									<label>[# emft:lbl="${attr}" /]</label>
+								</th>
+								[/]
+								[/]
+								[# th:if="${'EString'.equals(operation.eType.name)}"]
+								<th>
+									<label>[(${operation.name})]</label>
+								</th>
+								[/]
+							</tr>
+						</thead>
+						<tbody>
+							{
+                                this.state.list ? this.state.list.map(model => this.renderRow(model)) : null
+                            }
+						</tbody>
+					</table>
+				</div>
+			</div>
+		);
+	}
+	[/]
+
+	render(){
+		return(
+			<div className="container-fluid">
+				<h1>[# emft:lbl="${operation}" /] </h1>
+				{this.renderSearchFilter()}					
+				<br/><br/>
+				{this.renderTable()}
+			</div>	
+		);
+	}
+	
+	
+	static  getStores() {
+	  	return [
+	    	[# emft:cc="${operation}" /]Store
+	  	];
+	}
+	
+	static calculateState() {
+	  	return {
+	  		[# th:if="${operation.upperBound == -1}"]
+	    	list: [# emft:cc="${operation}" /]Store.getState().list,
+	    	[/]
+	    	[# th:if="${operation.upperBound == 1}"]
+	    	model: [# emft:cc="${operation}" /]Store.getState().model,
+	    	[/]
+	    	filter: [# emft:cc="${operation}" /]Store.getState().filter,
+	    	executing: [# emft:cc="${operation}" /]Store.getState().executing
+	  	};
+	}
+}
+
+
+export default Container.create([# emft:cc="${operation}" /]Container);

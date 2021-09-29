@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 /**
  * Helps to order columns by the ordinal position.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class OrdinalPositionComparator implements Comparator<Column> {

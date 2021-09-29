@@ -1,0 +1,83 @@
+/*[- */ fileNamePattern=%sModifyStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import {ReduceStore} from 'flux/utils';
+import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+[# th:each="eType: ${clazz.getReferencedETypes()}"]
+import [(${eType.name})]ActionTypes from "../data/[(${eType.name})]ActionTypes";
+[/]
+
+class [(${clazz.name})]ModifyStore extends ReduceStore {
+
+	constructor() {
+		super([(${system})]Dispatcher);
+	}
+
+	getInitialState() {
+		return {model: {}, errors:{}, message: null};
+	}
+
+	reduce(state, action) {
+		switch (action.type) {
+			
+			[# th:each="eType: ${clazz.getReferencedETypes()}"]
+			case [(${eType.name})]ActionTypes.[# emft:constant="${eType}"/]_UPDATE_SEARCH:
+				const stateAfter[(${eType.name})]List = Object.assign({}, state);
+				stateAfter[(${eType.name})]List.list[(${eType.name})] = action.list
+				return stateAfter[(${eType.name})]List;
+
+			case [(${eType.name})]ActionTypes.[# emft:constant="${eType}"/]_UPDATE_SEARCH_ERROR:
+				const stateAfter[(${eType.name})]ListError = Object.assign({}, state);
+				stateAfter[(${eType.name})]ListError.message = "Could not search [(${eType.name})]";
+				return stateAfter[(${eType.name})]ListError;
+			
+			[/]
+		        
+	        case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_UPDATE_MODEL:
+	     		const newModelState = Object.assign({}, state);
+	     		newModelState.model = Object.assign({}, state.model);
+	     		newModelState.model[action.field] = action.value;
+	     		console.log(newModelState.model);
+		        return newModelState;
+
+		    case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_MODIFY_REQUEST:
+				const stateAfterModifyRequest = Object.assign({}, state);
+				stateAfterModifyRequest.errors = {};
+				stateAfterModifyRequest.message = null;
+		        return stateAfterModifyRequest;
+		        
+		    case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_MODIFY:
+		        const stateAfterModify = Object.assign({}, state);
+				stateAfterModify.errors = {};
+				stateAfterModify.message = null;
+				stateAfterModify.insert = false;
+				stateAfterModify.edit = null;
+				return stateAfterModify;
+	        
+	        case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_MODIFY_ERROR:
+		        const stateAfterModifyError = Object.assign({}, state);
+				stateAfterModifyError.errors = Object.assign({}, action.errors);
+				stateAfterModifyError.message = action.message;
+				return stateAfterModifyError;
+		        
+		    case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_LOAD:
+				const stateAfterLoad = Object.assign({}, state);
+				stateAfterLoad.model = action.model;
+				stateAfterLoad.errors = {};
+				stateAfterLoad.message = null;
+				return stateAfterLoad;
+			
+			case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_LOAD_ERROR:
+		        const stateAfterLoadError = Object.assign({}, state);
+				stateAfterLoadError.model = {};
+				stateAfterLoadError.message = "Could not load data.";
+				return stateAfterLoadError;
+
+      default:
+        return state;
+    }
+  }
+}
+
+export default new [(${clazz.name})]ModifyStore();

@@ -1,0 +1,65 @@
+/*[- */ fileNamePattern=%sCreateStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import {ReduceStore} from 'flux/utils';
+import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+[# th:each="eType: ${clazz.getReferencedETypes()}"]
+import [(${eType.name})]ActionTypes from './[(${eType.name})]ActionTypes';
+[/]
+
+class [(${clazz.name})]CreateStore extends ReduceStore {
+
+	constructor() {
+		super([(${system})]Dispatcher);
+	}
+
+	getInitialState() {
+		return {model: {}, errors:{}, message: null};
+	}
+
+	reduce(state, action) {
+		switch (action.type) {
+			[# th:each="eType: ${clazz.getReferencedETypes()}"]
+			case [(${eType.name})]ActionTypes.[# emft:constant="${eType}"/]_CREATE_SEARCH:
+				const stateAfter[(${eType.name})]List = Object.assign({}, state);
+				stateAfter[(${eType.name})]List.list[(${eType.name})] = action.list
+				return stateAfter[(${eType.name})]List;
+
+			case [(${eType.name})]ActionTypes.[# emft:constant="${eType}"/]_CREATE_SEARCH_ERROR:
+				const stateAfter[(${eType.name})]ListError = Object.assign({}, state);
+				stateAfter[(${eType.name})]ListError.message = "Could not search [(${eType.name})]";
+				return stateAfter[(${eType.name})]ListError;
+			
+			[/]
+			
+	        
+	        case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_UPDATE_MODEL:
+	     		const newModelState = Object.assign({}, state);
+	     		newModelState.model = Object.assign({}, state.model);
+	     		newModelState.model[action.field] = action.value;
+	     		console.log(newModelState.model);
+		        return newModelState;
+	        
+	        case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_CREATE_INSERT:
+		        return state;
+	        
+	        case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_CREATE_INSERT_ERROR:
+		        const stateAfterInsertError = Object.assign({}, state);
+				stateAfterInsertError.errors = Object.assign({}, action.errors);
+				stateAfterInsertError.message = action.message;
+				return stateAfterInsertError;
+		        
+		    case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}"/]_CREATE_INSERT_REQUEST:
+				const stateAfterInsertRequest = Object.assign({}, state);
+				stateAfterInsertRequest.errors = {};
+				stateAfterInsertRequest.message = null;
+		        return stateAfterInsertRequest;
+
+      default:
+        return state;
+    }
+  }
+}
+
+export default new [(${clazz.name})]CreateStore();

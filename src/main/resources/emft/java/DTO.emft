@@ -1,7 +1,8 @@
 /*[- */ fileNamePattern=%sDTO.java /* -]*/
 /*[- */ genfolder=java /* -]*/
-/*[- */ subpackage=dto /* -]*/
-package [(${clazz.epackage.name})].dto;
+/*[- */ subpackage=web.dto /* -]*/
+/*[- */ appliesTo=Entity /* -]*/
+package [(${clazz.epackage.name})].web.dto;
 
 [# emft:importJavaList="${clazz}" /]
 

@@ -3,7 +3,29 @@
 /*[- */ subpackage=src/data/ /* -]*/
 
 const [(${clazz.name})]ActionTypes = {
-  [# emft:constant="${clazz}" /]_SEARCH: '[# emft:constant="${clazz}" /]_SEARCH',
+	
+	[# emft:constant="${clazz}" /]_VALIDATION_ERROR: '[# emft:constant="${clazz}" /]_VALIDATION_ERROR',
+	
+	[# emft:constant="${clazz}" /]_SEARCH: '[# emft:constant="${clazz}" /]_SEARCH',
+	[# emft:constant="${clazz}" /]_SEARCH_REQUEST: '[# emft:constant="${clazz}" /]_SEARCH_REQUEST',
+  	[# emft:constant="${clazz}" /]_SEARCH_ERROR: '[# emft:constant="${clazz}" /]_SEARCH_ERROR',
+  	
+  	[# emft:constant="${clazz}" /]_MODAL_SEARCH: '[# emft:constant="${clazz}" /]_MODAL_SEARCH',
+	[# emft:constant="${clazz}" /]_MODAL_SEARCH_REQUEST: '[# emft:constant="${clazz}" /]_MODAL_SEARCH_REQUEST',
+  	[# emft:constant="${clazz}" /]_MODAL_SEARCH_ERROR: '[# emft:constant="${clazz}" /]_MODAL_SEARCH_ERROR',
+  	
+  	[# emft:constant="${clazz}" /]_INSERT: '[# emft:constant="${clazz}" /]_INSERT',
+  	[# emft:constant="${clazz}" /]_INSERT_REQUEST: '[# emft:constant="${clazz}" /]_INSERT_REQUEST',
+  	[# emft:constant="${clazz}" /]_INSERT_ERROR: '[# emft:constant="${clazz}" /]_INSERT_ERROR',
+  	
+  	[# emft:constant="${clazz}" /]_MODIFY: '[# emft:constant="${clazz}" /]_MODIFY',
+  	[# emft:constant="${clazz}" /]_MODIFY_ERROR: '[# emft:constant="${clazz}" /]_MODIFY_ERROR',
+  	[# emft:constant="${clazz}" /]_DELETE: '[# emft:constant="${clazz}" /]_DELETE',
+  	[# emft:constant="${clazz}" /]_DELETE_ERROR: '[# emft:constant="${clazz}" /]_DELETE_ERROR',
+  	[# emft:constant="${clazz}" /]_LOAD: '[# emft:constant="${clazz}" /]_LOAD',
+  	[# emft:constant="${clazz}" /]_LOAD_ERROR: '[# emft:constant="${clazz}" /]_LOAD_ERROR',
+  	[# emft:constant="${clazz}" /]_UPDATE_FILTER: '[# emft:constant="${clazz}" /]_UPDATE_FILTER',
+  	[# emft:constant="${clazz}" /]_UPDATE_MODEL: '[# emft:constant="${clazz}" /]_UPDATE_MODEL'
 };
 
 export default [(${clazz.name})]ActionTypes;

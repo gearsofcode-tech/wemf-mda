@@ -42,7 +42,7 @@ public class EMFModelGeneratorTest {
 	public void testParser() throws IOException, URISyntaxException{
 		WEMFLexer lexer = new WEMFLexer(null);
 		StringBuilder strb = new StringBuilder();
-		Path filePath = Paths.get(getClass().getClassLoader().getResource("Teste001.WEMF").toURI());
+		Path filePath = Paths.get(getClass().getClassLoader().getResource("Teste001.wemf").toURI());
 		List<String> linhas = Files.readAllLines(filePath);
 		linhas.forEach(linha -> strb.append(linha));
 		String query = strb.toString();

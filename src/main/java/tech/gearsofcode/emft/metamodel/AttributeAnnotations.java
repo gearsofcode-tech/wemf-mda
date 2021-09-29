@@ -4,7 +4,7 @@ package tech.gearsofcode.emft.metamodel;
 /**
  * Keeps a list of particular EMF Annotations used by the framework.
  *  
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class AttributeAnnotations {

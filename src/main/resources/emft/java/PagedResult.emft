@@ -14,10 +14,10 @@ public class PagedResult<T> {
 	private String operationTime;
 	private Long totalPages;
 	private Long totalRecords;
-	private Long pageSize;
+	private Integer pageSize;
 	private List<T> list;
 	
-	public PagedResult(Long pageSize) {
+	public PagedResult(Integer pageSize) {
 		LocalDateTime now = LocalDateTime.now();
 		operationDate = now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		operationTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));

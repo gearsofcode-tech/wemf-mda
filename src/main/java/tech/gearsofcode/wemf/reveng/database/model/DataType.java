@@ -7,7 +7,7 @@ import org.eclipse.emf.ecore.EDataType;
 /**
  * Represents the type of a database column.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class DataType implements Serializable {
 

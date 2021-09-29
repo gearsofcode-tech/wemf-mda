@@ -1,0 +1,159 @@
+/*[- */ fileNamePattern=%sCreateContainer.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/containers/ /* -]*/
+import React, {Component} from "react";
+import {Container} from "flux/utils";
+import [(${clazz.name})]CreateStore from "../data/[(${clazz.name})]CreateStore";
+import [(${clazz.name})]Actions from "../data/[(${clazz.name})]Actions";
+import BasePage from "../components/BasePage";
+import Alert from "../components/Alert";
+import $ from "jquery";
+[# th:each="eType: ${clazz.getReferencedETypes()}"]
+import [(${eType.name})]Actions from "../data/[(${eType.name})]Actions";
+import Modal[(${eType.name})] from "../components/Modal[(${eType.name})]";
+[/]
+import ValidationError from "../components/ValidationError";
+import "bootstrap";
+
+class [(${clazz.name})]CreateContainer extends BasePage {
+
+	constructor(props){
+		super(props);
+		this.create = this.create.bind(this);
+		this.goBack = this.goBack.bind(this);
+	}
+	
+	pageTitle(){
+		return "[(${clazz.name})] :: new";
+	}
+
+	create(){
+		[(${clazz.name})]Actions.insert(this.state.model);
+	}
+	
+	
+	updateModel(field, value){
+		[(${clazz.name})]Actions.updateModel(field, value);
+	}
+	
+	
+	goBack(){
+	    this.props.history.goBack();
+	}
+	
+	[# th:each="eType: ${clazz.getReferencedETypes()}"]
+
+
+	print[(${eType.name})]([# emft:lcc="${eType}"/]){
+		return (
+			<option key={[# emft:lcc="${eType}"/].id} value={[# emft:lcc="${eType}"/].id}>{[# emft:lcc="${eType}"/].description}</option>
+		);
+	}	
+	[/]
+	
+	
+	[# th:each="eType: ${clazz.getReferencedETypes()}"]
+
+
+	select[(${eType.name})]([# emft:lcc="${eType}"/]){
+		[(${clazz.name})]Actions.updateModel('[# emft:lcc="${eType}"/]', [# emft:lcc="${eType}"/]);
+		$("#modal[(${eType.name})]").modal('hide');
+	}	
+	[/]
+
+
+	
+	componentDidMount(){
+		[# th:each="eType: ${clazz.getReferencedETypes()}"]
+		[(${eType.name})]Actions.search();
+		[/]
+	}
+
+
+	renderForm(){
+		return (
+			<div>
+				<div className="row">
+					[# th:each="attr, itStat : ${clazz.eAttributes}"]
+					[# th:if="${attr.eType.name}!='EBoolean' and ${attr.eType.name}!='EBooleanObject'"]
+					<div className="col-md-3">
+						<label htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+						<input id="[(${attr.name})]" type="text" className="form-control" onChange={event => this.updateModel('[(${attr.name})]', event.target.value)}></input>
+						<ValidationError error={this.state.errors.[(${attr.name})]} />
+					</div>
+					[/]
+					[# th:if="${attr.eType.name}=='EBoolean' or ${attr.eType.name}=='EBooleanObject'"]
+					<div className="col-md-3">
+						<div className="form-group form-check">
+							<input id="[(${attr.name})]" type="checkbox" className="form-check-input" onChange={event => this.updateModel('[(${attr.name})]', event.target.checked)}></input>
+							<label className="form-check-label" htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+							<ValidationError error={this.state.errors.[(${attr.name})]} />
+						</div>
+					</div>
+					[/]
+				    [/]
+				    [# th:each="ref, itStat : ${clazz.eReferences}"]
+				    	<div className="col-md-3">
+							<label htmlFor="[(${ref.name})]">[# emft:lbl="${ref}" /]</label>
+							<div className="input-group mb-3">
+								<input className="form-control" id="[(${ref.name})]Id" type="text" placeholder="code"  onChange={event => this.updateModel('[(${ref.name})]', {id: event.target.value})} value={this.state.[(${ref.name})]Id} />
+								<input className="form-control" id="[(${ref.name})]" type="text" disabled="disabled" value={this.state.[(${ref.name})]Name}/>
+								<div className="input-group-append">
+									<button className="btn btn-outline-secondary" type="button" onClick={(e)=>$("#modal[(${ref.eType.name})]").modal()}>choose</button>
+								</div>
+							</div>
+							<ValidationError error={this.state.errors.[(${ref.name})]} />
+						</div>
+				    [/]
+				</div>
+				<div className="row mt-3">
+					<div className="col">
+						<button className="btn btn-primary" onClick={this.create}>add</button>
+						<button className="btn btn-secondary" onClick={this.goBack}>cancel</button>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+
+	renderPage(){
+		return(
+			<div className="card">
+				<div className="card-header">
+					<h1 className="card-title">Add new [# emft:lbl="${clazz}" /]</h1>
+				</div>
+				<Alert message={this.state.message}/>
+				<div className="card-body">
+					[# th:each="eType: ${clazz.getReferencedETypes()}"]
+					<Modal[(${eType.name})] id="modal[(${eType.name})]" callback={this.select[(${eType.name})]}/>
+					[/]
+					{this.renderForm()}
+				</div>		
+			</div>	
+		);
+	}
+	
+	
+	static  getStores() {
+	  	return [
+	    	[(${clazz.name})]CreateStore
+	  	];
+	}
+	
+	static calculateState() {
+		const nextState = [(${clazz.name})]CreateStore.getState();
+	  	return {
+	    	model: nextState.model,
+	    	message: nextState.message,
+	    	[# th:each="ref: ${clazz.getEReferences()}"]
+			list[(${ref.eType.name})] : nextState.list[(${ref.eType.name})],
+			[(${ref.name})]Id : nextState.model.[(${ref.name})] ? nextState.model.[(${ref.name})].id[(${ref.eType.name})] : '',
+			[(${ref.name})]Name : nextState.model.[(${ref.name})] ? nextState.model.[(${ref.name})].name : '',
+			[/]
+	    	errors: nextState.errors
+	  	};
+	}
+}
+
+export default Container.create([(${clazz.name})]CreateContainer);

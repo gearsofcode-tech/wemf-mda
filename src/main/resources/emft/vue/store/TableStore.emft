@@ -1,0 +1,181 @@
+/*[- */ fileNamePattern=%sTableStore.js /* -]*/
+/*[- */ genfolder=../ /* -]*/
+/*[- */ subpackage=store/modules/ /* -]*/
+import Axios from "axios";
+import baseUrl from "../baseUrl";
+
+export default {
+    namespaced: true,
+
+    state: {
+        data: [],
+        parameters: {page:1, pageSize: 50},
+        errors: {},
+        errorMessage: '',
+        filtrosAplicados: '',
+        model: {}
+    },
+    
+    getters:{
+    	model(state){
+    		return state.model;
+    	},
+    
+        data(state){
+            return state.data;
+        },
+
+        errorMessage(state){
+            return state.errorMessage;
+        },
+
+
+        errors(state){
+            return state.errors;
+        },
+
+        parameters(state){
+            return state.parameters;
+        }, 
+        
+        filtrosAplicados(state){
+            return state.filtrosAplicados;
+        }
+
+    },
+
+
+    mutations:{
+    	setModel(state, model){
+    		state.model = model;
+    	},
+    	
+        setData(state, data){
+            state.data = data;
+        },
+
+        setErrorMessage(state, msg){
+            state.errorMessage = msg;
+        },
+
+        setErrors(state, erros){
+            state.errors = erros;
+        },
+
+        setParameters(state, parameters){
+            state.parameters = Object.assign({}, parameters);
+        },
+
+		setFiltrosAplicados(state, filtrosAplicados){
+            state.filtrosAplicados = filtrosAplicados;
+        },
+    },
+
+    
+    actions:{
+    	load(context, id){
+            const searchUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/consultar-por-id/${id}`;
+            Axios.get(searchUrl)
+                .then(response => {
+                    context.commit('setModel', response.data);
+                })
+                .catch(error => {
+                    context.commit('setErrorMessage', 'Erro carregando [# emft:lbl="${clazz}" /]');
+                });
+            
+        },
+    
+        search(context){
+            const searchUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/consultar`;
+            Axios.post(searchUrl, context.state.parameters)
+                .then(response => {
+                	let filtrosAplicados = '';
+                    let parameters = context.state.parameters;
+                    [# th:each="attr : ${clazz.eAttributes}"]
+                    if (parameters['[(${attr.name})]']){
+                    	if (filtrosAplicados.length>0) filtrosAplicados += ', ';
+                        filtrosAplicados += `[(${attr.name})] = ${parameters['[(${attr.name})]']}`;
+                    }
+                    [/]
+                    context.commit('setFiltrosAplicados', filtrosAplicados);
+                    context.commit('setData', response.data.list);
+                })
+                .catch(error => {
+                    context.commit('setErrorMessage', 'Erro consultando [# emft:lbl="${clazz}" /]');
+                });
+            
+        },
+
+
+
+        create(context, model){
+            const createUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/incluir`;
+            Axios.post(createUrl, model)
+                .then(response => {
+                    context.commit('setInsert', false);
+                    context.dispatch('consultar');
+                })
+                .catch(error => {
+                    if (error.response){
+                        context.commit('setErrors', error.response.data.erros)
+                    }
+                    else if (error.request){
+                        context.commit('setErrorMessage', 'Erro incluindo [# emft:lbl="${clazz}" /]. O serviço está indisponível');
+                    }
+                    else{
+                        context.commit('setErrorMessage', 'Erro incluindo [# emft:lbl="${clazz}" /]. Ocorreu um erro inesperado');
+                    }
+                });
+            
+        },
+
+
+        update(context, model){
+            const updateUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/atualizar`;
+            Axios.post(updateUrl, model)
+                .then(response => {
+                    context.commit('setEdit', {});
+                    context.dispatch('consultar');
+                })
+                .catch(error => {
+                    if (error.response){
+                        context.commit('setErrors', error.response.data.erros)
+                    }
+                    else if (error.request){
+                        context.commit('setErrorMessage', 'Erro atualizando [# emft:lbl="${clazz}" /]. O serviço está indisponível');
+                    }
+                    else{
+                        context.commit('setErrorMessage', 'Erro atualizando [# emft:lbl="${clazz}" /]. Ocorreu um erro inesperado');
+                    }
+                });
+            
+        },
+
+
+        remove(context, model){
+            const deleteUrl = `${baseUrl}/api/v1/[# emft:dashed="${clazz}"/]/excluir/${model.codigo}`;
+            Axios.get(deleteUrl, model)
+                .then(response => {
+                    context.commit('setErrorMessage', null);
+                    context.dispatch('consultar');
+                })
+                .catch(error => {
+                    if (error.response){
+                        context.commit('setErrorMessage', error.response.data.mensagem)
+                    }
+                    else if (error.request){
+                        context.commit('setErrorMessage', 'Erro excluindo [# emft:lbl="${clazz}" /]. O serviço está indisponível');
+                    }
+                    else{
+                        context.commit('setErrorMessage', 'Erro excluindo [# emft:lbl="${clazz}" /]. Ocorreu um erro inesperado');
+                    }
+                });
+            
+        },
+        
+        
+        clear(context){
+            context.commit('setParameters', {});
+        }
+    }
+};

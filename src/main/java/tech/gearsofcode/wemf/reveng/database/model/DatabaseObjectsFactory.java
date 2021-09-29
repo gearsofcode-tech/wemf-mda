@@ -16,7 +16,7 @@ import tech.gearsofcode.wemf.reveng.database.sql.oracle.OracleSQLBuilder;
  * @TODO: Refactor implementation. When more objects exist, it will be needed to
  *        choose among them. Besides, when more than one file is open, they may
  *        use different objects.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class DatabaseObjectsFactory {
 

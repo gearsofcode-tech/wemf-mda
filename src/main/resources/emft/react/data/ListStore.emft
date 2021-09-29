@@ -1,0 +1,84 @@
+/*[- */ fileNamePattern=%sListStore.js /* -]*/
+/*[- */ genfolder=front /* -]*/
+/*[- */ subpackage=src/data/ /* -]*/
+import {ReduceStore} from 'flux/utils';
+import [(${clazz.name})]ActionTypes from './[(${clazz.name})]ActionTypes';
+import [(${system})]Dispatcher from './[(${system})]Dispatcher';
+[# th:each="eType: ${clazz.getReferencedETypes()}"]
+import [(${eType.name})]ActionTypes from "../data/[(${eType.name})]ActionTypes";
+[/]
+class [(${clazz.name})]ListStore extends ReduceStore {
+
+	constructor() {
+		super([(${system})]Dispatcher);
+	}
+
+	getInitialState() {
+		return {list:[], filter:{pageSize : 20, page: 1}, model: {}, errors:{}, message: null};
+	}
+
+	reduce(state, action) {
+		switch (action.type) {
+			[# th:each="eType: ${clazz.getReferencedETypes()}"]
+			case [(${eType.name})]ActionTypes.[# emft:constant="${eType}"/]_LIST_SEARCH:
+				const stateAfter[(${eType.name})]List = Object.assign({}, state);
+				stateAfter[(${eType.name})]List.list[(${eType.name})] = action.list
+				return stateAfter[(${eType.name})]List;
+
+			case [(${eType.name})]ActionTypes.[# emft:constant="${eType}"/]_LIST_SEARCH_ERROR:
+				const stateAfter[(${eType.name})]ListError = Object.assign({}, state);
+				stateAfter[(${eType.name})]ListError.message = "Could not search [(${eType.name})]";
+				return stateAfter[(${eType.name})]ListError;
+			
+			[/]
+
+		
+			case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH_REQUEST:
+				const stateAfterSearchRequest = Object.assign({}, state);
+				stateAfterSearchRequest.list = [];
+				stateAfterSearchRequest.executing = true;
+				stateAfterSearchRequest.errors = action.errors;
+				return stateAfterSearchRequest;
+
+			case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH:
+	        	const stateAfterList = Object.assign({}, state);
+	        	stateAfterList.list = action.list;
+	        	return stateAfterList;
+        	
+      		case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_SEARCH_ERROR:
+	      		const stateAfterSearchError = Object.assign({}, state);
+	        	stateAfterSearchError.list = [];
+	        	stateAfterSearchError.message = 'There was a problem searching for your data.';
+	        	return stateAfterSearchError;
+        
+     		case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_UPDATE_FILTER:
+	     		const newFilterState = Object.assign({}, state);
+	     		if (action.value === '') {
+					delete newFilterState.filter[action.field];
+				}
+				else{
+	     			newFilterState.filter[action.field] = action.value;
+	     		}
+		        return newFilterState;
+		    
+		    case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_DELETE:
+		        const stateAfterDelete = Object.assign({}, state);
+				stateAfterDelete.errors = {};
+				stateAfterDelete.message = null;
+				stateAfterDelete.insert = false;
+				stateAfterDelete.edit = null;
+				stateAfterDelete.delete = {};
+		        return state;
+	        
+	        case [(${clazz.name})]ActionTypes.[# emft:constant="${clazz}" /]_DELETE_ERROR:
+		        const stateAfterDeleteError = Object.assign({}, state);
+				stateAfterDeleteError.message = action.message;
+				return stateAfterDeleteError;
+
+      default:
+        return state;
+    }
+  }
+}
+
+export default new [(${clazz.name})]ListStore();

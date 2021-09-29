@@ -1,11 +1,12 @@
 /*[- */ fileNamePattern=%sService.java /* -]*/
 /*[- */ genfolder=java /* -]*/
-/*[- */ subpackage=service /* -]*/ 
+/*[- */ subpackage=service /* -]*/
+/*[- */ appliesTo=Entity /* -]*/ 
 package [(${clazz.epackage.name})].service;
 
-import [(${clazz.epackage.name})].model.[(${clazz.name})];
+import [(${clazz.epackage.name})].domain.[(${clazz.name})];
 import [(${clazz.epackage.name})].repository.[(${clazz.name})]Repository;
-import [(${clazz.epackage.name})].dto.[(${clazz.name})]FilterDTO;
+import [(${clazz.epackage.name})].web.dto.[(${clazz.name})]Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -18,31 +19,36 @@ import java.util.List;
 public class [(${clazz.name})]Service {
 
 	@Autowired
-	[(${clazz.name})]Repository [(${#strings.toLowerCase(clazz.name)})]Repository;
+	[(${clazz.name})]Repository [# emft:lcc="${clazz}"/]Repository;
 	
-	public void include ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
-		[(${#strings.toLowerCase(clazz.name)})]Repository.include([(${#strings.toLowerCase(clazz.name)})]);
+	public void insert ([(${clazz.name})] [# emft:lcc="${clazz}"/]){
+		[# emft:lcc="${clazz}"/]Repository.insert([# emft:lcc="${clazz}"/]);
 	}
 	
 	
-	public void remove ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
-		[(${#strings.toLowerCase(clazz.name)})]Repository.remove([(${#strings.toLowerCase(clazz.name)})]);
+	public void delete ([(${clazz.name})] [# emft:lcc="${clazz}"/]){
+		[# emft:lcc="${clazz}"/]Repository.delete([# emft:lcc="${clazz}"/]);
 	} 
 	
-	public void update ([(${clazz.name})] [(${#strings.toLowerCase(clazz.name)})]){
-		[(${#strings.toLowerCase(clazz.name)})]Repository.update([(${#strings.toLowerCase(clazz.name)})]);
+	public void update ([(${clazz.name})] [# emft:lcc="${clazz}"/]){
+		[# emft:lcc="${clazz}"/]Repository.update([# emft:lcc="${clazz}"/]);
 	}
 	
-	public [(${clazz.name})] getById([# emft:idJavaType="${clazz}"/] id){
-		return [(${#strings.toLowerCase(clazz.name)})]Repository.getById(id);
+	public [(${clazz.name})] findById([# emft:idJavaType="${clazz}"/] id){
+		return [# emft:lcc="${clazz}"/]Repository.findById(id);
+	}
+	[# emft:hasNoAnnotation="${clazz}" source="NoSearchFilter"]
+	public List<[(${clazz.name})]> findByCriteria([(${clazz.name})]Criteria [# emft:lcc="${clazz}"/]Criteria){
+		return [# emft:lcc="${clazz}"/]Repository.findByCriteria([# emft:lcc="${clazz}"/]Criteria);
 	}
 	
-	public List<[(${clazz.name})]> getByFilter([(${clazz.name})]FilterDTO filtro){
-		return [(${#strings.toLowerCase(clazz.name)})]Repository.getByFilter(filtro);
+	public Long getTotalRecords([(${clazz.name})]Criteria [# emft:lcc="${clazz}"/]Criteria){
+		return [# emft:lcc="${clazz}"/]Repository.getTotalRecords([# emft:lcc="${clazz}"/]Criteria);
 	}
+	[/]
 	
-	public Long getTotalRecords([(${clazz.name})]FilterDTO filtro){
-		return [(${#strings.toLowerCase(clazz.name)})]Repository.getTotalRecords(filtro);
+	public List<[(${clazz.name})]> findAll(){
+		return [# emft:lcc="${clazz}"/]Repository.findAll();
 	}
 	
 }

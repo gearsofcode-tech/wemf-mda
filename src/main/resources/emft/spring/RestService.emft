@@ -1,0 +1,99 @@
+/*[- */ fileNamePattern=%s.java /* -]*/
+/*[- */ genfolder=java /* -]*/
+/*[- */ subpackage=web.controller /* -]*/
+/*[- */ namePattern=.*RestService /* -]*/
+package [(${clazz.epackage.name})].web.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import java.util.stream.Collectors;
+import java.text.ParseException;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import [(${clazz.epackage.name})].domain.*;
+import [(${clazz.epackage.name})].web.dto.*;
+import [(${clazz.epackage.name})].web.util.PagedResult;
+import java.util.LinkedList;
+[# emft:importJavaList="${clazz}" /]
+
+@RestController
+@RequestMapping("/rest/[# emft:dashed="${clazz}" /]")
+public class [(${clazz.name})] {
+
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+[# th:each="oper : ${clazz.getEAllOperations()}"]		
+	
+	[# emft:hasAnnotation="${oper}" source="GET"]
+	[# th:if="${oper.upperBound == -1}"]
+	[# th:if="${!'EString'.equals(oper.eType.name)}"]
+	@GetMapping("/[# emft:dashed="${oper}" /]")
+	public List<[# emft:javaDTOType="${oper}"/]> [(${oper.name})]([# th:each="arg, itStat : ${oper.getEParameters()}"]@RequestParam("[(${arg.name})]") [# emft:javaDTOType="${arg}"/] [(${arg.name})][# th:block th:if="${itStat.count} < ${itStat.size}"], [/][/]){
+		List<[# emft:javaDTOType="${oper}"/]> lst = new LinkedList<[# emft:javaDTOType="${oper}"/]>(); 
+		[# emft:javaDTOType="${oper}"/] result = new [# emft:javaDTOType="${oper}"/](); 
+		[# th:each="attr : ${oper.eType.getEStructuralFeatures()}"]	
+		result.set[# emft:cc="${attr}" /]([# emft:field="${attr}" /]);
+		[/]
+		lst.add(result);
+		return lst;
+	}
+	[/]
+	[# th:if="${'EString'.equals(oper.eType.name)}"]
+	@GetMapping("/[# emft:dashed="${oper}" /]")
+	public List<String> [(${oper.name})]([# th:each="arg, itStat : ${oper.getEParameters()}"]@RequestParam("[(${arg.name})]") [# emft:javaDTOType="${arg}"/] [(${arg.name})][# th:block th:if="${itStat.count} < ${itStat.size}"], [/][/]){
+		return new LinkedList<String>();
+	}
+	[/]
+	[/]
+	[/]
+	[# th:if="${oper.upperBound == 1}"]
+	[# th:if="${!'EString'.equals(oper.eType.name)}"]
+	@GetMapping("/[# emft:dashed="${oper}" /]")
+	public [# emft:javaDTOType="${oper}"/] [(${oper.name})]([# th:each="arg, itStat : ${oper.getEParameters()}"]@RequestParam("[(${arg.name})]") [# emft:javaDTOType="${arg}"/] [(${arg.name})][# th:block th:if="${itStat.count} < ${itStat.size}"], [/][/]){
+		[# emft:javaDTOType="${oper}"/] result = new [# emft:javaDTOType="${oper}"/](); 
+		[# th:each="attr : ${oper.eType.getEStructuralFeatures()}"]	
+		result.set[# emft:cc="${attr}" /]([# emft:field="${attr}" /]);
+		[/]
+		return result;
+	}
+	[/]
+	[# th:if="${'EString'.equals(oper.eType.name)}"]
+	@GetMapping("/[# emft:dashed="${oper}" /]")
+	public String [(${oper.name})]([# th:each="arg, itStat : ${oper.getEParameters()}"]@RequestParam("[(${arg.name})]") [# emft:javaDTOType="${arg}"/] [(${arg.name})][# th:block th:if="${itStat.count} < ${itStat.size}"], [/][/]){
+		return "[(${oper.name})]";
+	}
+	[/]
+	[/]
+	
+	[# emft:hasAnnotation="${oper}" source="POST"]
+	[# th:if="${oper.upperBound == -1}"]
+	@PostMapping("/[# emft:dashed="${oper}" /]")
+	public List<[# emft:javaDTOType="${oper}"/]> [(${oper.name})]([# th:each="arg, itStat : ${oper.getEParameters()}"][# emft:javaDTOType="${arg}"/] [(${arg.name})][# th:block th:if="${itStat.count} < ${itStat.size}"], [/][/]){
+		List<[# emft:javaDTOType="${oper}"/]> lst = new LinkedList<[# emft:javaDTOType="${oper}"/]>(); 
+		[# emft:javaDTOType="${oper}"/] result = new [# emft:javaDTOType="${oper}"/](); 
+		[# th:each="attr : ${oper.eType.getEStructuralFeatures()}"]	
+		result.set[# emft:cc="${attr}" /]([# emft:field="${attr}" /]);
+		[/]
+		lst.add(result);
+		return lst;
+	}
+	[/]
+	[# th:if="${oper.upperBound != -1}"]
+	@PostMapping("/[# emft:dashed="${oper}" /]")
+	public [# emft:javaDTOType="${oper}"/] [(${oper.name})]([# th:each="arg : ${oper.getEParameters()}"][# emft:javaDTOType="${arg}"/] [(${arg.name})][/]){
+		[# emft:javaDTOType="${oper}"/] result = new [# emft:javaDTOType="${oper}"/](); 
+		[# th:each="attr : ${oper.eType.getEStructuralFeatures()}"]	
+		result.set[# emft:cc="${attr}" /]([# emft:field="${attr}" /]);
+		[/]
+		return result;
+	}
+	[/][/]
+	
+[/]		
+}

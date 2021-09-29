@@ -22,7 +22,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 /**
  * Tag that prints all the EMF Annotations as Java Annotations.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class JavaAnnotationsTagProcessor extends AbstractAttributeTagProcessor{

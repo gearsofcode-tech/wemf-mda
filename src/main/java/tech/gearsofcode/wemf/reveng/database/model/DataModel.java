@@ -22,7 +22,7 @@ import tech.gearsofcode.wemf.reveng.database.sql.java.DynamicDataTypes;
 /**
  * Represents a data model.
  * 
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  * */
 public class DataModel implements Serializable {
 

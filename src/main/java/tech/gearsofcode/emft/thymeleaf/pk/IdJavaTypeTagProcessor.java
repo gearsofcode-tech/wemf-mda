@@ -24,7 +24,7 @@ import tech.gearsofcode.emft.metamodel.TypeMapper;
 
 /**
  * Tag that determines what is the Java Type of the Id of a class.
- * @author Carlos Padoa
+ * @author SamuraiCharlie
  *
  */
 public class IdJavaTypeTagProcessor extends AbstractAttributeTagProcessor{
