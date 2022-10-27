@@ -28,7 +28,7 @@ public class [(${clazz.name})]Criteria {
 		this.[(${attr.name})] = [(${attr.name})];
 	}
 	[/][/]
-[/][/]
+[/]
 
 
 

@@ -56,7 +56,7 @@ public class WEMFCodeGen {
 		
 		if (sourceDir.exists()) {
 			File[] arquivosWEMF = getWEMFFiles(sourceDir, sources);
-			List<EMFTemplate> lstArquivosEMFT = getEMFTemplates(getEMFTSourceDir(), modules, templates);
+			List<EMFTemplate> lstArquivosEMFT = getEMFTemplates(new File(getEMFTSourceDir()), modules, templates);
 			generateCode(rootGen, templateProcessor, arquivosWEMF, lstArquivosEMFT, classifiers);
 		}
 		else {
@@ -66,7 +66,7 @@ public class WEMFCodeGen {
 	
 	
 	private static void copyStaticResources(File projectDir, List<String> modules) throws IOException {
-		File emftFolder = getEMFTSourceDir();
+		File emftFolder = new File(getEMFTSourceDir());
 		for (File f : emftFolder.listFiles()) {
 			if (f.isDirectory() && modules.contains(f.getName())) {
 				File staticResources = new File(f, "static");
@@ -201,7 +201,7 @@ public class WEMFCodeGen {
 	 * */
 	public static List<String> getEMFTModules() {
 		List<String> modules = new ArrayList<String>();
-		File sourceDir = getEMFTSourceDir();
+		File sourceDir = new File(getEMFTSourceDir());
 		if (sourceDir.exists()) {
 			File [] subdirs = sourceDir.listFiles(new FileFilter() {
 				@Override
@@ -297,7 +297,7 @@ public class WEMFCodeGen {
 
 	
 	public static List<EMFTemplate> getEMFTemplates(List<String> lstModules) {
-		File sourceDir = getEMFTSourceDir();
+		File sourceDir = new File(getEMFTSourceDir());
 		return getEMFTemplates(sourceDir, lstModules, new ArrayList<String>());
 	}
 
@@ -305,12 +305,12 @@ public class WEMFCodeGen {
 	/**
 	 * Finds where project is located.
 	 * */
-	private static File getEMFTSourceDir() {
+	private static String getEMFTSourceDir() {
 		File currentDir = new File(ClassLoader.getSystemResource(".").getFile());
 		while (currentDir.getParentFile()!=null && !currentDir.getName().equals("target") && !currentDir.getName().equals("bin"))
 			currentDir = currentDir.getParentFile();
 		File sourceDir = new File(currentDir.getParentFile(), "src/main/resources/emft");
-		return sourceDir;
+		return sourceDir.getAbsolutePath().replace("%20", " " );
 	}
 	
 	
