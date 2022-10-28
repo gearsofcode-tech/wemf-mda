@@ -1,0 +1,20 @@
+/*[- */ fileNamePattern=%s.service.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/ /* -]*/
+[# th:each="ref: ${clazz.eReferences}"]
+import {[(${ref.eType.name})]} from './[(${ref.eType.name})]';
+[/]
+import {[(${clazz.name})]} from './[(${clazz.name})]';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class [(${clazz.name})]Service {
+    items: [(${clazz.name})][] = [];
+
+
+	getItems() {
+	    return this.items;
+	}
+}

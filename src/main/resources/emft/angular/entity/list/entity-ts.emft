@@ -2,25 +2,37 @@
 /*[- */ genfolder=../main/angular/src /* -]*/
 /*[- */ subpackage=app/%s-List/ /* -]*/
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import {[(${clazz.name})]} from '../[(${clazz.name})]';
+import {[(${clazz.name})]Service} from '../[(${clazz.name})].service';
 
 @Component({
-  selector: 'app-[(${clazz.name})]-list',
-  templateUrl: './[(${clazz.name})]-List.component.html',
-  styleUrls: ['./[(${clazz.name})]-List.component.css']
+    selector: 'app-[(${clazz.name})]-list',
+    templateUrl: './[(${clazz.name})]-List.component.html',
+    styleUrls: ['./[(${clazz.name})]-List.component.css']
 })
 export class [(${clazz.name})]ListComponent implements OnInit {
 
-  [# emft:lcc="${clazz}"/]List = [] as [(${clazz.name})][];
+    [# emft:lcc="${clazz}"/]List : [(${clazz.name})][] = this.[# emft:lcc="${clazz}"/]Service.getItems();
+    
+    searchForm = this.formBuilder.group({
+        [# th:each="attr, itStat : ${clazz.eAttributes}"]
+		[# emft:hasAnnotation="${attr}" source="SearchFilter"]
+			[(${attr.name})]: ''[# th:block th:if="${itStat.count} < ${itStat.size}"],[/]
+		[/][/]
+    });
   
-  constructor() { }
+    constructor(
+        private  [# emft:lcc="${clazz}"/]Service: [(${clazz.name})]Service,
+        private formBuilder: FormBuilder
+    ) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
   
   
-  search[(${clazz.name})](){
-  	alert('[(${clazz.name})] works!');
-  }
+    onSearchSubmit(){
+  	    alert('[(${clazz.name})] works!');
+    }
 
 }

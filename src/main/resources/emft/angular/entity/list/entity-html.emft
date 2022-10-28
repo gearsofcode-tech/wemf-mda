@@ -2,6 +2,7 @@
 /*[- */ genfolder=../main/angular/src /* -]*/
 /*[- */ subpackage=app/%s-List/ /* -]*/
 <h1>Search for [(${clazz.name})]</h1>
+<form [formGroup]="searchForm" (ngSubmit)="onSearchSubmit()">
 <div class="row">
 	
 	[# th:each="attr, itStat : ${clazz.eAttributes}"]
@@ -9,7 +10,7 @@
 	<div class="col-md-3">
 		<div class="form-group">
 			<label htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
-			<input class="form-control" id="[(${attr.name})]" name="[(${attr.name})]" type="text" placeholder="" />
+			<input class="form-control" id="[(${attr.name})]" name="[(${attr.name})]" formControlName="[(${attr.name})]" type="text" placeholder="" />
 		</div>
 
 	</div>
@@ -34,16 +35,16 @@
 </div>
 <div class="row">
 	<div class="col-md-3">
-		<button (click)="search[(${clazz.name})]()">search</button>
+		<button type="submit">search</button>
 	</div>
 </div>	
+</form>
 
 <div class="row">
 	<div class="col-md-12">
 	<table class="table table-bordered">
 		<thead>
 			<tr>
-				<th></th>
 				[# th:each="attr : ${clazz.eAttributes}"][# emft:hasAnnotation="${attr}" source="SearchResult"]
 				<th>
 					[# emft:lbl="${attr}" /]
@@ -61,7 +62,6 @@
 		</thead>
 		<tbody *ngFor="let [# emft:lcc="${clazz}"/] of [# emft:lcc="${clazz}"/]List">
 			<tr>
-				<th></th>
 				[# th:each="attr : ${clazz.eAttributes}"][# emft:hasAnnotation="${attr}" source="SearchResult"]
 				<th>
 					{{[# emft:lcc="${clazz}"/].[(${attr.name})]}}
