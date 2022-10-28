@@ -25,11 +25,11 @@
                     <br/>
                 </div>
 
-                <div class="selic-gridPesquisa selic-grid selic-gridOnly">
-                    <div class="selic-grid-pager-panel selic-gridPaginationTop">
+                <div>
+                    <div>
                     </div>
-                    <div class="selic-grid-contents-wrapper selic-grid-render-container">
-                        <table class="tabelaResultado">
+                    <div>
+                        <table>
                             <thead>
                                 <tr>
                                     [# th:each="attr : ${clazz.eAttributes}"]
@@ -62,15 +62,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="selic-grid-pager-panel selic-gridPaginationBottom">
-                        <div class="selic-grid-pager-container">
-                            <div class="selic-grid-pager-control">
-                                <button class="selic-grid-pager-first"></button>
-                                <button class="selic-grid-pager-previous"></button>
-                                <input id="inputPagina" type="number" class="selic-grid-pager-control-input inputPaginacao"></input>
-                                <span class="selic-grid-pager-max-pages-number spanPaginacao"><abbr></abbr> totalDePaginas</span>
-                                <button class="selic-grid-pager-next"></button>
-                                <button class="selic-grid-pager-last"></button>
+                    <div>
+                        <div>
+                            <div>
+                                <button></button>
+                                <button></button>
+                                <input id="inputPagina" type="number"></input>
+                                <span><abbr></abbr> totalDePaginas</span>
+                                <button></button>
+                                <buttons></button>
                             </div>
                         </div>
                     </div>
