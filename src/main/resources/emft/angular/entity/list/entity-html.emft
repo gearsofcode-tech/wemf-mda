@@ -1,0 +1,82 @@
+/*[- */ fileNamePattern=%s-List.component.html /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-List/ /* -]*/
+<h1>Search for [(${clazz.name})]</h1>
+<div class="row">
+	
+	[# th:each="attr, itStat : ${clazz.eAttributes}"]
+	[# emft:hasAnnotation="${attr}" source="SearchFilter"]
+	<div class="col-md-3">
+		<div class="form-group">
+			<label htmlFor="[(${attr.name})]">[# emft:lbl="${attr}" /]</label>
+			<input class="form-control" id="[(${attr.name})]" name="[(${attr.name})]" type="text" placeholder="" />
+		</div>
+
+	</div>
+    [/][/]
+    
+    [# th:each="ref, itStat : ${clazz.eReferences}"]
+    [# emft:hasAnnotation="${ref}" source="SearchFilter"]
+	<div class="col-md-3">
+		<label htmlFor="[(${ref.name})]">[# emft:lbl="${ref}" /]</label>
+		<div class="input-group mb-3">
+			<input class="form-control" id="[(${ref.name})]Id" type="text" placeholder="code"/>
+			<input class="form-control" id="[(${ref.name})]Name" type="text" disabled="disabled"/>
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary btn-small" type="button" onClick={(e)=>$("#modal[(${ref.name})]").modal()}><i class="fas fa-fw fa-search"></i></button>
+			</div>
+		</div>
+
+	</div>
+    [/][/]
+    
+    
+</div>
+<div class="row">
+	<div class="col-md-3">
+		<button (click)="search[(${clazz.name})]()">search</button>
+	</div>
+</div>	
+
+<div class="row">
+	<div class="col-md-12">
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th></th>
+				[# th:each="attr : ${clazz.eAttributes}"][# emft:hasAnnotation="${attr}" source="SearchResult"]
+				<th>
+					[# emft:lbl="${attr}" /]
+				</th>
+				[/][/]
+				[# th:each="ref : ${clazz.eReferences}"][# emft:hasAnnotation="${ref}" source="SearchResult"]
+				<th>
+					[# emft:lbl="${ref}" /]
+				</th>
+				[/][/]
+				<th>
+					Actions
+				</th>
+			</tr>
+		</thead>
+		<tbody *ngFor="let [# emft:lcc="${clazz}"/] of [# emft:lcc="${clazz}"/]List">
+			<tr>
+				<th></th>
+				[# th:each="attr : ${clazz.eAttributes}"][# emft:hasAnnotation="${attr}" source="SearchResult"]
+				<th>
+					{{[# emft:lcc="${clazz}"/].[(${attr.name})]}}
+				</th>
+				[/][/]
+				[# th:each="ref : ${clazz.eReferences}"][# emft:hasAnnotation="${ref}" source="SearchResult"]
+				<th>
+					{{[# emft:lcc="${clazz}"/].[(${ref.name})]}}
+				</th>
+				[/][/]
+				<th>
+					Actions
+				</th>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+</div>

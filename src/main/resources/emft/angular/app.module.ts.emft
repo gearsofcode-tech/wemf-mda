@@ -1,0 +1,28 @@
+/*[- */ fileNamePattern=app.module.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/ /* -]*/
+/*[- */ global=true /* -]*/
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+[# th:each="clazz : ${model.eClassifiers}"]
+import { [(${clazz.name})]ListComponent } from './[(${clazz.name})]-List/[(${clazz.name})]-List.component';
+[/]
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    [# th:each="clazz, itStat : ${model.eClassifiers}"]
+    [(${clazz.name})]ListComponent[# th:block th:if="${itStat.count} < ${itStat.size}"],[/]
+    [/]
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }

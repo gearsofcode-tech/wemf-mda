@@ -1,0 +1,11 @@
+/*[- */ fileNamePattern=%s.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/ /* -]*/
+[# th:each="ref: ${clazz.eReferences}"]
+import {[(${ref.eType.name})]} from './[(${ref.eType.name})]';
+[/]
+export interface [(${clazz.name})] {
+	[# th:each="attr : ${clazz.eStructuralFeatures}"]
+	[(${attr.name})]: [# emft:typescriptType="${attr}"/];
+	[/]
+}

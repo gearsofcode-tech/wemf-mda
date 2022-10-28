@@ -77,6 +77,59 @@ public class TypeMapper {
 	
 	
 	
+	public static String getTypescriptType(String emfType) {
+		String javaType = null;
+		switch (emfType) {
+			case "EString":
+				javaType = "string";
+				break;
+			case "ELong":
+				javaType = "number";
+				break;
+			case "ELongObject":
+				javaType = "number";
+				break;
+			case "EDouble":
+				javaType = "number";
+				break;
+			case "EDoubleObject":
+				javaType = "number";
+				break;
+			case "EFloat":
+				javaType = "number";
+				break;
+			case "EFloatObject":
+				javaType = "number";
+				break;
+			case "EBoolean":
+				javaType = "boolean";
+				break;
+			case "EBooleanObject":
+				javaType = "boolean";
+				break;
+			case "EInt":
+				javaType = "number";
+				break;
+			case "EIntegerObject":
+				javaType = "number";
+				break;
+			case "EDate":
+				javaType = "number";
+				break;
+			case "EBigDecimal":
+				javaType = "number";
+				break;
+			case "EByteArray":
+				javaType = "number";
+				break;
+			default:
+				javaType = emfType;
+		}	
+		return javaType;
+	}
+	
+	
+	
 	/**
 	 * Converts the given Java class into the correspondent EMF type.
 	 * @param clazz java type to be converted ('String.class', for example).

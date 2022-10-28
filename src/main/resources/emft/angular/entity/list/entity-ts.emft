@@ -1,0 +1,26 @@
+/*[- */ fileNamePattern=%s-List.component.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-List/ /* -]*/
+import { Component, OnInit } from '@angular/core';
+import {[(${clazz.name})]} from '../[(${clazz.name})]';
+
+@Component({
+  selector: 'app-[(${clazz.name})]-list',
+  templateUrl: './[(${clazz.name})]-List.component.html',
+  styleUrls: ['./[(${clazz.name})]-List.component.css']
+})
+export class [(${clazz.name})]ListComponent implements OnInit {
+
+  [# emft:lcc="${clazz}"/]List = [] as [(${clazz.name})][];
+  
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  
+  
+  search[(${clazz.name})](){
+  	alert('[(${clazz.name})] works!');
+  }
+
+}

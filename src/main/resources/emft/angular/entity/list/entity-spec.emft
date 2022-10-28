@@ -1,0 +1,26 @@
+/*[- */ fileNamePattern=%s-List.component.spec.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-List/ /* -]*/
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { [(${clazz.name})]ListComponent } from './[(${clazz.name})]-List.component';
+
+describe('[(${clazz.name})]ListComponent', () => {
+  let component: [(${clazz.name})]ListComponent;
+  let fixture: ComponentFixture<[(${clazz.name})]ListComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ [(${clazz.name})]ListComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent([(${clazz.name})]ListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -37,6 +37,7 @@ public class EMFTDialect extends AbstractProcessorDialect{
 		final Set<IProcessor> processors = new HashSet<IProcessor>();
 		processors.add(new LabelTagProcessor(PREFIX));
 		processors.add(new JavaTypeTagProcessor(PREFIX));
+		processors.add(new TypescriptTypeTagProcessor(PREFIX));
 		processors.add(new JavaDTOTypeTagProcessor(PREFIX));
 		processors.add(new CamelCaseTagProcessor(PREFIX));
 		
