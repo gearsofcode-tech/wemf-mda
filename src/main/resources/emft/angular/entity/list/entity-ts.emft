@@ -13,13 +13,15 @@ import {[(${clazz.name})]Service} from '../[(${clazz.name})].service';
 })
 export class [(${clazz.name})]ListComponent implements OnInit {
 
-    [# emft:lcc="${clazz}"/]List : [(${clazz.name})][] = this.[# emft:lcc="${clazz}"/]Service.getItems();
+    [# emft:lcc="${clazz}"/]List : [(${clazz.name})][] = [];
     
     searchForm = this.formBuilder.group({
         [# th:each="attr, itStat : ${clazz.eAttributes}"]
 		[# emft:hasAnnotation="${attr}" source="SearchFilter"]
-			[(${attr.name})]: ''[# th:block th:if="${itStat.count} < ${itStat.size}"],[/]
+			[(${attr.name})]: '',
 		[/][/]
+		page: 1,
+        pageSize: 20
     });
   
     constructor(
@@ -32,6 +34,8 @@ export class [(${clazz.name})]ListComponent implements OnInit {
   
   
     onSearchSubmit(){
+    	this.[# emft:lcc="${clazz}"/]Service.getItems(this.searchForm)
+        .subscribe(result => this.[# emft:lcc="${clazz}"/]List = result.list);
   	    alert('[(${clazz.name})] works!');
     }
 

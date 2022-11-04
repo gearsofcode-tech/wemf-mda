@@ -63,18 +63,18 @@
 		<tbody *ngFor="let [# emft:lcc="${clazz}"/] of [# emft:lcc="${clazz}"/]List">
 			<tr>
 				[# th:each="attr : ${clazz.eAttributes}"][# emft:hasAnnotation="${attr}" source="SearchResult"]
-				<th>
+				<td>
 					{{[# emft:lcc="${clazz}"/].[(${attr.name})]}}
-				</th>
+				</td>
 				[/][/]
 				[# th:each="ref : ${clazz.eReferences}"][# emft:hasAnnotation="${ref}" source="SearchResult"]
-				<th>
+				<td>
 					{{[# emft:lcc="${clazz}"/].[(${ref.name})]}}
-				</th>
+				</td>
 				[/][/]
-				<th>
+				<td>
 					Actions
-				</th>
+				</td>
 			</tr>
 		</tbody>
 	</table>

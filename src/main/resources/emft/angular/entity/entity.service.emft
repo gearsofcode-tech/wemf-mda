@@ -7,15 +7,24 @@ import {[(${ref.eType.name})]} from './[(${ref.eType.name})]';
 import {[(${clazz.name})]} from './[(${clazz.name})]';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import baseUrl from './baseUrl';
+import { Observable } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+import { PagedResult } from './PagedResult';
 
 @Injectable({
     providedIn: 'root'
 })
 export class [(${clazz.name})]Service {
     items: [(${clazz.name})][] = [];
+    getUrl = baseUrl() + '/api/v1/[# emft:dashed="${clazz}"/]/find';
 
 
-	getItems() {
-	    return this.items;
+	constructor(private http: HttpClient){
+        
+    }
+
+	getItems(searchForm : FormGroup): Observable<PagedResult<[(${clazz.name})]>> {
+	    return this.http.post<PagedResult<[(${clazz.name})]>>(this.getUrl, searchForm.value);
 	}
 }
