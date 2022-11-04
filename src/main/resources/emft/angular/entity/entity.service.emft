@@ -6,6 +6,7 @@ import {[(${ref.eType.name})]} from './[(${ref.eType.name})]';
 [/]
 import {[(${clazz.name})]} from './[(${clazz.name})]';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
