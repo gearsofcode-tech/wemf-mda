@@ -1,0 +1,26 @@
+/*[- */ fileNamePattern=%s-Update.component.spec.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Update/ /* -]*/
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { [(${clazz.name})]UpdateComponent } from './[(${clazz.name})]-Update.component';
+
+describe('[(${clazz.name})]UpdateComponent', () => {
+  let component: [(${clazz.name})]UpdateComponent;
+  let fixture: ComponentFixture<[(${clazz.name})]UpdateComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ [(${clazz.name})]UpdateComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent([(${clazz.name})]UpdateComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

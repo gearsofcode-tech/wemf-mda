@@ -1,0 +1,53 @@
+/*[- */ fileNamePattern=%s-Update.component.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Update/ /* -]*/
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import {[(${clazz.name})]} from '../[(${clazz.name})]';
+import {[(${clazz.name})]Service} from '../[(${clazz.name})].service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+
+@Component({
+    selector: 'app-[(${clazz.name})]-update',
+    templateUrl: './[(${clazz.name})]-Update.component.html',
+    styleUrls: ['./[(${clazz.name})]-Update.component.css']
+})
+export class [(${clazz.name})]UpdateComponent implements OnInit {
+
+	[# emft:lcc="${clazz}"/] : Partial<[(${clazz.name})]> = {};
+    
+    updateForm = this.formBuilder.group({
+    	id : 0,
+        [# th:each="attr, itStat : ${clazz.eAttributes}"]
+		[# emft:hasNoAnnotation="${attr}" source="Id"]
+			[(${attr.name})]: ''[# th:block th:if="${itStat.count} < ${itStat.size}"],[/]
+		[/][/]
+    });
+    
+    id = 0;
+  
+    constructor(
+    	private route: ActivatedRoute,
+        private router: Router,
+        private  [# emft:lcc="${clazz}"/]Service: [(${clazz.name})]Service,
+        private formBuilder: FormBuilder
+    ) { }
+
+    ngOnInit(): void {
+    	this.route.paramMap.subscribe(
+            (params) => this.id = Number(params.get('id'))
+        );
+        alert("id = " + this.id);
+        this.[# emft:lcc="${clazz}"/]Service.getItem(this.id).subscribe(
+            [# emft:lcc="${clazz}"/] => {this.[# emft:lcc="${clazz}"/] = [# emft:lcc="${clazz}"/]; console.log([# emft:lcc="${clazz}"/])}
+        );
+    }
+  
+  
+    onUpdateSubmit(){
+    	this.[# emft:lcc="${clazz}"/]Service.update(this.updateForm)
+    	.subscribe(result => console.log(result));
+  	    alert('[(${clazz.name})] works!');
+    }
+
+}

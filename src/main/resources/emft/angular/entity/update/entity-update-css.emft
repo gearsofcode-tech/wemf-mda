@@ -1,0 +1,3 @@
+/*[- */ fileNamePattern=%s-Update.component.css /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Update/ /* -]*/

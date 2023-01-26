@@ -1,0 +1,28 @@
+/*[- */ fileNamePattern=%s-Update.component.html /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Update/ /* -]*/
+<form [formGroup]="updateForm" (ngSubmit)="onUpdateSubmit()">
+	<input type="hidden" formControlName="id" [(ngModel)]="[# emft:lcc="${clazz}"/].id"/><input type="hidden" formControlName="id" [(ngModel)]="[# emft:lcc="${clazz}"/].id"/>
+	<h1>New [(${clazz.name})]</h1>
+	<div class="row">
+			
+			[# th:each="attr : ${clazz.eAttributes}"][# emft:hasNoAnnotation="${attr}" source="Id"]
+				<div class="col-mb-3">
+					<label for="[(${attr.name})]" class="form-label">[# emft:lbl="${attr}" /]</label>
+					<input type="text" class="form-control" formControlName="[(${attr.name})]" [(ngModel)]="[(${attr.name})]"/>
+				</div>
+			[/][/]
+			[# th:each="ref : ${clazz.eReferences}"][# emft:hasNoAnnotation="${ref}" source="Id"]
+				<div class="col-mb-3">
+					<label>[# emft:lbl="${ref}" /]</label>
+					<input type="text" class="form-control" formControlName="[(${ref.name})]"/>
+				</div>
+			[/][/]
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<button type="submit">update</button>
+		</div>
+	</div>	
+</form>
+
