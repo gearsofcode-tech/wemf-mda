@@ -1,0 +1,39 @@
+/*[- */ fileNamePattern=%s-Create.component.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Create/ /* -]*/
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import {[(${clazz.name})]} from '../[(${clazz.name})]';
+import {[(${clazz.name})]Service} from '../[(${clazz.name})].service';
+
+@Component({
+    selector: 'app-[(${clazz.name})]-create',
+    templateUrl: './[(${clazz.name})]-Create.component.html',
+    styleUrls: ['./[(${clazz.name})]-Create.component.css']
+})
+export class [(${clazz.name})]CreateComponent implements OnInit {
+
+    
+    createForm = this.formBuilder.group({
+        [# th:each="attr, itStat : ${clazz.eAttributes}"]
+		[# emft:hasNoAnnotation="${attr}" source="Id"]
+			[(${attr.name})]: ''[# th:block th:if="${itStat.count} < ${itStat.size}"],[/]
+		[/][/]
+    });
+  
+    constructor(
+        private  [# emft:lcc="${clazz}"/]Service: [(${clazz.name})]Service,
+        private formBuilder: FormBuilder
+    ) { }
+
+    ngOnInit(): void {
+    }
+  
+  
+    onCreateSubmit(){
+    	this.[# emft:lcc="${clazz}"/]Service.createNew(this.createForm)
+    	.subscribe(result => console.log(result));
+  	    alert('[(${clazz.name})] works!');
+    }
+
+}

@@ -1,0 +1,26 @@
+/*[- */ fileNamePattern=%s-Create.component.spec.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Create/ /* -]*/
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { [(${clazz.name})]CreateComponent } from './[(${clazz.name})]-Create.component';
+
+describe('[(${clazz.name})]CreateComponent', () => {
+  let component: [(${clazz.name})]CreateComponent;
+  let fixture: ComponentFixture<[(${clazz.name})]CreateComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ [(${clazz.name})]CreateComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent([(${clazz.name})]CreateComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

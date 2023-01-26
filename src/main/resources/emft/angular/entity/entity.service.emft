@@ -18,6 +18,7 @@ import { PagedResult } from './PagedResult';
 export class [(${clazz.name})]Service {
     items: [(${clazz.name})][] = [];
     getUrl = baseUrl() + '/api/v1/[# emft:dashed="${clazz}"/]/find';
+    createUrl = baseUrl() + '/api/v1/[# emft:dashed="${clazz}"/]/insert';
 
 
 	constructor(private http: HttpClient){
@@ -26,5 +27,9 @@ export class [(${clazz.name})]Service {
 
 	getItems(searchForm : FormGroup): Observable<PagedResult<[(${clazz.name})]>> {
 	    return this.http.post<PagedResult<[(${clazz.name})]>>(this.getUrl, searchForm.value);
+	}
+	
+	createNew(createForm : FormGroup): Observable<[(${clazz.name})]> {
+	    return this.http.post<[(${clazz.name})]>(this.createUrl, createForm.value);
 	}
 }

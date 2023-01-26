@@ -1,0 +1,3 @@
+/*[- */ fileNamePattern=%s-Create.component.css /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Create/ /* -]*/
