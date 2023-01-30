@@ -1,0 +1,26 @@
+/*[- */ fileNamePattern=%s-Detail.component.spec.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Detail/ /* -]*/
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { [(${clazz.name})]DetailComponent } from './[(${clazz.name})]-Detail.component';
+
+describe('[(${clazz.name})]DetailComponent', () => {
+  let component: [(${clazz.name})]DetailComponent;
+  let fixture: ComponentFixture<[(${clazz.name})]DetailComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ [(${clazz.name})]DetailComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent([(${clazz.name})]DetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

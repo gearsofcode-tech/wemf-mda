@@ -1,0 +1,20 @@
+/*[- */ fileNamePattern=%s-Detail.component.html /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Detail/ /* -]*/
+
+<h1>Detail - [(${clazz.name})]</h1>
+<div class="row">
+		[# th:each="attr : ${clazz.eAttributes}"][# emft:hasNoAnnotation="${attr}" source="Id"]
+			<div class="col-mb-3">
+				{{[# emft:lcc="${clazz}"/].[(${attr.name})]}}
+			</div>
+		[/][/]
+		[# th:each="ref : ${clazz.eReferences}"][# emft:hasNoAnnotation="${ref}" source="Id"]
+			<div class="col-mb-3">
+				{{[# emft:lcc="${clazz}"/].[(${ref.name})]}}
+			</div>
+		[/][/]
+</div>
+
+
+

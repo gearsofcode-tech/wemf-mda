@@ -1,0 +1,38 @@
+/*[- */ fileNamePattern=%s-Detail.component.ts /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Detail/ /* -]*/
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import {[(${clazz.name})]} from '../[(${clazz.name})]';
+import {[(${clazz.name})]Service} from '../[(${clazz.name})].service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+
+@Component({
+    selector: 'app-[(${clazz.name})]-detail',
+    templateUrl: './[(${clazz.name})]-Detail.component.html',
+    styleUrls: ['./[(${clazz.name})]-Detail.component.css']
+})
+export class [(${clazz.name})]DetailComponent implements OnInit {
+
+	[# emft:lcc="${clazz}"/] : Partial<[(${clazz.name})]> = {};
+
+    
+    id = 0;
+  
+    constructor(
+    	private route: ActivatedRoute,
+        private router: Router,
+        private  [# emft:lcc="${clazz}"/]Service: [(${clazz.name})]Service,
+        private formBuilder: FormBuilder
+    ) { }
+
+    ngOnInit(): void {
+    	this.route.paramMap.subscribe(
+            (params) => this.id = Number(params.get('id'))
+        );
+        alert("id = " + this.id);
+        this.[# emft:lcc="${clazz}"/]Service.getItem(this.id).subscribe(
+            [# emft:lcc="${clazz}"/] => {this.[# emft:lcc="${clazz}"/] = [# emft:lcc="${clazz}"/]; console.log([# emft:lcc="${clazz}"/])}
+        );
+    }
+}

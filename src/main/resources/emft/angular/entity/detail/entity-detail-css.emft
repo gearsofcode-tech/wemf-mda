@@ -1,0 +1,3 @@
+/*[- */ fileNamePattern=%s-Detail.component.css /* -]*/
+/*[- */ genfolder=../main/angular/src /* -]*/
+/*[- */ subpackage=app/%s-Detail/ /* -]*/
